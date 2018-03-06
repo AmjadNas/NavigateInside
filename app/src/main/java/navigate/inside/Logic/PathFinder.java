@@ -5,4 +5,5 @@ package navigate.inside.Logic;
  */
 
 public class PathFinder {
+    //
 }
