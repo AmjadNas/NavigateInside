@@ -11,6 +11,7 @@ public class Node {
     String Floor;
     boolean Outside;
     boolean NessOutside;
+    boolean Visited=false;
     private Node Father=null;
     ArrayList<Node> Neighbours;
     ArrayList<String> RoomsNearby;
@@ -25,8 +26,28 @@ public class Node {
         RoomsNearby = new ArrayList<>();
     }
 
-    public void SetFather(Node Father){
+    public void setFather(Node Father){
         this.Father=Father;
+    }
+
+    public Node getFather() {
+        return Father;
+    }
+
+    public ArrayList<Node> getNeighbours() {
+        return Neighbours;
+    }
+
+    public ArrayList<String> getRoomsNearby() {
+        return RoomsNearby;
+    }
+
+    public boolean isVisited() {
+        return Visited;
+    }
+
+    public void setVisited(boolean visited) {
+        Visited = visited;
     }
 
     public Node GetFather(){
@@ -101,5 +122,10 @@ public class Node {
         NessOutside = nessOutside;
     }
 
-
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id=" + id +
+                '}';
+    }
 }

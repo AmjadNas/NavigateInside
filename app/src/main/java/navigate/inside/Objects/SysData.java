@@ -25,6 +25,15 @@ public class SysData {
         return AllNodes;
     }
 
+    public Node getNodeById(String ID){
+        for(Node n : AllNodes){
+            if(Integer.parseInt(ID) == n.getId()){
+                return n;
+            }
+        }
+        return null;
+    }
+
     private void InitializeData(){
         //Main Bulding , Floor 600
         Node n6001 = new Node(6001,false,false,"Main","600");
