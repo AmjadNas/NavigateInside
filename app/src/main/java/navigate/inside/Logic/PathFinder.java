@@ -15,7 +15,7 @@ public class PathFinder {
         data = SysData.getInstance();
     }
 
-    public PathFinder getInstance(){
+    public static PathFinder getInstance(){
         if(instance == null){
             instance = new PathFinder();
         }
@@ -23,7 +23,9 @@ public class PathFinder {
     }
 
     public ArrayList<Node> FindPath(String SNode,String GNode , boolean ok){
-    return null;
+
+
+         return null;
     }
 
 

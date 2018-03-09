@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         txtSNode = sNode.getText().toString();
         txtGNode = gNode.getText().toString();
 
-        PathFinder pf = new PathFinder();
+        PathFinder pf = PathFinder.getInstance();
         boolean b = chElevator.isChecked();
 
         // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
