@@ -3,10 +3,11 @@ package navigate.inside.Objects;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class SysData {
     //Its should contain Nodes List
-    public static SysData instance = null;
+    private static SysData instance = null;
     private ArrayList<Node> AllNodes;
 
 
@@ -83,7 +84,6 @@ public class SysData {
         Node n70011 = new Node(70011,false,false,"Rabin","7000");
         Node n70012 = new Node(70012,false,false,"Rabin","7000");
         Node n70013 = new Node(70013,false,true,"Rabin","7000");
-
         AllNodes.add(n70001);
         AllNodes.add(n70002);
         AllNodes.add(n70003);
@@ -341,21 +341,7 @@ public class SysData {
         n70008.AddNeighbour(n60005);
         n60005.AddNeighbour(n70008);
 
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
 
 
 

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class Node {
 
-    int id;
-    boolean Junction;
-    boolean Elevator;
-    String Building;
-    String Floor;
-    boolean Outside;
-    boolean NessOutside;
-    boolean Visited=false;
+    private int id;
+    private boolean Junction;
+    private boolean Elevator;
+    private String Building;
+    private String Floor;
+    private boolean Outside;
+    private boolean NessOutside;
+    private boolean Visited=false;
     private Node Father=null;
-    ArrayList<Node> Neighbours;
-    ArrayList<String> RoomsNearby;
+    private ArrayList<Node> Neighbours;
+    private ArrayList<String> RoomsNearby;
 
     public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
         this.id = id;
@@ -25,6 +25,7 @@ public class Node {
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
+
 
     public void setFather(Node Father){
         this.Father=Father;
@@ -59,7 +60,8 @@ public class Node {
     }
 
     public void AddNeighbour(Node Neighbour){
-        Neighbours.add(Neighbour);
+        if(!Neighbours.contains(Neighbour))
+            Neighbours.add(Neighbour);
     }
 
     public void AddNearbyRoom(String Room){
@@ -120,6 +122,22 @@ public class Node {
 
     public void setNessOutside(boolean nessOutside) {
         NessOutside = nessOutside;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return id == node.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     @Override

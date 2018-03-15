@@ -12,7 +12,7 @@ import navigate.inside.Objects.SysData;
 
 public class PathFinder {
     //
-    public static PathFinder instance = null;
+    private static PathFinder instance = null;
     private Queue<Node> queue;
 
     private SysData data;
