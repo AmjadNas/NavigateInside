@@ -1,8 +1,10 @@
 package navigate.inside.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -13,7 +15,9 @@ import java.util.List;
 
 import navigate.inside.Logic.PathFinder;
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.SysData;
 import navigate.inside.R;
+import navigate.inside.Utills.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private String txtSNode, txtGNode;
     private CheckBox chElevator;
     private ListView lView;
+    private SysData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         gNode = (TextView)findViewById(R.id.goal);
         chElevator = (CheckBox)findViewById(R.id.elevator);
         lView = (ListView)findViewById(R.id.nodeList);
+
+        SysData.getInstance();
     }
 
     public void search(View view) {
@@ -49,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
             list.add(n.toString());
 
         lView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list));
+
+        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, PlaceViewActivity.class);
+                intent.putExtra(Constants.INDEX, position);
+                startActivity(intent);
+            }
+        });
 
 
     }

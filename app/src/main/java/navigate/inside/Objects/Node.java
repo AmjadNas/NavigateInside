@@ -2,6 +2,8 @@ package navigate.inside.Objects;
 
 import java.util.ArrayList;
 
+import navigate.inside.Utills.Constants;
+
 public class Node {
 
     private int id;
@@ -15,6 +17,7 @@ public class Node {
     private Node Father=null;
     private ArrayList<Node> Neighbours;
     private ArrayList<String> RoomsNearby;
+    private int direction;
 
     public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
         this.id = id;
@@ -26,6 +29,9 @@ public class Node {
         RoomsNearby = new ArrayList<>();
     }
 
+    public int getDirection() {
+        return direction;
+    }
 
     public void setFather(Node Father){
         this.Father=Father;
@@ -49,10 +55,6 @@ public class Node {
 
     public void setVisited(boolean visited) {
         Visited = visited;
-    }
-
-    public Node GetFather(){
-        return Father;
     }
 
     public void SetFatherNull(){
@@ -145,5 +147,10 @@ public class Node {
         return "Node{" +
                 "id=" + id +
                 '}';
+    }
+
+    public void setDirection(int d) {
+
+        direction = d;
     }
 }

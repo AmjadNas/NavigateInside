@@ -5,6 +5,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import navigate.inside.Utills.Constants;
+
 public class SysData {
     //Its should contain Nodes List
     private static SysData instance = null;
@@ -38,10 +40,12 @@ public class SysData {
     private void InitializeData(){
         //Main Bulding , Floor 600
         Node n6001 = new Node(6001,false,false,"Main","600");
+        n6001.setDirection(Constants.N); // temporary assignment, just for testing
         Node n6002 = new Node(6002,true,false,"Main","600");
         Node n6003 = new Node(6003,false,false,"Main","600");
         Node n6004 = new Node(6004,false,false,"Main","600");
         Node n6005 = new Node(6005,false,false,"Main","600");
+        n6005.setDirection(Constants.S); // temporary assignment, just for testing
         Node n6006 = new Node(6006,false,true,"Main","600");
         Node n6007 = new Node(6007,false,false,"Main","600");
         Node n6008 = new Node(6008,true,false,"Main","600");
@@ -105,6 +109,7 @@ public class SysData {
         Node n60003 = new Node(60003,false,false,"Rabin","6000");
         Node n60004 = new Node(60004,true,false,"Rabin","6000");
         Node n60005 = new Node(60005,false,true,"Rabin","6000");
+
         Node n60006 = new Node(60006,false,false,"Rabin","6000");
         Node n60007 = new Node(60007,true,false,"Rabin","6000");
         Node n60008 = new Node(60008,false,false,"Rabin","6000");

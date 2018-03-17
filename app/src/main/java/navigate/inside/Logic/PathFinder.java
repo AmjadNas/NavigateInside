@@ -13,11 +13,11 @@ import navigate.inside.Objects.SysData;
 public class PathFinder {
     //
     private static PathFinder instance = null;
-    private Queue<Node> queue;
+    private ArrayList<Node> path;
 
     private SysData data;
+
     private PathFinder(){
-        //Constructor
         data = SysData.getInstance();
     }
 
@@ -29,10 +29,12 @@ public class PathFinder {
     }
 
     public ArrayList<Node> FindPath(String SNode,String GNode , boolean ok){
-        ArrayList<Node> path = new ArrayList<>();
+        path = new ArrayList<>();
         Node StartNode = data.getNodeById(SNode);
         Node FinishNode = data.getNodeById(GNode);
         boolean check = true;
+        Queue<Node> queue;
+
         queue = new LinkedList<>();
         queue.add(StartNode);
         StartNode.setVisited(true);
@@ -59,7 +61,7 @@ public class PathFinder {
         path.add(FinishNode);
         while(FinishNode.getFather()!=null){
             path.add(FinishNode.getFather());
-            FinishNode = FinishNode.GetFather();
+            FinishNode = FinishNode.getFather();
         }
         Collections.reverse(path);
 
@@ -75,9 +77,7 @@ public class PathFinder {
         }
     }
 
-
-
-
-
-
+    public ArrayList<Node> getPath() {
+        return path;
+    }
 }
