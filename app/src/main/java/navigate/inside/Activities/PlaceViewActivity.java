@@ -118,15 +118,19 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
         if(diff < 44 && diff > (-44) ){
             direction.setText("Go forward " + diff);
-        }else if( diff <= (-45) && diff >= (-135) ){
+        }else if( diff < (359) && diff > (315) ){
+            direction.setText("Go forward " + diff);
+        }else if( diff < (-45) && diff > (-135) ){
             direction.setText("Go Right " + diff);
-        }else if( diff < (359) && diff > 225 ){
+        }else if( diff < (315) && diff > 225 ){
             direction.setText("Go Right " + diff);
         }else if( diff < (-135) && diff > (-225) ){
             direction.setText("Turn around " + diff);
         }else if( diff < (225) && diff > (135) ){
             direction.setText("Turn around " + diff);
         }else if( diff < (135) && diff > (45) ){
+            direction.setText("Go Left " + diff);
+        }else if( diff < (-225) && diff > (-315) ){
             direction.setText("Go Left " + diff);
         }
     }
