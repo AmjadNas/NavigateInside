@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         sNode = (TextView)findViewById(R.id.start);
         gNode = (TextView)findViewById(R.id.goal);
         chElevator = (CheckBox)findViewById(R.id.elevator);
-        lView = (ListView)findViewById(R.id.nodeList);
 
         SysData.getInstance();
     }
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
         List<Node> nodes = pf.FindPath(txtSNode, txtGNode, b);
-        List<String> list = new ArrayList<>(nodes.size());
+        /*List<String> list = new ArrayList<>(nodes.size());
 
         for(Node n : nodes)
             list.add(n.toString());
@@ -64,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Constants.INDEX, position);
                 startActivity(intent);
             }
-        });
+        });*/
 
+        Intent intent = new Intent(MainActivity.this, PlaceViewActivity.class);
+        intent.putExtra(Constants.INDEX, 0);
+        startActivity(intent);
 
     }
 }

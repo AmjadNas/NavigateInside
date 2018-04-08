@@ -3,7 +3,6 @@ package navigate.inside.Utills;
 
 public final class Constants {
 
-    // this class is una
     private Constants(){}
 
     public static final String INDEX = "index";
