@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
@@ -53,6 +52,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     };
     // scrolling listener for finding current view position
     private SnapHelper snapHelper;
+    private RecyclerView.LayoutManager hLayoutManager;
     private final RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
 
         @Override
@@ -64,7 +64,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             }
         }
     };
-    private RecyclerView.LayoutManager hLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,38 +73,46 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         position = getIntent().getIntExtra(Constants.INDEX, -1);
 
         if (position >= 0){
-            // initialize your android device sensor capabilities
-            mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR );
 
+            initSensor();
             handler = new Handler();
             // bottom sheet init
             sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
             sheetBehavior = BottomSheetBehavior.from(sheetLayout);
 
-            pager = (RecyclerView) findViewById(R.id.path_pages);
-            // list RecyclerView for bottom sheet
-            list = (RecyclerView) findViewById(R.id.pathlist);
-
-            pageAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), true);
-            // list adapter for bottom sheet
-            listAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), false);
-
-            hLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-            pager.setLayoutManager(hLayoutManager);
-
-            list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-
-            list.setAdapter(listAdapter);
-            pager.setAdapter(pageAdapter);
-
-            snapHelper = new LinearSnapHelper(){};
-            snapHelper.attachToRecyclerView(pager);
-            pager.addOnScrollListener(listener);
+            initRecyclerViews();
 
         }else
             finish();
 
+    }
+
+    private void initSensor(){
+        // initialize your android device sensor capabilities
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR );
+    }
+
+    private void initRecyclerViews(){
+        pager = (RecyclerView) findViewById(R.id.path_pages);
+        // list RecyclerView for bottom sheet
+        list = (RecyclerView) findViewById(R.id.pathlist);
+
+        pageAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), true);
+        // list adapter for bottom sheet
+        listAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), false);
+
+        hLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        pager.setLayoutManager(hLayoutManager);
+
+        list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+
+        list.setAdapter(listAdapter);
+        pager.setAdapter(pageAdapter);
+
+        snapHelper = new LinearSnapHelper(){};
+        snapHelper.attachToRecyclerView(pager);
+        pager.addOnScrollListener(listener);
     }
 
     @Override
