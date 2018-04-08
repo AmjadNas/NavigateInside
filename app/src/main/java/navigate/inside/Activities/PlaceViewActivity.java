@@ -9,10 +9,12 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +24,7 @@ import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, RecyclerView.OnItemTouchListener/*, ViewPager.OnPageChangeListener*/ {
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener/*, ViewPager.OnPageChangeListener*/ {
     // layout containers
     private RecyclerView pager,list;
     private PageAdapter pageAdapter,listAdapter;
@@ -39,11 +41,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     // delay handlers
     private boolean flag;
     private Handler handler;
-    // scrolling variable
-    private float lastX;
-
-    //TODO no finished yet, work in progress
-
     private final Runnable processSensors = new Runnable() {
         private final int interval = 1000;
         @Override
@@ -54,7 +51,20 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             handler.postDelayed(this, interval);
         }
     };
-    private int pathLength;
+    // scrolling listener for finding current view position
+    private SnapHelper snapHelper;
+    private final RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                View centerView = snapHelper.findSnapView(hLayoutManager);
+                position = hLayoutManager.getPosition(centerView);
+            }
+        }
+    };
+    private RecyclerView.LayoutManager hLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +83,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
             sheetBehavior = BottomSheetBehavior.from(sheetLayout);
 
-            pathLength = PathFinder.getInstance().getPath().size();
-
             pager = (RecyclerView) findViewById(R.id.path_pages);
             // list RecyclerView for bottom sheet
             list = (RecyclerView) findViewById(R.id.pathlist);
@@ -83,15 +91,17 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             // list adapter for bottom sheet
             listAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), false);
 
-            pager.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            hLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+            pager.setLayoutManager(hLayoutManager);
+
             list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 
-            pager.addOnItemTouchListener(this);
-
             list.setAdapter(listAdapter);
-
             pager.setAdapter(pageAdapter);
-            pager.scrollToPosition(position);
+
+            snapHelper = new LinearSnapHelper(){};
+            snapHelper.attachToRecyclerView(pager);
+            pager.addOnScrollListener(listener);
 
         }else
             finish();
@@ -134,29 +144,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         }
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        switch (e.getAction()){
-
-            case MotionEvent.ACTION_MOVE:
-                if(lastX > e.getX(e.getPointerCount()-1))
-                    position--;
-                else if(lastX < e.getX(e.getPointerCount()-1))
-                    position++;
-
-                position %= pathLength;
-                if (position < 0)
-                    position *= -1;
-
-                Log.i("Scroll", "X = " + e.getX(e.getPointerCount()-1) + " POS = " + position);
-                lastX = e.getX(e.getPointerCount()-1);
-                pager.scrollToPosition(position);
-                return true;
-        }
-
-        return false;
-    }
-
     public void setPage(int page) {
         position = page;
         pager.scrollToPosition(page);
@@ -165,16 +152,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
 }
