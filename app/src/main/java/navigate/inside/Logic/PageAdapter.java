@@ -83,7 +83,7 @@ public class PageAdapter extends RecyclerView.Adapter {
         switch(holder.getItemViewType()){
             case PAGE_ITEMS_VIEW_TYPE:
                 ((PageViewHolder)holder).name.setText(String.valueOf(itemList.get(position).getId()));
-                ((PageViewHolder)holder).direction.setText(Node.getDirection(mAzimuth, itemList.get(position).getDirection()));
+                ((PageViewHolder)holder).direction.setText(getDirection(mAzimuth, itemList.get(position).getDirection()));
                 break;
             case LIST_ITEMS_VIEW_TYPE:
                 ((ListViewHolder)holder).name.setText(String.valueOf(itemList.get(position).getId()));
@@ -107,6 +107,31 @@ public class PageAdapter extends RecyclerView.Adapter {
     public void reBindElementAt(int mAzimuth, int index){
         this.mAzimuth = mAzimuth;
         notifyItemChanged(index);
+    }
+
+    private String getDirection(int mAzimuth, int direction){
+            int diff = mAzimuth - direction;
+            String dir = null;
+
+            if(diff < 44 && diff > (-44) ){
+                dir = mContext.getString(R.string.GoForward) + diff;
+            }else if( diff < (359) && diff > (315) ){
+                dir = mContext.getString(R.string.GoForward) + diff;
+            }else if( diff < (-45) && diff > (-135) ){
+                dir = mContext.getString(R.string.GoRight) + diff;
+            }else if( diff < (315) && diff > 225 ){
+                dir = mContext.getString(R.string.GoRight)+ diff;
+            }else if( diff < (-135) && diff > (-225) ){
+                dir = mContext.getString(R.string.TurnAround) + diff;
+            }else if( diff < (225) && diff > (135) ){
+                dir = mContext.getString(R.string.TurnAround) + diff;
+            }else if( diff < (135) && diff > (45) ){
+                dir = mContext.getString(R.string.GoLeft) + diff;
+            }else if( diff < (-225) && diff > (-315) ){
+                dir = mContext.getString(R.string.GoLeft)+ diff;
+            }
+            return dir;
+
     }
 }
 

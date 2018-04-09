@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Inside</string>
+    <string name="GoForward">Go forward</string>
+    <string name="Showless">Show less</string>
+    <string name="show_path">Show Path</string>
+    <string name="GoRight">Go Right</string>
+    <string name="TurnAround">Turn around</string>
+    <string name="GoLeft">Go Left</string>
+
 </resources>

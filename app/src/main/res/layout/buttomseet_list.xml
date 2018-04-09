@@ -16,10 +16,10 @@
         android:id="@+id/path_show_lbl"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:textSize="30sp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/show_path"
         android:textAlignment="center"
-        android:text="Show Path" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pathlist"

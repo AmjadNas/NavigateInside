@@ -2,6 +2,7 @@ package navigate.inside.Objects;
 
 import java.util.ArrayList;
 
+import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
 public class Node {
@@ -154,26 +155,5 @@ public class Node {
         direction = d;
     }
 
-    public static String getDirection(int mAzimuth, int direction){
-        int diff = mAzimuth - direction;
-        String dir = null;
-        if(diff < 44 && diff > (-44) ){
-            dir = "Go forward " + diff;
-        }else if( diff < (359) && diff > (315) ){
-            dir = "Go forward " + diff;
-        }else if( diff < (-45) && diff > (-135) ){
-            dir = "Go Right " + diff;
-        }else if( diff < (315) && diff > 225 ){
-            dir = "Go Right " + diff;
-        }else if( diff < (-135) && diff > (-225) ){
-            dir = "Turn around " + diff;
-        }else if( diff < (225) && diff > (135) ){
-            dir = "Turn around " + diff;
-        }else if( diff < (135) && diff > (45) ){
-            dir = "Go Left " + diff;
-        }else if( diff < (-225) && diff > (-315) ){
-            dir = "Go Left " + diff;
-        }
-        return dir;
-    }
+
 }

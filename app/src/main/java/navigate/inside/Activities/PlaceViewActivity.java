@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
@@ -23,7 +25,7 @@ import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener/*, ViewPager.OnPageChangeListener*/ {
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener{
     // layout containers
     private RecyclerView pager,list;
     private PageAdapter pageAdapter,listAdapter;
@@ -78,6 +80,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             handler = new Handler();
             // bottom sheet init
             sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
+            TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
+            textView.setOnClickListener(this);
             sheetBehavior = BottomSheetBehavior.from(sheetLayout);
 
             initRecyclerViews();
@@ -156,9 +160,21 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         pager.scrollToPosition(page);
     }
 
+    @Override
+    public void onClick(View v) {
+        if(sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            ((TextView)v).setText(R.string.Showless);
+        }else if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            ((TextView)v).setText(R.string.show_path);
+        }
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+
 }
