@@ -1,5 +1,7 @@
 package navigate.inside.Objects;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 
 import navigate.inside.R;
@@ -16,7 +18,7 @@ public class Node {
     private boolean NessOutside;
     private boolean Visited=false;
     private Node Father=null;
-    private ArrayList<Node> Neighbours;
+    private ArrayList<Pair<Node,Integer>> Neighbours;
     private ArrayList<String> RoomsNearby;
     private int direction;
 
@@ -43,7 +45,11 @@ public class Node {
     }
 
     public ArrayList<Node> getNeighbours() {
-        return Neighbours;
+        ArrayList<Node> node = new ArrayList<>();
+        for(Pair p : Neighbours){
+            node.add((Node) p.first);
+        }
+        return node;
     }
 
     public ArrayList<String> getRoomsNearby() {
@@ -62,7 +68,7 @@ public class Node {
         this.Father=null;
     }
 
-    public void AddNeighbour(Node Neighbour){
+    public void AddNeighbour(Pair<Node,Integer> Neighbour){
         if(!Neighbours.contains(Neighbour))
             Neighbours.add(Neighbour);
     }
