@@ -1,5 +1,7 @@
 package navigate.inside.Objects;
 
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class Node {
     private ArrayList<Pair<Node,Integer>> Neighbours;
     private ArrayList<String> RoomsNearby;
     private int direction;
+    private Bitmap image = null;
 
     public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
         this.id = id;
@@ -32,6 +35,13 @@ public class Node {
         RoomsNearby = new ArrayList<>();
     }
 
+    public Bitmap getImage(){
+        return image;
+    }
+
+    public void setImage(Bitmap image){
+        this.image=image;
+    }
     public int getDirection() {
         return direction;
     }

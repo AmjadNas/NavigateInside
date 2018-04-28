@@ -4,11 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
+import navigate.inside.Utills.Converter;
 
 /**
  * Created by StiPro on 4/9/2018.
@@ -27,7 +29,9 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.Floor + " VARCHAR(25)," +
             Constants.Outside + " BOOLEAN,"+
             Constants.NessOutside + " BOOLEAN,"+
-            Constants.Direction + " INTEGER " +")";
+            Constants.Direction + " INTEGER " +
+            Constants.Image +" BLOB " +
+            ")";
 
     private static final String SQL_CREATE_RELATION_TABLE = "CREATE TABLE " + Constants.Relation +" ("+
             Constants.FirstID + " INTEGER PRIMARY KEY,"+
@@ -64,7 +68,8 @@ public class DataBase extends SQLiteOpenHelper {
                 Constants.Floor,
                 Constants.Outside,
                 Constants.NessOutside,
-                Constants.Direction
+                Constants.Direction,
+                Constants.Image
         };
 
         Cursor r = db.query(Constants.Node,projection,null,null,null,null,null);
@@ -75,9 +80,13 @@ public class DataBase extends SQLiteOpenHelper {
             n.setOutside(Boolean.valueOf(r.getString(5)));
             n.setNessOutside(Boolean.valueOf(r.getString(6)));
             n.setDirection(r.getInt(7));
+            byte[] m = r.getBlob(8);
+            n.setImage(Converter.decodeImage(m));
             nodes.add(n);
 
         }
+        r.close();
+        db.close();
     }
 
     public void getNodesRelation(){

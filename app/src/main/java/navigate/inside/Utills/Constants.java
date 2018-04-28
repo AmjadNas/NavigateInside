@@ -47,5 +47,7 @@ public final class Constants {
 
     public static final String SecondID = "SecondID";
 
+    public static final String Image ="Image";
+
 
 }
