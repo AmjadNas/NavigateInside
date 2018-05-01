@@ -3,6 +3,8 @@ package navigate.inside.Utills;
 
 public final class Constants {
 
+
+
     private Constants(){}
 
     public static final String INDEX = "index";
@@ -24,30 +26,18 @@ public final class Constants {
     public static final int SE = 225;
 
     public static final String Node = "Node";
-
     public static final String ID = "ID";
-
     public static final String Junction = "Junction";
-
     public static final String Elevator = "Elevator";
-
     public static final String Building = "Building";
-
     public static final String Floor ="Floor";
-
     public static final String Outside = "Outside";
-
     public static final String NessOutside = "NessOutside";
-
     public static final String Direction = "Direction";
-
     public static final String Relation = "Relation";
-
     public static final String FirstID = "FirstID";
-
     public static final String SecondID = "SecondID";
-
     public static final String Image ="Image";
-
+    public static final String Range = "range";
 
 }

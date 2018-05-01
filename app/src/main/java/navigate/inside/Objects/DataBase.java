@@ -26,6 +26,7 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.Junction + " BOOLEAN," +
             Constants.Elevator + " BOOLEAN,"+
             Constants.Building + " VARCHAR(25),"+
+            Constants.Range + " TEXT,"+
             Constants.Floor + " VARCHAR(25)," +
             Constants.Outside + " BOOLEAN,"+
             Constants.NessOutside + " BOOLEAN,"+
@@ -69,7 +70,8 @@ public class DataBase extends SQLiteOpenHelper {
                 Constants.Outside,
                 Constants.NessOutside,
                 Constants.Direction,
-                Constants.Image
+                Constants.Image,
+                Constants.Range
         };
 
         Cursor r = db.query(Constants.Node,projection,null,null,null,null,null);
@@ -80,6 +82,7 @@ public class DataBase extends SQLiteOpenHelper {
             n.setOutside(Boolean.valueOf(r.getString(5)));
             n.setNessOutside(Boolean.valueOf(r.getString(6)));
             n.setDirection(r.getInt(7));
+            n.setRoomsRange(r.getString(9));
             byte[] m = r.getBlob(8);
             n.setImage(Converter.decodeImage(m));
             nodes.add(n);

@@ -1,6 +1,8 @@
 package navigate.inside.Objects;
 
 
+import android.util.Pair;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -130,9 +132,10 @@ public class SysData {
         AllNodes.add(n60011);
 
         //Adding Neighbours to Points in main building
-        n6001.AddNeighbour(n6004);
-        n6001.AddNeighbour(n6005);
-
+        new Pair<>(n6004,0);
+        n6001.AddNeighbour(new Pair<>(n6004,0));
+        n6001.AddNeighbour(new Pair<>(n6005,0));
+/*
         n6003.AddNeighbour(n6002);
         n6003.AddNeighbour(n6004);
 
@@ -326,7 +329,7 @@ public class SysData {
         n60011.AddNeighbour(n60005);
         n60011.AddNeighbour(n60006);
         n60011.AddNeighbour(n60007);
-        n60011.AddNeighbour(n60008);
+        n60011.AddNeighbour(n60008);*/
 
         //Connecting Junctions and ELevators
         //Junctions :
@@ -337,14 +340,14 @@ public class SysData {
         n70008.setElevator(true);
         n60005.setElevator(true);
 
-        n70007.AddNeighbour(n60004);
+      /*  n70007.AddNeighbour(n60004);
         n60004.AddNeighbour(n70007);
 
         n70009.AddNeighbour(n60007);
         n60007.AddNeighbour(n70009);
 
         n70008.AddNeighbour(n60005);
-        n60005.AddNeighbour(n70008);
+        n60005.AddNeighbour(n70008);*/
 
     }
 

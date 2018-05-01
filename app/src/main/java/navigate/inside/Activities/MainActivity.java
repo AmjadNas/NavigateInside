@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         chElevator = (CheckBox)findViewById(R.id.elevator);
 
         SysData.getInstance();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
     }
 
     public void search(View view) {

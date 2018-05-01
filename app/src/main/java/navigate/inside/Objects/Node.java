@@ -21,8 +21,8 @@ public class Node {
     private boolean Visited=false;
     private Node Father=null;
     private ArrayList<Pair<Node,Integer>> Neighbours;
-    private ArrayList<String> RoomsNearby;
     private int direction;
+    private String roomsRange;   // must be entered in format x:y (from room x to y)
     private Bitmap image = null;
 
     public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
@@ -32,7 +32,14 @@ public class Node {
         this.Building=Building;
         this.Floor=Floor;
         Neighbours = new ArrayList<>();
-        RoomsNearby = new ArrayList<>();
+    }
+
+    public void setRoomsRange(String roomsRange) {
+        this.roomsRange = roomsRange;
+    }
+
+    public String getRoomsRange() {
+        return roomsRange;
     }
 
     public Bitmap getImage(){
@@ -62,9 +69,6 @@ public class Node {
         return node;
     }
 
-    public ArrayList<String> getRoomsNearby() {
-        return RoomsNearby;
-    }
 
     public boolean isVisited() {
         return Visited;
@@ -83,9 +87,6 @@ public class Node {
             Neighbours.add(Neighbour);
     }
 
-    public void AddNearbyRoom(String Room){
-        RoomsNearby.add(Room);
-    }
 
     public int getId() {
         return id;

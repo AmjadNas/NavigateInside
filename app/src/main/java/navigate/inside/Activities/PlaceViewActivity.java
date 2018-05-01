@@ -19,13 +19,17 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.estimote.coresdk.recognition.packets.Beacon;
+
+import navigate.inside.Logic.BeaconListener;
+import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener{
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener{
     // layout containers
     private RecyclerView pager,list;
     private PageAdapter pageAdapter,listAdapter;
@@ -122,7 +126,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onResume() {
         super.onResume();
-
+        // register beacon listener
+        ((MyApplication)getApplication()).registerListener(this);
         // for the system's orientation sensor registered listeners
         mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
         // register handler
@@ -132,7 +137,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onPause() {
         super.onPause();
-
+        // unregister beacon listeners
+        ((MyApplication)getApplication()).unRegisterListener(this);
         // to stop the listener and save battery
         mSensorManager.unregisterListener(this);
         // unregister handler
@@ -176,5 +182,12 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    /*
+    * triggered when a beacon event happens
+    * */
+    @Override
+    public void onBeaconEvent(Beacon beacon) {
 
+        Log.i("becon", beacon.getProximityUUID().toString());
+    }
 }
