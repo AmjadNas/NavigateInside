@@ -25,7 +25,7 @@ public class MyApplication extends Application {
 
         listeners = new ArrayList<>();
         beaconManager = new BeaconManager(getApplicationContext());
-
+        beaconManager.setBackgroundScanPeriod(500,500);
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {

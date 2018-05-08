@@ -4,20 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import navigate.inside.Logic.PathFinder;
 import navigate.inside.Objects.Node;
-import navigate.inside.Objects.SysData;
+import navigate.inside.Logic.SysData;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 

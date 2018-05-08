@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
+import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.MyApplication;
@@ -82,17 +84,19 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
             initSensor();
             handler = new Handler();
-            // bottom sheet init
-            sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
-            TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
-            textView.setOnClickListener(this);
-            sheetBehavior = BottomSheetBehavior.from(sheetLayout);
-
+            initBottomSheet();
             initRecyclerViews();
 
         }else
             finish();
 
+    }
+
+    private void initBottomSheet() {
+        sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
+        TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
+        textView.setOnClickListener(this);
+        sheetBehavior = BottomSheetBehavior.from(sheetLayout);
     }
 
     private void initSensor(){

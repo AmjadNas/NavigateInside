@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class PageAdapter extends RecyclerView.Adapter {
     private boolean isPage;
     private int mAzimuth;
 
+
     public PageAdapter(Context context, ArrayList<Node> itemlist, boolean isPage)  {
         mContext = context;
         this.isPage = isPage;
@@ -33,26 +36,6 @@ public class PageAdapter extends RecyclerView.Adapter {
         mAzimuth = 0;
     }
 
-
-    public class PageViewHolder extends RecyclerView.ViewHolder {
-        private TextView name, direction;
-
-        public PageViewHolder(View itemView) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.node_name);
-            if (isPage)
-                direction = (TextView) itemView.findViewById(R.id.node_direct);
-        }
-    }
-
-    public class ListViewHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-
-        public ListViewHolder(View itemView) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.node_name);
-        }
-    }
 
     @Override
     public int getItemViewType(int position) {
@@ -78,24 +61,16 @@ public class PageAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         switch(holder.getItemViewType()){
             case PAGE_ITEMS_VIEW_TYPE:
-                ((PageViewHolder)holder).name.setText(String.valueOf(itemList.get(position).getId()));
-                ((PageViewHolder)holder).direction.setText(getDirection(mAzimuth, itemList.get(position).getDirection()));
+                ((PageViewHolder)holder).bind(position);
                 break;
             case LIST_ITEMS_VIEW_TYPE:
-                ((ListViewHolder)holder).name.setText(String.valueOf(itemList.get(position).getId()));
-                ((ListViewHolder)holder).name.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((PlaceViewActivity)mContext).setPage(position);
-                    }
-                });
+                ((ListViewHolder)holder).bind(position);
                 break;
         }
-
 
     }
 
@@ -104,10 +79,93 @@ public class PageAdapter extends RecyclerView.Adapter {
         return itemList.size();
     }
 
+
+  /*  @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if(holder instanceof PageViewHolder)
+            ((PageViewHolder)holder).resumeVR();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if(holder instanceof PageViewHolder)
+            ((PageViewHolder)holder).pauseVR();
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if(holder instanceof PageViewHolder)
+            ((PageViewHolder)holder).shutdounVR();
+    }*/
+
+    public class PageViewHolder extends RecyclerView.ViewHolder {
+        private TextView name, direction;
+        private ImageView image;
+        private CheckBox checkBox;
+       // private VrPanoramaView panoWidgetView;
+
+        public PageViewHolder(View itemView) {
+            super(itemView);
+            name = (TextView) itemView.findViewById(R.id.node_name);
+            direction = (TextView) itemView.findViewById(R.id.node_direct);
+            image =  (ImageView) itemView.findViewById(R.id.place_img_rec);
+            checkBox = (CheckBox) itemView.findViewById(R.id.arrive_check);
+           // panoWidgetView = (VrPanoramaView) itemView.findViewById(R.id.pano_view);
+
+        }
+
+        public void bind(int position) {
+
+            name.setText(String.valueOf(itemList.get(position).getId()));
+            direction.setText(getDirection(mAzimuth, itemList.get(position).getDirection()));
+            if(itemList.get(position).getImage() != null) {
+                image.setImageBitmap(itemList.get(position).getImage());
+                /*VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
+                viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+                panoWidgetView.loadImageFromBitmap(itemList.get(position).getImage(), viewOptions);*/
+            } 
+        }
+       /* public void resumeVR(){
+            panoWidgetView.resumeRendering();
+        }
+        public void pauseVR() {
+            panoWidgetView.pauseRendering();
+        }
+
+        public void shutdounVR() {
+            panoWidgetView.shutdown();
+        }*/
+    }
+
+    public class ListViewHolder extends RecyclerView.ViewHolder {
+        private TextView name;
+
+        public ListViewHolder(View itemView) {
+            super(itemView);
+            name = (TextView) itemView.findViewById(R.id.node_name);
+        }
+
+        public void bind(final int position) {
+
+           name.setText(String.valueOf(itemList.get(position).getId()));
+            name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((PlaceViewActivity)mContext).setPage(position);
+                }
+            });
+        }
+    }
+
+
     public void reBindElementAt(int mAzimuth, int index){
         this.mAzimuth = mAzimuth;
         notifyItemChanged(index);
     }
+
 
     private String getDirection(int mAzimuth, int direction){
             int diff = mAzimuth - direction;

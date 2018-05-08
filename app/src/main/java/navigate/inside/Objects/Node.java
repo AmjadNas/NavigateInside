@@ -12,6 +12,7 @@ import navigate.inside.Utills.Constants;
 public class Node {
 
     private int id;
+    private BeaconID _id; // new id to be used
     private boolean Junction;
     private boolean Elevator;
     private String Building;
@@ -27,11 +28,24 @@ public class Node {
 
     public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
         this.id = id;
-        this.Junction=Junction;
-        this.Elevator=Elevator;
-        this.Building=Building;
-        this.Floor=Floor;
+        this.Junction = Junction;
+        this.Elevator = Elevator;
+        this.Building = Building;
+        this.Floor = Floor;
         Neighbours = new ArrayList<>();
+    }
+
+    public Node(BeaconID _id,boolean Junction,boolean Elevator,String Building,String Floor){
+        this._id = _id;
+        this.Junction = Junction;
+        this.Elevator = Elevator;
+        this.Building = Building;
+        this.Floor = Floor;
+        Neighbours = new ArrayList<>();
+    }
+
+    public BeaconID get_id() {
+        return _id;
     }
 
     public void setRoomsRange(String roomsRange) {
@@ -154,6 +168,24 @@ public class Node {
         return id == node.id;
 
     }
+
+   /* @Override
+    public int hashCode() {
+        return _id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return _id.equals(node._id);
+
+    }*/
+
+
 
     @Override
     public int hashCode() {

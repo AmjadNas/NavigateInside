@@ -6,5 +6,6 @@
     <string name="GoRight">Go Right</string>
     <string name="TurnAround">Turn around</string>
     <string name="GoLeft">Go Left</string>
-
+    <string name="codelab_img_description">Image of a codelab computer</string>
+    <string name="checkbox">Check the box if you arrive to this location</string>
 </resources>

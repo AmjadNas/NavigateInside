@@ -1,14 +1,12 @@
 package navigate.inside.Logic;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import navigate.inside.Objects.Node;
-import navigate.inside.Objects.SysData;
 
 public class PathFinder {
     //
