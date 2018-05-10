@@ -1,15 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/pageLayout">
-
-    <!-- <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>-->
+    tools:context="navigate.inside.Activities.MyLocationFragment">
 
     <TextView
         android:id="@+id/node_name"
@@ -23,7 +16,7 @@
 
 
     <com.google.vr.sdk.widgets.pano.VrPanoramaView
-        android:id="@+id/pano_view"
+        android:id="@+id/frag_vr_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="5dip"
@@ -41,19 +34,8 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="30sp"
-        android:layout_alignTop="@+id/arrive_check"
-        android:layout_alignStart="@+id/pano_view"
-        android:layout_marginStart="13dp" />
-
-    <CheckBox
-        android:id="@+id/arrive_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="162dp"
-        android:text="@string/checkbox"
-        android:layout_marginStart="12dp"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/node_direct" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="167dp" />
 
-
-</RelativeLayout >
+</RelativeLayout>

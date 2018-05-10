@@ -8,4 +8,8 @@
     <string name="GoLeft">Go Left</string>
     <string name="codelab_img_description">Image of a codelab computer</string>
     <string name="checkbox">Check the box if you arrive to this location</string>
+    <string name="no_path_found">Could not find requested path</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

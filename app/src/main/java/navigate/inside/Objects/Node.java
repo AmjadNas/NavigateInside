@@ -20,7 +20,7 @@ public class Node {
     private boolean Outside;
     private boolean NessOutside;
     private boolean Visited=false;
-    private Node Father=null;
+    private Pair<Node,Integer> Father=null;
     private ArrayList<Pair<Node,Integer>> Neighbours;
     private int direction;
     private String roomsRange;   // must be entered in format x:y (from room x to y)
@@ -67,20 +67,17 @@ public class Node {
         return direction;
     }
 
-    public void setFather(Node Father){
+    public void setFather(Pair<Node,Integer> Father){
         this.Father=Father;
     }
 
-    public Node getFather() {
+    public Pair<Node,Integer> getFather() {
         return Father;
     }
 
-    public ArrayList<Node> getNeighbours() {
-        ArrayList<Node> node = new ArrayList<>();
-        for(Pair p : Neighbours){
-            node.add((Node) p.first);
-        }
-        return node;
+    public ArrayList<Pair<Node,Integer>> getNeighbours() {
+
+        return Neighbours;
     }
 
 
@@ -158,18 +155,9 @@ public class Node {
         NessOutside = nessOutside;
     }
 
+
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Node node = (Node) o;
-
-        return id == node.id;
-
-    }
-
-   /* @Override
     public int hashCode() {
         return _id.hashCode();
     }
@@ -183,19 +171,12 @@ public class Node {
 
         return _id.equals(node._id);
 
-    }*/
-
-
-
-    @Override
-    public int hashCode() {
-        return id;
     }
 
     @Override
     public String toString() {
         return "Node{" +
-                "id=" + id +
+                "id=" + _id.getMajor() +
                 '}';
     }
 

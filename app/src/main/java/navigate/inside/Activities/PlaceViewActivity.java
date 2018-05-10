@@ -5,36 +5,37 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.SnapHelper;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
+import java.util.ArrayList;
+
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
+import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
 public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener{
     // layout containers
-    private RecyclerView pager,list;
-    private PageAdapter pageAdapter,listAdapter;
+    private RecyclerView list;
+    private PageAdapter listAdapter;
     // device sensor manager
     private SensorManager mSensorManager;
     private Sensor mSensor;
@@ -58,20 +59,10 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             handler.postDelayed(this, interval);
         }
     };
-    // scrolling listener for finding current view position
-    private SnapHelper snapHelper;
-    private RecyclerView.LayoutManager hLayoutManager;
-    private final RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                View centerView = snapHelper.findSnapView(hLayoutManager);
-                position = hLayoutManager.getPosition(centerView);
-            }
-        }
-    };
+    private ArrayList<Pair<Node,Integer>> itemList;
+    private TextView name, direction;
+    private CheckBox checkBox;
+    private VrPanoramaView panoWidgetView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +72,11 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         position = getIntent().getIntExtra(Constants.INDEX, -1);
 
         if (position >= 0){
-
+            itemList =  PathFinder.getInstance().getPath();
             initSensor();
             handler = new Handler();
+            initView();
+            bindPage();
             initBottomSheet();
             initRecyclerViews();
 
@@ -92,11 +85,42 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    private void initView(){
+        name = (TextView) findViewById(R.id.node_name);
+        direction = (TextView) findViewById(R.id.node_direct);
+        checkBox = (CheckBox) findViewById(R.id.arrive_check);
+        panoWidgetView = (VrPanoramaView) findViewById(R.id.pano_view);
+    }
+
+    private void bindPage(){
+        name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
+        direction.setText(getDirection(mAzimuth, itemList.get(position).second));
+        if(itemList.get(position).first.getImage() != null) {
+            VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
+            viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+            panoWidgetView.loadImageFromBitmap(itemList.get(position).first.getImage(), viewOptions);
+        }
+    }
+
     private void initBottomSheet() {
         sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
-        TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
+        final TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
         textView.setOnClickListener(this);
         sheetBehavior = BottomSheetBehavior.from(sheetLayout);
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING)
+                    textView.setText(R.string.Showless);
+                if(newState == BottomSheetBehavior.STATE_COLLAPSED)
+                    textView.setText(R.string.show_path);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
     }
 
     private void initSensor(){
@@ -106,30 +130,20 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void initRecyclerViews(){
-        pager = (RecyclerView) findViewById(R.id.path_pages);
         // list RecyclerView for bottom sheet
         list = (RecyclerView) findViewById(R.id.pathlist);
 
-        pageAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), true);
         // list adapter for bottom sheet
-        listAdapter = new PageAdapter(this, PathFinder.getInstance().getPath(), false);
-
-        hLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        pager.setLayoutManager(hLayoutManager);
+        listAdapter = new PageAdapter(this, itemList);
 
         list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-
         list.setAdapter(listAdapter);
-        pager.setAdapter(pageAdapter);
-
-        snapHelper = new LinearSnapHelper(){};
-        snapHelper.attachToRecyclerView(pager);
-        pager.addOnScrollListener(listener);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        panoWidgetView.resumeRendering();
         // register beacon listener
         ((MyApplication)getApplication()).registerListener(this);
         // for the system's orientation sensor registered listeners
@@ -141,6 +155,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onPause() {
         super.onPause();
+        panoWidgetView.pauseRendering();
         // unregister beacon listeners
         ((MyApplication)getApplication()).unRegisterListener(this);
         // to stop the listener and save battery
@@ -157,17 +172,43 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 SensorManager.getRotationMatrixFromVector(rMat, event.values);
                 // get the azimuth value (orientation[0]) in degree
                 mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
-                pageAdapter.reBindElementAt(mAzimuth, position);
-
+                direction.setText(getDirection(mAzimuth, itemList.get(position).second));
                 flag = false;
             }
 
         }
     }
 
+    private String getDirection(int mAzimuth, int direction){
+        int diff = mAzimuth - direction;
+        String dir = null;
+
+        if(diff < 44 && diff > (-44) ){
+            dir = getString(R.string.GoForward) + diff;
+        }else if( diff < (359) && diff > (315) ){
+            dir = getString(R.string.GoForward) + diff;
+        }else if( diff < (-45) && diff > (-135) ){
+            dir = getString(R.string.GoRight) + diff;
+        }else if( diff < (315) && diff > 225 ){
+            dir = getString(R.string.GoRight)+ diff;
+        }else if( diff < (-135) && diff > (-225) ){
+            dir = getString(R.string.TurnAround) + diff;
+        }else if( diff < (225) && diff > (135) ){
+            dir = getString(R.string.TurnAround) + diff;
+        }else if( diff < (135) && diff > (45) ){
+            dir = getString(R.string.GoLeft) + diff;
+        }else if( diff < (-225) && diff > (-315) ){
+            dir = getString(R.string.GoLeft)+ diff;
+        }
+        return dir;
+
+    }
+
     public void setPage(int page) {
-        position = page;
-        pager.scrollToPosition(page);
+        if(position != page) {
+            position = page;
+            bindPage();
+        }
     }
 
     @Override
@@ -182,16 +223,26 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+    protected void onDestroy() {
+        super.onDestroy();
+        panoWidgetView.shutdown();
     }
-
     /*
     * triggered when a beacon event happens
     * */
     @Override
     public void onBeaconEvent(Beacon beacon) {
 
-        Log.i("becon", beacon.getProximityUUID().toString());
+      int index = PathFinder.getInstance().getIndexOfNode(new BeaconID(beacon.getProximityUUID(),
+               beacon.getMajor(), beacon.getMinor()));
+        Log.i("onBeaconEvent ", "Called");
+      if(index >= 0) {
+          setPage(index);
+      }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

@@ -1,17 +1,21 @@
 package navigate.inside.Logic;
 
 
+import android.util.Log;
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 
 public class PathFinder {
     //
     private static PathFinder instance = null;
-    private ArrayList<Node> path;
+    private ArrayList< Pair<Node,Integer>> path;
 
     private SysData data;
 
@@ -26,46 +30,51 @@ public class PathFinder {
         return instance;
     }
 
-    public ArrayList<Node> FindPath(String SNode,String GNode , boolean ok){
+    public ArrayList<Pair<Node,Integer>> FindPath(String SNode,String GNode , boolean ok){
         path = new ArrayList<>();
-        Node StartNode = data.getNodeById(SNode);
-        Node FinishNode = data.getNodeById(GNode);
+        Pair<Node,Integer> StartNode = new Pair<>(data.getNodeById(SNode),0);
+        Node FinishNode =  data.getNodeById(GNode);
         boolean check = true;
-        Queue<Node> queue;
+        Queue< Pair<Node,Integer>> queue;
 
         queue = new LinkedList<>();
         queue.add(StartNode);
-        StartNode.setVisited(true);
+        StartNode.first.setVisited(true);
+        Pair<Node,Integer> Father = null;
 
         while(!queue.isEmpty() && check){
 
-            Node Father = queue.remove();
-            if(Father.getId() == FinishNode.getId()){
+            Father = queue.remove();
+            if(Father.first.equals(FinishNode)){
                 check=false;
                 break;
             }
-            for(Node n:Father.getNeighbours()){
-                if(n.isJunction() && ok){
+            for(Pair<Node,Integer> p : Father.first.getNeighbours()){
+                if(p.first.isJunction() && ok){
                     continue;
                 }
-                if(!n.isVisited()){
-                    n.setVisited(true);
-                    n.setFather(Father);
-                    queue.add(n);
+                if(!p.first.isVisited()){
+                    p.first.setVisited(true);
+                    p.first.setFather(Father);
+                    queue.add(p);
                 }
             }
 
         }
-        path.add(FinishNode);
-        while(FinishNode.getFather()!=null){
-            path.add(FinishNode.getFather());
-            FinishNode = FinishNode.getFather();
+        if(Father != null) {
+            path.add(Father);
+            while (Father.first.getFather() != null) {
+                path.add(Father.first.getFather());
+                Father = Father.first.getFather();
+            }
+            Collections.reverse(path);
+            path.remove(0);
+            setFathersNull();
         }
-        Collections.reverse(path);
+        for (Pair<Node,Integer> p : path)
+            Log.i("path", "path " + p.first.get_id().getMajor() + " " + p.second);
 
-        setFathersNull();
-
-         return path;
+        return path;
     }
 
     private void setFathersNull(){
@@ -75,7 +84,16 @@ public class PathFinder {
         }
     }
 
-    public ArrayList<Node> getPath() {
+    public ArrayList<Pair<Node,Integer>> getPath() {
         return path;
+    }
+
+    public int getIndexOfNode(BeaconID id){
+        int index = 0;
+        for (Pair<Node,Integer> p : path){
+            if(p.first.get_id().equals(id))
+                return index;
+        }
+        return -1;
     }
 }

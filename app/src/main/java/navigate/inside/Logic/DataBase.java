@@ -5,9 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.util.Pair;
+
+import com.estimote.mgmtsdk.feature.settings.api.Eddystone;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
+import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
@@ -20,25 +25,26 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = String.valueOf(R.string.app_name);
 
     private static final String SQL_CREATE_NODE_TABLE = "CREATE TABLE "+ Constants.Node + " ("+
-            Constants.ID + " INTEGER PRIMARY KEY,"+
-            Constants.Junction + " BOOLEAN," +
-            Constants.Elevator + " BOOLEAN,"+
-            Constants.Building + " VARCHAR(25),"+
-            Constants.Range + " TEXT,"+
-            Constants.Floor + " VARCHAR(25)," +
-            Constants.Outside + " BOOLEAN,"+
-            Constants.NessOutside + " BOOLEAN,"+
-            Constants.Direction + " INTEGER " +
+            Constants.BEACONID + " VARCHAR(100) PRIMARY KEY, "+   // beaconid with format UID:Major:Minor for
+            Constants.Junction + " BOOLEAN, " +                   // example fadsfasdf-afda-dasffdfd:1555:54654
+            Constants.Elevator + " BOOLEAN, "+
+            Constants.Building + " VARCHAR(25), "+
+            Constants.Range + " TEXT, "+
+            Constants.Floor + " VARCHAR(25), " +
+            Constants.Outside + " BOOLEAN, "+
+            Constants.NessOutside + " BOOLEAN, "+
+            Constants.Direction + " INTEGER, " +
             Constants.Image +" BLOB " +
             ")";
 
     private static final String SQL_CREATE_RELATION_TABLE = "CREATE TABLE " + Constants.Relation +" ("+
-            Constants.FirstID + " INTEGER PRIMARY KEY,"+
-            Constants.SecondID + " INTEGER PRIMARY KEY,"+
-            Constants.Direction + "INTEGER ,"+
-             "CONSTRAINT PK2 PRIMARY KEY (" + Constants.FirstID + "," + Constants.SecondID +")" +
-            " )"
-            ;
+            Constants.FirstID + " VARCHAR(100), "+
+            Constants.SecondID + " VARCHAR(100), "+
+            Constants.Direction + "INTEGER, "+
+            "FOREIGN KEY (" + Constants.FirstID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
+            "FOREIGN KEY (" + Constants.SecondID + ") REFERENCES " + Constants.Node +" (" + Constants.BEACONID + "), " +
+            "CONSTRAINT PK1 PRIMARY KEY (" + Constants.FirstID + "," + Constants.SecondID + ")" +
+            " )";
 
 
     public DataBase(Context context){
@@ -60,7 +66,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         String[] projection = {
-          Constants.ID,
+          Constants.BEACONID,
                 Constants.Junction,
                 Constants.Elevator,
                 Constants.Building,
@@ -73,25 +79,66 @@ public class DataBase extends SQLiteOpenHelper {
         };
 
         Cursor r = db.query(Constants.Node,projection,null,null,null,null,null);
-
+        String[] beaconID;
+        BeaconID Id;
+        int major, minor;
         while(r.moveToNext()){
+            beaconID = r.getString(0).split(":");
+            major = Integer.parseInt(beaconID[1]);
+            minor = Integer.parseInt(beaconID[2]);
 
-        Node n = new Node(r.getInt(0),Boolean.valueOf(r.getString(1)),Boolean.valueOf(r.getString(2)),r.getString(3),r.getString(4));
+            Id = new BeaconID(UUID.fromString(beaconID[0]), major, minor);
+
+            Node n = new Node(Id,Boolean.valueOf(r.getString(1)),Boolean.valueOf(r.getString(2)),r.getString(3),r.getString(4));
             n.setOutside(Boolean.valueOf(r.getString(5)));
             n.setNessOutside(Boolean.valueOf(r.getString(6)));
             n.setDirection(r.getInt(7));
             n.setRoomsRange(r.getString(9));
-            byte[] m = r.getBlob(8);
-            n.setImage(Converter.decodeImage(m));
+
+            if(!r.isNull(8)){
+                byte[] m = r.getBlob(8);
+                n.setImage(Converter.decodeImage(m));
+            }
             nodes.add(n);
 
         }
         r.close();
         db.close();
+
+        getNodesRelation(nodes);
     }
 
-    public void getNodesRelation(){
+    public void getNodesRelation(ArrayList<Node> nodes){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = { Constants.SecondID };
 
+        Cursor r = null;
+        String[] beaconID;
+        BeaconID Id;
+        int major, minor;
+        int dir;
+
+        for(Node n : nodes) {
+            r = db.query(Constants.Node, projection, Constants.FirstID + " = ?", new String[]{n.get_id().toString()}, null, null, null);
+            while (r.moveToNext()) {
+                beaconID = r.getString(0).split(":");
+                major = Integer.parseInt(beaconID[1]);
+                minor = Integer.parseInt(beaconID[2]);
+                Id = new BeaconID(UUID.fromString(beaconID[0]), major, minor);
+
+                for (Node nb : nodes)
+                    if (nb.get_id().equals(Id) && !nb.equals(n)) {
+                        dir = (r.getInt(2) + 180) % 360;
+                        n.AddNeighbour(new Pair<Node, Integer>(nb, r.getInt(2)));
+                        nb.AddNeighbour(new Pair<Node, Integer>(n, dir));
+                        break;
+                    }
+            }
+        }
+
+        if (r != null)
+            r.close();
+        db.close();
     }
 
 }

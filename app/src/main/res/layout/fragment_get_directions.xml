@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Start node"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Goal node"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <CheckBox
+            android:id="@+id/elevator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="go through elevator" />
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

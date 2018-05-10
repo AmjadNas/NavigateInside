@@ -27,6 +27,10 @@ public final class Constants {
 
     public static final String Node = "Node";
     public static final String ID = "ID";
+    public static final String UID = "UID";
+    public static final String MAJOR = "Major";
+    public static final String MINOR = "Minor";
+    public static final String BEACONID = "BeaconID";
     public static final String Junction = "Junction";
     public static final String Elevator = "Elevator";
     public static final String Building = "Building";

@@ -4,7 +4,9 @@ package navigate.inside.Logic;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
+import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.Utills.Constants;
 
@@ -31,7 +33,7 @@ public class SysData {
 
     public Node getNodeById(String ID){
         for(Node n : AllNodes){
-            if(Integer.parseInt(ID) == n.getId()){
+            if(Integer.parseInt(ID) == n.get_id().getMajor()){
                 return n;
             }
         }
@@ -40,23 +42,22 @@ public class SysData {
 
     private void InitializeData(){
         //Main Bulding , Floor 600
-        Node n6001 = new Node(6001,false,false,"Main","600");
-        n6001.setDirection(Constants.N); // temporary assignment, just for testing
-        Node n6002 = new Node(6002,true,false,"Main","600");
-        Node n6003 = new Node(6003,false,false,"Main","600");
-        Node n6004 = new Node(6004,false,false,"Main","600");
-        Node n6005 = new Node(6005,false,false,"Main","600");
-        n6005.setDirection(Constants.S); // temporary assignment, just for testing
-        Node n6006 = new Node(6006,false,true,"Main","600");
-        Node n6007 = new Node(6007,false,false,"Main","600");
-        Node n6008 = new Node(6008,true,false,"Main","600");
-        Node n6009 = new Node(6009,true,false,"Main","600");
-        Node n6010 = new Node(6010,false,false,"Main","600");
-        Node n6011 = new Node(6011,false,false,"Main","600");
-        Node n6012 = new Node(6012,false,false,"Main","600");
-        Node n6013 = new Node(6013,false,false,"Main","600");
-        Node n6014 = new Node(6014,false,false,"Main","600");
-        Node n6015 = new Node(6015,false,false,"Main","600");
+
+        Node n6001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6001,6001),false,false,"Main","600");
+        Node n6002 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6002,6002),true,false,"Main","600");
+        Node n6003 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6003,6003),false,false,"Main","600");
+        Node n6004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),886,1307),false,false,"Main","600");
+        Node n6005 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6005,6005)  ,false,false,"Main","600");
+        Node n6006 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6006,6006) ,false,true,"Main","600");
+        Node n6007 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6007,6007) ,false,false,"Main","600");
+        Node n6008 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6008,6008) ,true,false,"Main","600");
+        Node n6009 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6009,6009) ,true,false,"Main","600");
+        Node n6010 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6010,6010) ,false,false,"Main","600");
+        Node n6011 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6011,6011) ,false,false,"Main","600");
+        Node n6012 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6012,6012) ,false,false,"Main","600");
+        Node n6013 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6013,6013) ,false,false,"Main","600");
+        Node n6014 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6014,6014) ,false,false,"Main","600");
+        Node n6015 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6015,6015) ,false,false,"Main","600");
 
         AllNodes.add(n6001);
         AllNodes.add(n6002);
@@ -76,19 +77,19 @@ public class SysData {
 
 
         //Rabin Bulding , Floor 7000
-        Node n70001 = new Node(70001,false,false,"Rabin","7000");
-        Node n70002 = new Node(70002,false,false,"Rabin","7000");
-        Node n70003 = new Node(70003,false,false,"Rabin","7000");
-        Node n70004 = new Node(70004,false,false,"Rabin","7000");
-        Node n70005 = new Node(70005,false,false,"Rabin","7000");
-        Node n70006 = new Node(70006,false,false,"Rabin","7000");
-        Node n70007 = new Node(70007,true,false,"Rabin","7000");
-        Node n70008 = new Node(70008,false,true,"Rabin","7000");
-        Node n70009 = new Node(70009,true,false,"Rabin","7000");
-        Node n70010 = new Node(70010,false,false,"Rabin","7000");
-        Node n70011 = new Node(70011,false,false,"Rabin","7000");
-        Node n70012 = new Node(70012,false,false,"Rabin","7000");
-        Node n70013 = new Node(70013,false,true,"Rabin","7000");
+        Node n70001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70001,70001) ,false,false,"Rabin","7000");
+        Node n70002 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70002,70002) ,false,false,"Rabin","7000");
+        Node n70003 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70003,70003) ,false,false,"Rabin","7000");
+        Node n70004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70004,70004) ,false,false,"Rabin","7000");
+        Node n70005 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70005,70005) ,false,false,"Rabin","7000");
+        Node n70006 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70006,70006) ,false,false,"Rabin","7000");
+        Node n70007 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70007,70007) ,true,false,"Rabin","7000");
+        Node n70008 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70008,70008) ,false,true,"Rabin","7000");
+        Node n70009 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70009,70009) ,true,false,"Rabin","7000");
+        Node n70010 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70010,70010) ,false,false,"Rabin","7000");
+        Node n70011 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70011,70011) ,false,false,"Rabin","7000");
+        Node n70012 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70012,70012) ,false,false,"Rabin","7000");
+        Node n70013 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),70013,70013) ,false,true,"Rabin","7000");
         AllNodes.add(n70001);
         AllNodes.add(n70002);
         AllNodes.add(n70003);
@@ -105,18 +106,18 @@ public class SysData {
 
 
         //Rabin Building , Floor 6000
-        Node n60001 = new Node(60001,false,false,"Rabin","6000");
-        Node n60002 = new Node(60002,false,false,"Rabin","6000");
-        Node n60003 = new Node(60003,false,false,"Rabin","6000");
-        Node n60004 = new Node(60004,true,false,"Rabin","6000");
-        Node n60005 = new Node(60005,false,true,"Rabin","6000");
+        Node n60001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60001,60001) ,false,false,"Rabin","6000");
+        Node n60002 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60002,60002) ,false,false,"Rabin","6000");
+        Node n60003 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60003,60003) ,false,false,"Rabin","6000");
+        Node n60004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60004,60004) ,true,false,"Rabin","6000");
+        Node n60005 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60005,60005) ,false,true,"Rabin","6000");
 
-        Node n60006 = new Node(60006,false,false,"Rabin","6000");
-        Node n60007 = new Node(60007,true,false,"Rabin","6000");
-        Node n60008 = new Node(60008,false,false,"Rabin","6000");
-        Node n60009 = new Node(60009,false,false,"Rabin","6000");
-        Node n60010 = new Node(60010,false,false,"Rabin","6000");
-        Node n60011 = new Node(60011,false,true,"Rabin","6000");
+        Node n60006 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60006,60006) ,false,false,"Rabin","6000");
+        Node n60007 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60007,60007) ,true,false,"Rabin","6000");
+        Node n60008 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60008,60008) ,false,false,"Rabin","6000");
+        Node n60009 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60009,60009) ,false,false,"Rabin","6000");
+        Node n60010 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60010,60010) ,false,false,"Rabin","6000");
+        Node n60011 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),60011,60011) ,false,true,"Rabin","6000");
 
         AllNodes.add(n60001);
         AllNodes.add(n60002);
@@ -131,74 +132,73 @@ public class SysData {
         AllNodes.add(n60011);
 
         //Adding Neighbours to Points in main building
-        new Pair<>(n6004,0);
-        n6001.AddNeighbour(new Pair<>(n6004,0));
-        n6001.AddNeighbour(new Pair<>(n6005,0));
-/*
-        n6003.AddNeighbour(n6002);
-        n6003.AddNeighbour(n6004);
+        n6001.AddNeighbour(new Pair<>(n6004,180));
+        n6001.AddNeighbour(new Pair<>(n6005,180));
 
-        n6004.AddNeighbour(n6001);
-        n6004.AddNeighbour(n6003);
-        n6004.AddNeighbour(n6005);
+        n6003.AddNeighbour(new Pair<>(n6002,0));
+        n6003.AddNeighbour(new Pair<>(n6004,0));
 
-        n6005.AddNeighbour(n6004);
-        n6005.AddNeighbour(n6006);
-        n6005.AddNeighbour(n6007);
+        n6004.AddNeighbour(new Pair<>(n6001,0));
+        n6004.AddNeighbour(new Pair<>(n6003,0));
+        n6004.AddNeighbour(new Pair<>(n6005,180));
 
-        n6006.AddNeighbour(n6005);
-        n6006.AddNeighbour(n6007);
+        n6005.AddNeighbour(new Pair<>(n6004,0));
+        n6005.AddNeighbour(new Pair<>(n6006,0));
+        n6005.AddNeighbour(new Pair<>(n6007,0));
 
-        n6007.AddNeighbour(n6005);
-        n6007.AddNeighbour(n6006);
-        n6007.AddNeighbour(n6008);
+        n6006.AddNeighbour(new Pair<>(n6005,0));
+        n6006.AddNeighbour(new Pair<>(n6007,0));
 
-        n6008.AddNeighbour(n6007);
-        n6008.AddNeighbour(n6009);
-        n6008.AddNeighbour(n6013);
+        n6007.AddNeighbour(new Pair<>(n6005,0));
+        n6007.AddNeighbour(new Pair<>(n6006,0));
+        n6007.AddNeighbour(new Pair<>(n6008,0));
 
-        n6009.AddNeighbour(n6008);
-        n6009.AddNeighbour(n6010);
-        n6009.AddNeighbour(n6011);
-        n6009.AddNeighbour(n6013);
+        n6008.AddNeighbour(new Pair<>(n6007,0));
+        n6008.AddNeighbour(new Pair<>(n6009,0));
+        n6008.AddNeighbour(new Pair<>(n6013,0));
 
-        n6010.AddNeighbour(n6009);
-        n6010.AddNeighbour(n6011);
-        n6010.AddNeighbour(n6012);
+        n6009.AddNeighbour(new Pair<>(n6008,0));
+        n6009.AddNeighbour(new Pair<>(n6010,0));
+        n6009.AddNeighbour(new Pair<>(n6011,0));
+        n6009.AddNeighbour(new Pair<>(n6013,0));
 
-        n6011.AddNeighbour(n6009);
-        n6011.AddNeighbour(n6010);
-        n6011.AddNeighbour(n6014);
+        n6010.AddNeighbour(new Pair<>(n6009,0));
+        n6010.AddNeighbour(new Pair<>(n6011,0));
+        n6010.AddNeighbour(new Pair<>(n6012,0));
 
-        n6012.AddNeighbour(n6010);
-        n6012.AddNeighbour(n6013);
-        n6012.AddNeighbour(n6014);
+        n6011.AddNeighbour(new Pair<>(n6009,0));
+        n6011.AddNeighbour(new Pair<>(n6010,0));
+        n6011.AddNeighbour(new Pair<>(n6014,0));
 
-        n6013.AddNeighbour(n6008);
-        n6013.AddNeighbour(n6009);
-        n6013.AddNeighbour(n6012);
-        n6013.AddNeighbour(n6014);
-        n6013.AddNeighbour(n6015);
+        n6012.AddNeighbour(new Pair<>(n6010,0));
+        n6012.AddNeighbour(new Pair<>(n6013,0));
+        n6012.AddNeighbour(new Pair<>(n6014,0));
+
+        n6013.AddNeighbour(new Pair<>(n6008,0));
+        n6013.AddNeighbour(new Pair<>(n6009,0));
+        n6013.AddNeighbour(new Pair<>(n6012,0));
+        n6013.AddNeighbour(new Pair<>(n6014,0));
+        n6013.AddNeighbour(new Pair<>(n6015,0));
 
         //Adding Neighbours to Points in Rabin building , floor 7000
-        n70001.AddNeighbour(n70002);
-        n70001.AddNeighbour(n70003);
-        n70001.AddNeighbour(n70007);
-        n70001.AddNeighbour(n70008);
-        n70001.AddNeighbour(n70009);
-        n70001.AddNeighbour(n70010);
-        n70001.AddNeighbour(n70013);
+        n70001.AddNeighbour(new Pair<>(n70002,0));
+        n70001.AddNeighbour(new Pair<>(n70003,0));
+        n70001.AddNeighbour(new Pair<>(n70007,0));
+        n70001.AddNeighbour(new Pair<>(n70008,0));
+        n70001.AddNeighbour(new Pair<>(n70009,0));
+        n70001.AddNeighbour(new Pair<>(n70010,0));
 
-        n70002.AddNeighbour(n70001);
-        n70002.AddNeighbour(n70004);
-        n70002.AddNeighbour(n70006);
-        n70002.AddNeighbour(n70003);
-        n70002.AddNeighbour(n70007);
-        n70002.AddNeighbour(n70008);
-        n70002.AddNeighbour(n70009);
-        n70002.AddNeighbour(n70010);
-        n70002.AddNeighbour(n70013);
-
+        n70002.AddNeighbour(new Pair<>(n70001,0));
+        n70002.AddNeighbour(new Pair<>(n70004,0));
+        n70002.AddNeighbour(new Pair<>(n70006,0));
+        n70002.AddNeighbour(new Pair<>(n70003,0));
+        n70002.AddNeighbour(new Pair<>(n70007,0));
+        n70002.AddNeighbour(new Pair<>(n70008,0));
+        n70002.AddNeighbour(new Pair<>(n70009,0));
+        n70002.AddNeighbour(new Pair<>(n70010,0));
+        n70002.AddNeighbour(new Pair<>(n70013,0));
+        n70001.AddNeighbour(new Pair<>(n70013,0));
+/*
         n70003.AddNeighbour(n70001);
         n70003.AddNeighbour(n70002);
         n70003.AddNeighbour(n70007);
@@ -351,5 +351,12 @@ public class SysData {
     }
 
 
+    public Node getNodeByBeaconID(BeaconID bid) {
+        for (Node node : AllNodes)
+            if (bid.equals(node.get_id()))
+                return node;
 
+        return null;
+
+    }
 }

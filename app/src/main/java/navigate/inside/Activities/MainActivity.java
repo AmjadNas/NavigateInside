@@ -1,41 +1,39 @@
 package navigate.inside.Activities;
 
-import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+
 
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 
-import java.util.List;
-
-import navigate.inside.Logic.PathFinder;
-import navigate.inside.Objects.Node;
+import navigate.inside.Logic.FragmentAdapter;
+import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.R;
-import navigate.inside.Utills.Constants;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
-    private TextView sNode, gNode;
-    private String txtSNode, txtGNode;
-    private CheckBox chElevator;
-    private ListView lView;
-    private SysData data;
+    private ViewPager viewPager;
+    private FragmentAdapter fpa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        sNode = (TextView)findViewById(R.id.start);
-        gNode = (TextView)findViewById(R.id.goal);
-        chElevator = (CheckBox)findViewById(R.id.elevator);
-
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TabLayout tabLayout = (TabLayout)findViewById(R.id.tags);
         SysData.getInstance();
+
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        fpa = new FragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(fpa);
+        viewPager.addOnPageChangeListener(this);
+        tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override
@@ -44,35 +42,21 @@ public class MainActivity extends AppCompatActivity {
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
     }
 
-    public void search(View view) {
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (position == 0)
+            ((MyApplication)getApplication()).unRegisterListener((MyLocationFragment)fpa.getItem(position+1));
+        else if (position == 1)
+            ((MyApplication)getApplication()).registerListener((MyLocationFragment)fpa.getItem(position));
+    }
 
-        txtSNode = sNode.getText().toString();
-        txtGNode = gNode.getText().toString();
+    @Override
+    public void onPageSelected(int position) {
 
-        PathFinder pf = PathFinder.getInstance();
-        boolean b = chElevator.isChecked();
+    }
 
-        // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
-        List<Node> nodes = pf.FindPath(txtSNode, txtGNode, b);
-        /*List<String> list = new ArrayList<>(nodes.size());
-
-        for(Node n : nodes)
-            list.add(n.toString());
-
-        lView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list));
-
-        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, PlaceViewActivity.class);
-                intent.putExtra(Constants.INDEX, position);
-                startActivity(intent);
-            }
-        });*/
-
-        Intent intent = new Intent(MainActivity.this, PlaceViewActivity.class);
-        intent.putExtra(Constants.INDEX, 0);
-        startActivity(intent);
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
     }
 }
