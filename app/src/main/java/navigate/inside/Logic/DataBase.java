@@ -41,6 +41,7 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.FirstID + " VARCHAR(100), "+
             Constants.SecondID + " VARCHAR(100), "+
             Constants.Direction + "INTEGER, "+
+            Constants.DIRECT + "BOOLEAN, "+
             "FOREIGN KEY (" + Constants.FirstID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
             "FOREIGN KEY (" + Constants.SecondID + ") REFERENCES " + Constants.Node +" (" + Constants.BEACONID + "), " +
             "CONSTRAINT PK1 PRIMARY KEY (" + Constants.FirstID + "," + Constants.SecondID + ")" +
@@ -129,8 +130,12 @@ public class DataBase extends SQLiteOpenHelper {
                 for (Node nb : nodes)
                     if (nb.get_id().equals(Id) && !nb.equals(n)) {
                         dir = (r.getInt(2) + 180) % 360;
+                        if(r.getInt(3) == 1)
+                            nb.AddNeighbour(new Pair<Node, Integer>(n, dir));
+                        else
+                            nb.AddNeighbour(new Pair<Node, Integer>(n, nb.getDirection()));
                         n.AddNeighbour(new Pair<Node, Integer>(nb, r.getInt(2)));
-                        nb.AddNeighbour(new Pair<Node, Integer>(n, dir));
+
                         break;
                     }
             }
