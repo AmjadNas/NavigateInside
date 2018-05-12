@@ -96,10 +96,6 @@ public class DataBase extends SQLiteOpenHelper {
             n.setDirection(r.getInt(7));
             n.setRoomsRange(r.getString(9));
 
-            if(!r.isNull(8)){
-                byte[] m = r.getBlob(8);
-                n.setImage(Converter.decodeImage(m));
-            }
             nodes.add(n);
 
         }
@@ -139,10 +135,8 @@ public class DataBase extends SQLiteOpenHelper {
                         break;
                     }
             }
-        }
-
-        if (r != null)
             r.close();
+        }
         db.close();
     }
 
