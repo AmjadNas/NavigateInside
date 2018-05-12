@@ -5,6 +5,7 @@ public final class Constants {
 
 
 
+
     private Constants(){}
 
     public static final String INDEX = "index";
@@ -25,6 +26,7 @@ public final class Constants {
     //SOUTH-EAST
     public static final int SE = 225;
 
+    public static final String DIRECT = "IsDirect";
     public static final String Node = "Node";
     public static final String ID = "ID";
     public static final String UID = "UID";
