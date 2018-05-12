@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tags);
-        SysData.getInstance();
+
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         fpa = new FragmentAdapter(getSupportFragmentManager());
@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onResume() {
         super.onResume();
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //SysData.getInstance().closeDatabase();
     }
 
     @Override

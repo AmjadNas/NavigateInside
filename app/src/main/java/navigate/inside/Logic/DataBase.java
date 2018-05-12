@@ -140,4 +140,24 @@ public class DataBase extends SQLiteOpenHelper {
         db.close();
     }
 
+    public Bitmap getNodeImage(String s) {
+        if(s != null){
+            SQLiteDatabase sq = getReadableDatabase();
+            Cursor c = sq.query(Constants.Node, new String[]{Constants.Image}, Constants.BEACONID + " = ?", new String[]{s}, null, null, null);
+            byte[] arr;
+            Bitmap btm = null;
+
+            while (c.moveToNext()){
+                if (!c.isNull(0)) {
+                    arr = c.getBlob(0);
+                    btm = Converter.decodeImage(arr);
+                }
+            }
+
+            c.close();
+            sq.close();
+            return btm;
+        }
+        return null;
+    }
 }

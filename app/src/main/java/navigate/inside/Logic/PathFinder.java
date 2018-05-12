@@ -1,6 +1,7 @@
 package navigate.inside.Logic;
 
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
 
@@ -32,48 +33,48 @@ public class PathFinder {
 
     public ArrayList<Pair<Node,Integer>> FindPath(String SNode,String GNode , boolean ok){
         path = new ArrayList<>();
-        Pair<Node,Integer> StartNode = new Pair<>(data.getNodeById(SNode),0);
+        Node first = data.getNodeById(SNode);
         Node FinishNode =  data.getNodeById(GNode);
-        boolean check = true;
-        Queue< Pair<Node,Integer>> queue;
 
-        queue = new LinkedList<>();
-        queue.add(StartNode);
-        StartNode.first.setVisited(true);
-        Pair<Node,Integer> Father = null;
+        if(first != null && FinishNode != null) {
+            Pair<Node, Integer> StartNode = new Pair<>(first, 0);
+            boolean check = true;
+            Queue<Pair<Node, Integer>> queue;
 
-        while(!queue.isEmpty() && check){
+            queue = new LinkedList<>();
+            queue.add(StartNode);
+            StartNode.first.setVisited(true);
+            Pair<Node, Integer> Father = null;
 
-            Father = queue.remove();
-            if(Father.first.equals(FinishNode)){
-                check=false;
-                break;
-            }
-            for(Pair<Node,Integer> p : Father.first.getNeighbours()){
-                if(p.first.isJunction() && ok){
-                    continue;
+            while (!queue.isEmpty() && check) {
+
+                Father = queue.remove();
+                if (Father.first.equals(FinishNode)) {
+                    check = false;
+                    break;
                 }
-                if(!p.first.isVisited()){
-                    p.first.setVisited(true);
-                    p.first.setFather(Father);
-                    queue.add(p);
+                for (Pair<Node, Integer> p : Father.first.getNeighbours()) {
+                    if (p.first.isJunction() && ok) {
+                        continue;
+                    }
+                    if (!p.first.isVisited()) {
+                        p.first.setVisited(true);
+                        p.first.setFather(Father);
+                        queue.add(p);
+                    }
                 }
             }
-
-        }
-        if(Father != null) {
-            path.add(Father);
-            while (Father.first.getFather() != null) {
-                path.add(Father.first.getFather());
-                Father = Father.first.getFather();
+            if (Father != null) {
+                path.add(Father);
+                while (Father.first.getFather() != null) {
+                    path.add(Father.first.getFather());
+                    Father = Father.first.getFather();
+                }
+                Collections.reverse(path);
+                path.remove(0);
+                setFathersNull();
             }
-            Collections.reverse(path);
-            path.remove(0);
-            setFathersNull();
         }
-        for (Pair<Node,Integer> p : path)
-            Log.i("path", "path " + p.first.get_id().getMajor() + " " + p.second);
-
         return path;
     }
 
@@ -95,5 +96,10 @@ public class PathFinder {
                 return index;
         }
         return -1;
+    }
+
+    public Bitmap getImage(int position) {
+        data.getImageForNode(path.get(position).first.get_id());
+        return null;
     }
 }

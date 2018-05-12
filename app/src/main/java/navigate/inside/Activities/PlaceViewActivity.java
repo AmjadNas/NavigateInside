@@ -1,5 +1,6 @@
 package navigate.inside.Activities;
 
+import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,9 +18,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -27,12 +31,14 @@ import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
+import navigate.inside.Network.NetworkResListener;
+import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener{
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener, NetworkResListener{
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -95,10 +101,14 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     private void bindPage(){
         name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
+        /*Bitmap image = PathFinder.getInstance().getImage(position);
+        if (image == null){
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
+        }else{
+            loadImageto3D(image);
+        }*/
         if(itemList.get(position).first.getImage() != null) {
-            VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
-            viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
-            panoWidgetView.loadImageFromBitmap(itemList.get(position).first.getImage(), viewOptions);
+            loadImageto3D(itemList.get(position).first.getImage());
         }
     }
 
@@ -211,14 +221,22 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         }
     }
 
+    private void loadImageto3D(Bitmap res) {
+        VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
+        viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+        panoWidgetView.loadImageFromBitmap(res, viewOptions);
+    }
+
     @Override
     public void onClick(View v) {
-        if(sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            ((TextView)v).setText(R.string.Showless);
-        }else if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            ((TextView)v).setText(R.string.show_path);
+        if(v instanceof TextView) {
+            if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                ((TextView) v).setText(R.string.Showless);
+            } else if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                ((TextView) v).setText(R.string.show_path);
+            }
         }
     }
 
@@ -245,4 +263,27 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    @Override
+    public void onPreUpdate(String str) {
+
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, ResStatus status) {
+
+    }
+
+    @Override
+    public void onPostUpdate(Bitmap res, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+               loadImageto3D(res);
+            }
+
+        }else
+            Toast.makeText(this,"Couldn't load Image", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

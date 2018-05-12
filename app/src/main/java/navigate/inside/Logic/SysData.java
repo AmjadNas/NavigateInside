@@ -1,11 +1,14 @@
 package navigate.inside.Logic;
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.Utills.Constants;
@@ -14,12 +17,13 @@ public class SysData {
     //Its should contain Nodes List
     private static SysData instance = null;
     private ArrayList<Node> AllNodes;
-
+    private DataBase db;
 
     private SysData(){
         AllNodes = new ArrayList<>();
         InitializeData();
     }
+
     public static SysData getInstance(){
         if(instance == null){
             instance = new SysData();
@@ -40,7 +44,31 @@ public class SysData {
         return null;
     }
 
-    private void InitializeData(){
+    public void initDatBase(Context context){
+        db = new DataBase(context);
+    }
+
+    public void closeDatabase(){
+        if(db != null)
+            db.close();
+    }
+
+    public Node getNodeByBeaconID(BeaconID bid) {
+        for (Node node : AllNodes)
+            if (bid.equals(node.get_id()))
+                return node;
+
+        return null;
+
+    }
+
+    public Bitmap getImageForNode(BeaconID id) {
+        Bitmap img = db.getNodeImage(id.toString());
+
+        return img;
+    }
+
+    public void InitializeData(){
         //Main Bulding , Floor 600
 
         Node n6001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6001,6001),false,false,"Main","600");
@@ -350,13 +378,4 @@ public class SysData {
 
     }
 
-
-    public Node getNodeByBeaconID(BeaconID bid) {
-        for (Node node : AllNodes)
-            if (bid.equals(node.get_id()))
-                return node;
-
-        return null;
-
-    }
 }
