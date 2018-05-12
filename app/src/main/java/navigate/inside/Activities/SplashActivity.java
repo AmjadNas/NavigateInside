@@ -39,6 +39,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                     .apply();
         }else{
             SysData.getInstance().InitializeData();
+            launchActivity();
             finish();
         }
     }
@@ -55,11 +56,15 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
             Toast.makeText(this, "couldn't initialize app.", Toast.LENGTH_SHORT).show();*/
        // else if (!firstInit && status == ResStatus.FAIL){
             SysData.getInstance().InitializeData();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            launchActivity();
         //}
 
         finish();
+    }
+
+    private void launchActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override

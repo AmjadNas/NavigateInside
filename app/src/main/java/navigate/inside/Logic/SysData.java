@@ -21,7 +21,7 @@ public class SysData {
 
     private SysData(){
         AllNodes = new ArrayList<>();
-        InitializeData();
+        //InitializeData();
     }
 
     public static SysData getInstance(){

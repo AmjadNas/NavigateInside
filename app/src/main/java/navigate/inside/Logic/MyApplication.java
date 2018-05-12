@@ -15,7 +15,7 @@ public class MyApplication extends Application {
 
     private BeaconManager beaconManager;
     private List<BeaconListener> listeners;
-
+    private BeaconRegion region;
 
     @Override
     public void onCreate() {
@@ -44,7 +44,7 @@ public class MyApplication extends Application {
             @Override
             public void onExitedRegion(BeaconRegion region) {
                 // could add an "exit" notification too if you want (-:
-
+                beaconManager.stopMonitoring(region.getIdentifier());
                 Log.i("exit becon", region.getProximityUUID().toString());
             }
         });
@@ -52,15 +52,21 @@ public class MyApplication extends Application {
     }
 
     public void registerListener(BeaconListener listener){
-        //if (!listeners.contains(listener)){
+        if (!listeners.contains(listener)){
         Log.i("event ", "I received it");
             listeners.add(listener);
-        //}
+        }
     }
 
     public void unRegisterListener(BeaconListener listener){
 
         listeners.remove(listener);
 
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        beaconManager.disconnect();
     }
 }
