@@ -1,18 +1,24 @@
 package navigate.inside.Activities;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
+import org.json.JSONObject;
+
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.SysData;
+import navigate.inside.Network.NetworkResListener;
+import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
@@ -22,7 +28,7 @@ import navigate.inside.R;
  * Use the {@link MyLocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyLocationFragment extends Fragment implements BeaconListener{
+public class MyLocationFragment extends Fragment implements BeaconListener, NetworkResListener{
     private TextView name, direction;
     private VrPanoramaView panoWidgetView;
 
@@ -52,6 +58,12 @@ public class MyLocationFragment extends Fragment implements BeaconListener{
     private void bindPage(Node node){
 
         name.setText(node.get_id().getMajor());
+        /*Bitmap image = PathFinder.getInstance().getImage(position);
+        if (image == null){
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, node, this);
+        }else{
+            loadImageto3D(image);
+        }*/
         if(node.getImage() != null) {
             VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
             viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
@@ -65,5 +77,32 @@ public class MyLocationFragment extends Fragment implements BeaconListener{
         Node node = SysData.getInstance().getNodeByBeaconID(bid);
         if (node != null)
             bindPage(node);
+    }
+
+    private void loadImageto3D(Bitmap res) {
+        VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
+        viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+        panoWidgetView.loadImageFromBitmap(res, viewOptions);
+    }
+
+    @Override
+    public void onPreUpdate(String str) {
+
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, ResStatus status) {
+
+    }
+
+    @Override
+    public void onPostUpdate(Bitmap res, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+                loadImageto3D(res);
+            }
+
+        }else
+            Toast.makeText(getContext(), R.string.loadfailed, Toast.LENGTH_SHORT).show();
     }
 }
