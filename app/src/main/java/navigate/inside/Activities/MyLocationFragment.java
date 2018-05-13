@@ -28,7 +28,7 @@ import navigate.inside.R;
  * Use the {@link MyLocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyLocationFragment extends Fragment implements BeaconListener, NetworkResListener{
+public class MyLocationFragment extends Fragment implements NetworkResListener{
     private TextView name, direction;
     private VrPanoramaView panoWidgetView;
 
@@ -69,14 +69,6 @@ public class MyLocationFragment extends Fragment implements BeaconListener, Netw
             viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
             panoWidgetView.loadImageFromBitmap(node.getImage(), viewOptions);
         }
-    }
-
-    @Override
-    public void onBeaconEvent(Beacon beacon) {
-        BeaconID bid = new BeaconID(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
-        Node node = SysData.getInstance().getNodeByBeaconID(bid);
-        if (node != null)
-            bindPage(node);
     }
 
     private void loadImageto3D(Bitmap res) {

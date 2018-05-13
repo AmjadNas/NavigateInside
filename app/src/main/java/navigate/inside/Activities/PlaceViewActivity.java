@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -69,6 +70,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     private TextView name, direction;
     private CheckBox checkBox;
     private VrPanoramaView panoWidgetView;
+    private BeaconID currentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,16 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else
+            super.onBackPressed();
+    }
+
+
     private void initView(){
         name = (TextView) findViewById(R.id.node_name);
         direction = (TextView) findViewById(R.id.node_direct);
@@ -99,6 +111,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void bindPage(){
+        currentID = itemList.get(position).first.get_id();
         name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
         /*Bitmap image = PathFinder.getInstance().getImage(position);
@@ -250,13 +263,16 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     * */
     @Override
     public void onBeaconEvent(Beacon beacon) {
+        BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
+                beacon.getMajor(), beacon.getMinor());
+        if (!currentID.equals(tempID)) {
+            int index = PathFinder.getInstance().getIndexOfNode(tempID);
+            Log.i("onBeaconEvent ", "Called " + beacon);
 
-      int index = PathFinder.getInstance().getIndexOfNode(new BeaconID(beacon.getProximityUUID(),
-               beacon.getMajor(), beacon.getMinor()));
-        Log.i("onBeaconEvent ", "Called");
-      if(index >= 0) {
-          setPage(index);
-      }
+            if (index >= 0) {
+                setPage(index);
+            }
+        }
     }
 
     @Override

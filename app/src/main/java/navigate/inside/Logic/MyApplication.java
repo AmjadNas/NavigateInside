@@ -15,7 +15,6 @@ public class MyApplication extends Application {
 
     private BeaconManager beaconManager;
     private List<BeaconListener> listeners;
-    private BeaconRegion region;
 
     @Override
     public void onCreate() {
@@ -23,45 +22,50 @@ public class MyApplication extends Application {
 
         listeners = new ArrayList<>();
         beaconManager = new BeaconManager(getApplicationContext());
-        beaconManager.setBackgroundScanPeriod(500,500);
+       // beaconManager.setBackgroundScanPeriod(1000,500);
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
-                beaconManager.startMonitoring(new BeaconRegion(
-                        "monitored region",
+                beaconManager.startRanging(new BeaconRegion(
+                        "ranged region",
                         null,
                         null, null));
             }
         });
-
-        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
+        beaconManager.setForegroundScanPeriod(200, 2000);
+        beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
+            @Override
+            public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
+                for (BeaconListener ltnr : listeners)
+                    if(!beacons.isEmpty())
+                        ltnr.onBeaconEvent(beacons.get(0));
+            }
+        });
+     /*   beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
             @Override
             public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
-                Log.i("event enter", "entered");
-                for (BeaconListener ltnr : listeners)
-                    ltnr.onBeaconEvent(beacons.get(0));
+
+
             }
             @Override
             public void onExitedRegion(BeaconRegion region) {
                 // could add an "exit" notification too if you want (-:
-                beaconManager.stopMonitoring(region.getIdentifier());
-                Log.i("exit becon", region.getProximityUUID().toString());
+                //beaconManager.stopMonitoring(region.getIdentifier());
+               // beaconManager.stop();
+              //  Log.i("exit becon", region.getProximityUUID().toString());
             }
-        });
+        });*/
 
     }
 
     public void registerListener(BeaconListener listener){
         if (!listeners.contains(listener)){
-        Log.i("event ", "I received it");
             listeners.add(listener);
         }
     }
 
     public void unRegisterListener(BeaconListener listener){
-
         listeners.remove(listener);
-
     }
 
     @Override

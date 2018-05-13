@@ -60,5 +60,6 @@ public class MainActivity extends AppCompatActivity implements BeaconListener{
     public void onBeaconEvent(Beacon beacon) {
         //todo when beacon invoked do stuff
 
+
     }
 }

@@ -74,7 +74,7 @@ public class SysData {
         Node n6001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6001,6001),false,false,"Main","600");
         Node n6002 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6002,6002),true,false,"Main","600");
         Node n6003 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6003,6003),false,false,"Main","600");
-        Node n6004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),886,1307),false,false,"Main","600");
+        Node n6004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),886,13607),false,false,"Main","600");
         Node n6005 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6005,6005)  ,false,false,"Main","600");
         Node n6006 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6006,6006) ,false,true,"Main","600");
         Node n6007 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6007,6007) ,false,false,"Main","600");

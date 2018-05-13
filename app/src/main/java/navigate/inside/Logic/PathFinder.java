@@ -50,6 +50,7 @@ public class PathFinder {
 
                 Father = queue.remove();
                 if (Father.first.equals(FinishNode)) {
+
                     check = false;
                     break;
                 }
