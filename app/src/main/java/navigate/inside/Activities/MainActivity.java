@@ -8,13 +8,15 @@ import android.support.v7.widget.Toolbar;
 
 
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
+import com.estimote.coresdk.recognition.packets.Beacon;
 
+import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.FragmentAdapter;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.R;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements BeaconListener{
 
     private ViewPager viewPager;
     private FragmentAdapter fpa;
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         fpa = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(fpa);
-        viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
 
     }
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onResume() {
         super.onResume();
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
+        ((MyApplication)getApplication()).registerListener(this);
     }
 
     @Override
@@ -49,20 +51,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (position == 0)
-            ((MyApplication)getApplication()).unRegisterListener((MyLocationFragment)fpa.getItem(position+1));
-        else if (position == 1)
-            ((MyApplication)getApplication()).registerListener((MyLocationFragment)fpa.getItem(position));
+    protected void onPause() {
+        super.onPause();
+        ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
     @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
+    public void onBeaconEvent(Beacon beacon) {
+        //todo when beacon invoked do stuff
 
     }
 }
