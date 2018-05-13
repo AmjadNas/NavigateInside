@@ -179,8 +179,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         super.onResume();
         panoWidgetView.resumeRendering();
         // register beacon listener
-        ((MyApplication)getApplication()).startRanging();
         ((MyApplication)getApplication()).registerListener(this);
+        ((MyApplication)getApplication()).startRanging();
+
         // for the system's orientation sensor registered listeners
         mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
         // register handler

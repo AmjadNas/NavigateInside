@@ -95,6 +95,7 @@ public class PathFinder {
         for (Pair<Node,Integer> p : path){
             if(p.first.get_id().equals(id))
                 return index;
+            index++;
         }
         return -1;
     }

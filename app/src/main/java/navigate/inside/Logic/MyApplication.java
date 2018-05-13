@@ -23,7 +23,7 @@ public class MyApplication extends Application {
 
         listeners = new ArrayList<>();
         beaconManager = new BeaconManager(getApplicationContext());
-       // beaconManager.setBackgroundScanPeriod(1000,500);
+        beaconManager.setBackgroundScanPeriod(1000,500);
 
         beaconManager.setForegroundScanPeriod(200, 2000);
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
@@ -34,10 +34,12 @@ public class MyApplication extends Application {
                         ltnr.onBeaconEvent(beacons.get(0));
             }
         });
-     /*   beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
+        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
             @Override
             public void onEnteredRegion(BeaconRegion region, List<Beacon> beacons) {
-
+                for (BeaconListener ltnr : listeners)
+                    if(!beacons.isEmpty())
+                        ltnr.onBeaconEvent(beacons.get(0));
 
             }
             @Override
@@ -47,7 +49,7 @@ public class MyApplication extends Application {
                // beaconManager.stop();
               //  Log.i("exit becon", region.getProximityUUID().toString());
             }
-        });*/
+        });
 
     }
 
@@ -56,16 +58,17 @@ public class MyApplication extends Application {
             @Override
             public void onServiceReady() {
                 region = new BeaconRegion(
-                        "ranged region",
+                        "monitored region",
                         null,
                         null, null);
-                beaconManager.startRanging(region);
+                beaconManager.startMonitoring(region);
             }
         });
     }
 
     public void stopRanging(){
-        beaconManager.stopRanging(region);
+        if (region != null)
+            beaconManager.stopMonitoring(region.getIdentifier());
     }
 
     public void registerListener(BeaconListener listener){
