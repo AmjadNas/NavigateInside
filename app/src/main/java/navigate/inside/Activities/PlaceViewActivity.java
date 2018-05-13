@@ -1,5 +1,6 @@
 package navigate.inside.Activities;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,11 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
-import android.view.MenuItem;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import navigate.inside.Logic.BeaconListener;
+import navigate.inside.Logic.GridSpacingItemDecoration;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
@@ -161,6 +164,14 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
         list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         list.setAdapter(listAdapter);
+
+        list.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        list.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
     @Override
@@ -168,6 +179,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         super.onResume();
         panoWidgetView.resumeRendering();
         // register beacon listener
+        ((MyApplication)getApplication()).startRanging();
         ((MyApplication)getApplication()).registerListener(this);
         // for the system's orientation sensor registered listeners
         mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
@@ -180,6 +192,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         super.onPause();
         panoWidgetView.pauseRendering();
         // unregister beacon listeners
+        ((MyApplication)getApplication()).stopRanging();
         ((MyApplication)getApplication()).unRegisterListener(this);
         // to stop the listener and save battery
         mSensorManager.unregisterListener(this);
@@ -231,6 +244,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         if(position != page) {
             position = page;
             bindPage();
+            if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
 

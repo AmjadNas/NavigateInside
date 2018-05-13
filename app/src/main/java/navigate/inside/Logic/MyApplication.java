@@ -15,6 +15,7 @@ public class MyApplication extends Application {
 
     private BeaconManager beaconManager;
     private List<BeaconListener> listeners;
+    private BeaconRegion region;
 
     @Override
     public void onCreate() {
@@ -23,15 +24,7 @@ public class MyApplication extends Application {
         listeners = new ArrayList<>();
         beaconManager = new BeaconManager(getApplicationContext());
        // beaconManager.setBackgroundScanPeriod(1000,500);
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startRanging(new BeaconRegion(
-                        "ranged region",
-                        null,
-                        null, null));
-            }
-        });
+
         beaconManager.setForegroundScanPeriod(200, 2000);
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
@@ -56,6 +49,23 @@ public class MyApplication extends Application {
             }
         });*/
 
+    }
+
+    public void startRanging(){
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                region = new BeaconRegion(
+                        "ranged region",
+                        null,
+                        null, null);
+                beaconManager.startRanging(region);
+            }
+        });
+    }
+
+    public void stopRanging(){
+        beaconManager.stopRanging(region);
     }
 
     public void registerListener(BeaconListener listener){

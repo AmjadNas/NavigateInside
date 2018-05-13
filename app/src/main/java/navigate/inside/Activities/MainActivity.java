@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements BeaconListener{
     protected void onResume() {
         super.onResume();
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
+        ((MyApplication)getApplication()).startRanging();
         ((MyApplication)getApplication()).registerListener(this);
     }
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements BeaconListener{
     @Override
     protected void onPause() {
         super.onPause();
+        ((MyApplication)getApplication()).stopRanging();
         ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
