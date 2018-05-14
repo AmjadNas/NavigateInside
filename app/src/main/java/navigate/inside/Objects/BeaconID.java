@@ -37,7 +37,7 @@ public class BeaconID {
     }
 
     public String toString() {
-        return /*getProximityUUID().toString() + ":"*/ + getMajor() + ":" + getMinor();
+        return getProximityUUID().toString() + ":" + getMajor() + ":" + getMinor();
     }
 
     @Override
@@ -61,8 +61,8 @@ public class BeaconID {
 
         BeaconID other = (BeaconID) o;
 
-        return /*getProximityUUID().equals(other.getProximityUUID())
-                && */getMajor() == other.getMajor()
+        return getProximityUUID().equals(other.getProximityUUID())
+                && getMajor() == other.getMajor()
                 && getMinor() == other.getMinor();
     }
 }

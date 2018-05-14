@@ -93,7 +93,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
         }else
             finish();
-
     }
 
     @Override

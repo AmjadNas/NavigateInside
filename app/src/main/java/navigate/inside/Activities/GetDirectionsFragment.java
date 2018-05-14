@@ -12,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import navigate.inside.Logic.PathFinder;
+import navigate.inside.Logic.SysData;
+import navigate.inside.Objects.BeaconID;
+import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
@@ -48,16 +51,32 @@ public class GetDirectionsFragment extends Fragment implements View.OnClickListe
         button.setOnClickListener(this);
     }
 
+    public void BindText(Node n){
+        sNode.setText(n.getRooms().get(0).GetRoomName());
+    }
+
     @Override
     public void onClick(View v) {
         txtSNode = sNode.getText().toString();
         txtGNode = gNode.getText().toString();
 
+        BeaconID StartNode=null;
+        BeaconID FinishNode=null;
+        StartNode = SysData.getInstance().getNodeIdByRoom(txtSNode);
+        FinishNode = SysData.getInstance().getNodeIdByRoom(txtGNode);
+
+        if(StartNode == null){
+            Toast.makeText(getContext(), "Start Poistion was not found !", Toast.LENGTH_SHORT).show();
+        }
+        if(FinishNode == null){
+            Toast.makeText(getContext(), "Finish goal was not found !", Toast.LENGTH_SHORT).show();
+        }
+
         PathFinder pf = PathFinder.getInstance();
         boolean b = chElevator.isChecked();
 
         // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
-        if(!pf.FindPath(txtSNode, txtGNode, b).isEmpty()) {
+        if(!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
 
             Intent intent = new Intent(getActivity(), PlaceViewActivity.class);
             intent.putExtra(Constants.INDEX, 0);

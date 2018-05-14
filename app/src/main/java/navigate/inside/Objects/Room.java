@@ -1,10 +1,23 @@
 package navigate.inside.Objects;
 
-/**
- * Created by StiPro on 3/9/2018.
- */
 
 public class Room {
+
+    String roomNum;
+    String roomName;
+
+
+    public Room(String roomNum,String roomName){
+        this.roomNum=roomNum;
+        this.roomName=roomName;
+    }
+
+    public String GetRoomNum(){
+        return roomNum;
+    }
+    public String GetRoomName(){
+        return roomName;
+    }
 
 
 

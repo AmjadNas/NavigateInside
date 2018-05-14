@@ -31,10 +31,10 @@ public class PathFinder {
         return instance;
     }
 
-    public ArrayList<Pair<Node,Integer>> FindPath(String SNode,String GNode , boolean ok){
+    public ArrayList<Pair<Node,Integer>> FindPath(BeaconID SNode,BeaconID GNode , boolean ok){
         path = new ArrayList<>();
-        Node first = data.getNodeById(SNode);
-        Node FinishNode =  data.getNodeById(GNode);
+        Node first = data.getNodeByBeaconID(SNode);
+        Node FinishNode =  data.getNodeByBeaconID(GNode);
 
         if(first != null && FinishNode != null) {
             Pair<Node, Integer> StartNode = new Pair<>(first, 0);

@@ -11,6 +11,7 @@ import java.util.UUID;
 import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.Room;
 import navigate.inside.Utills.Constants;
 
 public class SysData {
@@ -33,6 +34,16 @@ public class SysData {
 
     public ArrayList<Node> getAllNodes(){
         return AllNodes;
+    }
+
+    public BeaconID getNodeIdByRoom(String room){
+        for(Node n : AllNodes)
+            for (Room m : n.getRooms()) {
+                if(room.equals(m.GetRoomName()) || room.equals(m.GetRoomNum())){
+                    return n.get_id();
+                }
+            }
+        return null;
     }
 
     public Node getNodeById(String ID){
@@ -88,6 +99,7 @@ public class SysData {
         Node n6015 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6015,6015) ,false,false,"Main","600");
 
         AllNodes.add(n6001);
+        n6001.getRooms().add(new Room("6001","6001"));
         AllNodes.add(n6002);
         AllNodes.add(n6003);
         AllNodes.add(n6004);
@@ -99,6 +111,7 @@ public class SysData {
         AllNodes.add(n6010);
         AllNodes.add(n6011);
         AllNodes.add(n6012);
+        n6012.getRooms().add(new Room("6012","6012"));
         AllNodes.add(n6013);
         AllNodes.add(n6014);
         AllNodes.add(n6015);

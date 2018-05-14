@@ -22,6 +22,7 @@ public class Node {
     private boolean Visited=false;
     private Pair<Node,Integer> Father=null;
     private ArrayList<Pair<Node,Integer>> Neighbours;
+    private ArrayList<Room> rooms;
     private int direction;
     private String roomsRange;   // must be entered in format x:y (from room x to y)
     private Bitmap image = null;
@@ -33,6 +34,7 @@ public class Node {
         this.Building = Building;
         this.Floor = Floor;
         Neighbours = new ArrayList<>();
+        this.rooms = new ArrayList<>();
     }
 
     public Node(BeaconID _id,boolean Junction,boolean Elevator,String Building,String Floor){
@@ -42,6 +44,7 @@ public class Node {
         this.Building = Building;
         this.Floor = Floor;
         Neighbours = new ArrayList<>();
+        this.rooms = new ArrayList<>();
     }
 
     public BeaconID get_id() {
@@ -155,7 +158,17 @@ public class Node {
         NessOutside = nessOutside;
     }
 
+    public ArrayList<Room> getRooms(){
+        return rooms;
+    }
 
+    public void AddRoom(Room e){
+        rooms.add(e);
+    }
+
+    public void DeleteRoom(Room e){
+        rooms.remove(e);
+    }
 
     @Override
     public int hashCode() {
