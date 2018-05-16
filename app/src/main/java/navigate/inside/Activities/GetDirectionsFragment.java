@@ -26,7 +26,7 @@ public class GetDirectionsFragment extends Fragment implements View.OnClickListe
     private TextView sNode, gNode;
     private String txtSNode, txtGNode;
     private CheckBox chElevator;
-    private Button search, add, relate;
+    private Button search, add, relate, addroom;
 
     public GetDirectionsFragment() {
 
@@ -49,13 +49,22 @@ public class GetDirectionsFragment extends Fragment implements View.OnClickListe
     //todo DISABLED TEMPORARILY
         /*sNode = (TextView)view.findViewById(R.id.start);
         gNode = (TextView)view.findViewById(R.id.goal);
-        chElevator = (CheckBox)view.findViewById(R.id.elevator);*/
+        chElevator = (CheckBox)view.findViewById(R.id.elevator);
+        search = (Button) view.findViewById(R.id.search);*/
 
-        search = (Button) view.findViewById(R.id.search);
+        addroom = (Button) view.findViewById(R.id.addRoom_btn);
         add = (Button) view.findViewById(R.id.addnode);
         relate = (Button) view.findViewById(R.id.relaetnode);
 
-        search.setOnClickListener(this);
+        //search.setOnClickListener(this);
+
+        addroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =  new Intent(getContext(), AddRoomActivity.class);
+                startActivity(intent);
+            }
+        });
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

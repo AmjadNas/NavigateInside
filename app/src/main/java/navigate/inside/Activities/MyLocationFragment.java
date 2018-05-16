@@ -60,6 +60,7 @@ public class MyLocationFragment extends Fragment implements NetworkResListener, 
     }
 
     public void bindPage(Node node){
+        // todo needs improving, cuz keeps crashing
         int m =node.get_id().getMajor();
       //  name.setText(String.valueOf(m));
       /*  Bitmap image = SysData.getInstance().getImageForNode(node.get_id());

@@ -401,6 +401,8 @@ public class SysData {
 
     public void insertRoomToNode(String bid, String num, String nm) {
 
+        Node node = getNodeByBeaconID(BeaconID.from(bid));
+        node.AddRoom(new Room(num, nm));
         db.insertRoom(bid, nm, num);
     }
 }

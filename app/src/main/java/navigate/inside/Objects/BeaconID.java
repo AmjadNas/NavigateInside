@@ -66,4 +66,9 @@ public class BeaconID implements Serializable{
                 && getMajor() == other.getMajor()
                 && getMinor() == other.getMinor();
     }
+
+    public static BeaconID from(String bid) {
+        String[] id = bid.split(":");
+        return  new BeaconID(UUID.fromString(id[0]), Integer.parseInt(id[1]), Integer.parseInt(id[2]));
+    }
 }
