@@ -1,6 +1,8 @@
 package navigate.inside.Utills;
 
 
+import java.util.UUID;
+
 public final class Constants {
 
 
@@ -48,6 +50,7 @@ public final class Constants {
     public static final String Room = "Room";
     public static final String NUMBER = "Number";
     public static final String NAME = "Name";
+    public static final UUID DEFULTUID = UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
 
 
 }

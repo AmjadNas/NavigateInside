@@ -44,6 +44,23 @@
         android:onClick="onClickCam"
         android:scaleType="fitXY" />
 
+        <EditText
+            android:id="@+id/edit_node_major"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Major (add only if there is no beacon around)"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edit_node_minor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Minor (add only if there is no beacon around)"
+            android:inputType="textPersonName" />
     <EditText
         android:id="@+id/edit_node_building"
         android:layout_width="match_parent"

@@ -44,7 +44,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
 
     private final static int IMAGE_CAPTUE_REQ = 1;
     private static final int PICK_IMAGE = 111;
-    private TextView name, floar, building;
+    private TextView major, floar, building,minor;
     private CheckBox elevator, junction, outside;
     private Bitmap img;
     private ImageView imageView;
@@ -73,6 +73,8 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
 
         floar = (TextView)findViewById(R.id.edit_node_floor);
         building = (TextView)findViewById(R.id.edit_node_building);
+        minor = (TextView)findViewById(R.id.edit_node_minor);
+        major = (TextView)findViewById(R.id.edit_node_major);
 
         imageView = (ImageView)findViewById(R.id.prof_img);
         panoWidgetView = (ImageView) findViewById(R.id.sell_img);
@@ -208,9 +210,20 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
     }
 
     public void SaveNode(View view) {
-        data.saveNode(currntID,
-                floar.getEditableText().toString(), building.getEditableText().toString(),
-                junction.isChecked(), elevator.isChecked(), outside.isChecked(), img, mAzimuth);
+
+        if(!major.getEditableText().toString().isEmpty() && !minor.getEditableText().toString().isEmpty()){
+            int mjr = Integer.parseInt(major.getEditableText().toString());
+            int mnr = Integer.parseInt(minor.getEditableText().toString());
+            BeaconID id = new BeaconID(Constants.DEFULTUID,mjr, mnr);
+
+            data.saveNode(id,
+                    floar.getEditableText().toString(), building.getEditableText().toString(),
+                    junction.isChecked(), elevator.isChecked(), outside.isChecked(), img, mAzimuth);
+        }else {
+            data.saveNode(currntID,
+                    floar.getEditableText().toString(), building.getEditableText().toString(),
+                    junction.isChecked(), elevator.isChecked(), outside.isChecked(), img, mAzimuth);
+        }
 
         finish();
 
