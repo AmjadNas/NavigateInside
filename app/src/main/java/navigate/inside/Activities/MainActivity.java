@@ -49,9 +49,10 @@ public class MainActivity extends AppCompatActivity implements BeaconListener{
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        //SysData.getInstance().closeDatabase();
+    protected void onDestroy() {
+        super.onDestroy();
+
+        SysData.getInstance().closeDatabase();
     }
 
     @Override
@@ -66,15 +67,17 @@ public class MainActivity extends AppCompatActivity implements BeaconListener{
         BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
             if(CurrentBeacon == null){
                 CurrentBeacon = temp;
-            }else if(CurrentBeacon!=null && !CurrentBeacon.equals(temp)){
+            }else{
+                if(!CurrentBeacon.equals(temp)){
                     CurrentBeacon = temp;
-                if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
-                    ((GetDirectionsFragment)fpa.getItem(0)).BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
-                }else{
-                    Toast.makeText(this,"Failed to fetch location",Toast.LENGTH_SHORT).show();
+                    if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
+                        ((GetDirectionsFragment)fpa.getItem(0)).BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+                        ((MyLocationFragment)fpa.getItem(1)).bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+                    }else{
+                        Toast.makeText(this,"Failed to fetch location",Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-
-
             }
     }
 }

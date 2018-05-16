@@ -46,14 +46,6 @@ public class SysData {
         return null;
     }
 
-    public Node getNodeById(String ID){
-        for(Node n : AllNodes){
-            if(Integer.parseInt(ID) == n.get_id().getMajor()){
-                return n;
-            }
-        }
-        return null;
-    }
 
     public void initDatBase(Context context){
         db = new DataBase(context);
@@ -81,11 +73,11 @@ public class SysData {
 
     public void InitializeData(){
         //Main Bulding , Floor 600
-
-        Node n6001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6001,6001),false,false,"Main","600");
+        db.getNodes(AllNodes);
+       /* Node n6001 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6001,6001),false,false,"Main","600");
         Node n6002 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6002,6002),true,false,"Main","600");
         Node n6003 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6003,6003),false,false,"Main","600");
-        Node n6004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),886,13607),false,false,"Main","600");
+        Node n6004 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6004,6004),false,false,"Main","600");
         Node n6005 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6005,6005)  ,false,false,"Main","600");
         Node n6006 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6006,6006) ,false,true,"Main","600");
         Node n6007 = new Node(new BeaconID(UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),6007,6007) ,false,false,"Main","600");
@@ -219,8 +211,8 @@ public class SysData {
         n6013.AddNeighbour(new Pair<>(n6009,0));
         n6013.AddNeighbour(new Pair<>(n6012,0));
         n6013.AddNeighbour(new Pair<>(n6014,0));
-        n6013.AddNeighbour(new Pair<>(n6015,0));
-
+        n6013.AddNeighbour(new Pair<>(n6015,0));*/
+/*
         //Adding Neighbours to Points in Rabin building , floor 7000
         n70001.AddNeighbour(new Pair<>(n70002,0));
         n70001.AddNeighbour(new Pair<>(n70003,0));
@@ -238,7 +230,7 @@ public class SysData {
         n70002.AddNeighbour(new Pair<>(n70009,0));
         n70002.AddNeighbour(new Pair<>(n70010,0));
         n70002.AddNeighbour(new Pair<>(n70013,0));
-        n70001.AddNeighbour(new Pair<>(n70013,0));
+        n70001.AddNeighbour(new Pair<>(n70013,0));*/
 /*
         n70003.AddNeighbour(n70001);
         n70003.AddNeighbour(n70002);
@@ -373,12 +365,12 @@ public class SysData {
 
         //Connecting Junctions and ELevators
         //Junctions :
-        n70007.setJunction(true);
+        /*n70007.setJunction(true);
         n60004.setJunction(true);
         n70009.setJunction(true);
         n60007.setJunction(true);
         n70008.setElevator(true);
-        n60005.setElevator(true);
+        n60005.setElevator(true);*/
 
       /*  n70007.AddNeighbour(n60004);
         n60004.AddNeighbour(n70007);
@@ -390,5 +382,25 @@ public class SysData {
         n60005.AddNeighbour(n70008);*/
 
     }
+    public void saveNode(BeaconID bid,  String floar, String building, boolean junction, boolean Elevator, boolean outside, Bitmap img,int dir) {
+        Node node = new Node(bid,junction, Elevator, building, floar);
+        node.setOutside(outside);
+        node.setDirection(dir);
+        db.insertNode(Node.getContentValues(node));
+        db.insertImage(bid, img);
 
+        AllNodes.add(node);
+
+    }
+
+
+    public void linkNodes(String s1, String s2, int direction, boolean isdirect) {
+
+        db.insertRelation(s1,s2, direction, isdirect);
+    }
+
+    public void insertRoomToNode(String bid, String num, String nm) {
+
+        db.insertRoom(bid, nm, num);
+    }
 }

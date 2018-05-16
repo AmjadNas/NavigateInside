@@ -25,23 +25,25 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        SysData.getInstance();
-       //SysData.getInstance().initDatBase(getApplicationContext());
+       /* SysData.getInstance();
+        SysData.getInstance().initDatBase(getApplicationContext());
         NetworkConnector.getInstance().initialize(getApplicationContext());
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         firstInit = sharedPref.getBoolean(getResources().getString(R.string.firstLaunch), true);
 
-        if (firstInit) {
+       if (firstInit) {
             NetworkConnector.getInstance().update(this);
             sharedPref.edit()
                     .putBoolean(getResources().getString(R.string.firstLaunch), false)
                     .apply();
-        }else{
+        }else{*/
+        SysData.getInstance();
+        SysData.getInstance().initDatBase(getApplicationContext());
             SysData.getInstance().InitializeData();
             launchActivity();
             finish();
-        }
+        //}
     }
 
     @Override

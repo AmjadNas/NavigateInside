@@ -45,5 +45,9 @@ public final class Constants {
     public static final String SecondID = "SecondID";
     public static final String Image ="Image";
     public static final String Range = "range";
+    public static final String Room = "Room";
+    public static final String NUMBER = "Number";
+    public static final String NAME = "Name";
+
 
 }

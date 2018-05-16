@@ -101,7 +101,7 @@ public class PathFinder {
     }
 
     public Bitmap getImage(int position) {
-        data.getImageForNode(path.get(position).first.get_id());
-        return null;
+
+        return data.getImageForNode(path.get(position).first.get_id());
     }
 }

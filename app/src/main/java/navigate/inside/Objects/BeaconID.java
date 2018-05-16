@@ -2,9 +2,10 @@ package navigate.inside.Objects;
 
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class BeaconID {
+public class BeaconID implements Serializable{
 
     private UUID proximityUUID;
     private int major;

@@ -1,10 +1,12 @@
 package navigate.inside.Logic;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.Pair;
 
 import com.estimote.mgmtsdk.feature.settings.api.Eddystone;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.Room;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
@@ -29,7 +32,6 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.Junction + " BOOLEAN, " +                   // example fadsfasdf-afda-dasffdfd:1555:54654
             Constants.Elevator + " BOOLEAN, "+
             Constants.Building + " VARCHAR(25), "+
-            Constants.Range + " TEXT, "+
             Constants.Floor + " VARCHAR(25), " +
             Constants.Outside + " BOOLEAN, "+
             Constants.NessOutside + " BOOLEAN, "+
@@ -40,11 +42,19 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String SQL_CREATE_RELATION_TABLE = "CREATE TABLE " + Constants.Relation +" ("+
             Constants.FirstID + " VARCHAR(100), "+
             Constants.SecondID + " VARCHAR(100), "+
-            Constants.Direction + "INTEGER, "+
-            Constants.DIRECT + "BOOLEAN, "+
+            Constants.Direction + " INTEGER, "+
+            Constants.DIRECT + " BOOLEAN, "+
             "FOREIGN KEY (" + Constants.FirstID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
             "FOREIGN KEY (" + Constants.SecondID + ") REFERENCES " + Constants.Node +" (" + Constants.BEACONID + "), " +
             "CONSTRAINT PK1 PRIMARY KEY (" + Constants.FirstID + "," + Constants.SecondID + ")" +
+            " )";
+
+    private static final String SQL_CREATE_ROOMS_TABLE = "CREATE TABLE " + Constants.Room +" ("+
+            Constants.BEACONID + " VARCHAR(100), "+
+            Constants.NUMBER + " VARCHAR(12), "+
+            Constants.NAME + " VARCHAR(50), "+
+            "FOREIGN KEY (" + Constants.BEACONID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
+            "CONSTRAINT PK2 PRIMARY KEY (" + Constants.FirstID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
             " )";
 
 
@@ -56,11 +66,50 @@ public class DataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_NODE_TABLE);
         db.execSQL(SQL_CREATE_RELATION_TABLE);
+        db.execSQL(SQL_CREATE_ROOMS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+
+    public void insertRoom(String bid, String name, String number){
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            ContentValues cv = new ContentValues();
+
+            cv.put(Constants.BEACONID, bid);
+            cv.put(Constants.NAME, name);
+            cv.put(Constants.NUMBER, number);
+
+            db.insert(Constants.Node, null, cv);
+
+            db.close();
+        }catch (Throwable th){
+            th.printStackTrace();
+        }
+    }
+
+    public void getNodeRooms(Node n){
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                Constants.NAME,
+                Constants.NUMBER
+        };
+
+        Cursor r = db.query(Constants.Room, projection,Constants.BEACONID + " = ?", new String[]{n.get_id().toString()},null,null,null);
+        Room rm;
+        while(r.moveToNext()){
+
+            rm = new Room(r.getString(1), r.getString(0));
+            n.AddRoom(rm);
+
+        }
+        r.close();
+        db.close();
     }
 
     public void getNodes(ArrayList<Node> nodes){
@@ -75,8 +124,6 @@ public class DataBase extends SQLiteOpenHelper {
                 Constants.Outside,
                 Constants.NessOutside,
                 Constants.Direction,
-                Constants.Image,
-                Constants.Range
         };
 
         Cursor r = db.query(Constants.Node,projection,null,null,null,null,null);
@@ -85,6 +132,7 @@ public class DataBase extends SQLiteOpenHelper {
         int major, minor;
         while(r.moveToNext()){
             beaconID = r.getString(0).split(":");
+
             major = Integer.parseInt(beaconID[1]);
             minor = Integer.parseInt(beaconID[2]);
 
@@ -94,7 +142,7 @@ public class DataBase extends SQLiteOpenHelper {
             n.setOutside(Boolean.valueOf(r.getString(5)));
             n.setNessOutside(Boolean.valueOf(r.getString(6)));
             n.setDirection(r.getInt(7));
-            n.setRoomsRange(r.getString(9));
+            getNodeRooms(n);
 
             nodes.add(n);
 
@@ -103,11 +151,12 @@ public class DataBase extends SQLiteOpenHelper {
         db.close();
 
         getNodesRelation(nodes);
+
     }
 
     public void getNodesRelation(ArrayList<Node> nodes){
         SQLiteDatabase db = getReadableDatabase();
-        String[] projection = { Constants.SecondID };
+        String[] projection = { Constants.SecondID, Constants.Direction, Constants.DIRECT };
 
         Cursor r = null;
         String[] beaconID;
@@ -116,7 +165,7 @@ public class DataBase extends SQLiteOpenHelper {
         int dir;
 
         for(Node n : nodes) {
-            r = db.query(Constants.Node, projection, Constants.FirstID + " = ?", new String[]{n.get_id().toString()}, null, null, null);
+            r = db.query(Constants.Relation, projection, Constants.FirstID + " = ?", new String[]{n.get_id().toString()}, null, null, null);
             while (r.moveToNext()) {
                 beaconID = r.getString(0).split(":");
                 major = Integer.parseInt(beaconID[1]);
@@ -125,12 +174,12 @@ public class DataBase extends SQLiteOpenHelper {
 
                 for (Node nb : nodes)
                     if (nb.get_id().equals(Id) && !nb.equals(n)) {
-                        dir = (r.getInt(2) + 180) % 360;
-                        if(r.getInt(3) == 1)
+                        dir = (r.getInt(1) + 180) % 360;
+                        if(r.getInt(2) == 1)
                             nb.AddNeighbour(new Pair<Node, Integer>(n, dir));
                         else
                             nb.AddNeighbour(new Pair<Node, Integer>(n, nb.getDirection()));
-                        n.AddNeighbour(new Pair<Node, Integer>(nb, r.getInt(2)));
+                        n.AddNeighbour(new Pair<Node, Integer>(nb, r.getInt(1)));
 
                         break;
                     }
@@ -159,5 +208,51 @@ public class DataBase extends SQLiteOpenHelper {
             return btm;
         }
         return null;
+    }
+
+    public void insertNode(ContentValues contentValues) {
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+
+            db.insert(Constants.Node, null, contentValues);
+
+            db.close();
+        }catch (Throwable th){
+            th.printStackTrace();
+        }
+    }
+
+    public void insertImage(BeaconID bid, Bitmap img) {
+
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(Constants.Image, Converter.getBitmapAsByteArray(img));
+            db.update(Constants.Node, cv, Constants.BEACONID + " = ?", new String[]{bid.toString()});
+
+
+            db.close();
+        }catch (Throwable th){
+            th.printStackTrace();
+        }
+    }
+
+    public void insertRelation(String s1, String s2, int direction, boolean isdirect) {
+
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            ContentValues cv = new ContentValues();
+
+            cv.put(Constants.FirstID, s1);
+            cv.put(Constants.SecondID, s2);
+            cv.put(Constants.Direction, direction);
+            cv.put(Constants.DIRECT, isdirect);
+
+            db.insert(Constants.Relation, null, cv);
+
+            db.close();
+        }catch (Throwable th){
+            th.printStackTrace();
+        }
     }
 }

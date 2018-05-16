@@ -1,11 +1,14 @@
 package navigate.inside.Activities;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -19,12 +22,14 @@ import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
-import com.google.vr.sdk.widgets.pano.VrPanoramaView;
+import com.gjiazhe.panoramaimageview.PanoramaImageView;
 
 import org.json.JSONObject;
 
@@ -43,6 +48,7 @@ import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
 public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener, NetworkResListener{
+    private static int L_WIDTH  ;
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -72,8 +78,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     private ArrayList<Pair<Node,Integer>> itemList;
     private TextView name, direction;
     private CheckBox checkBox;
-    private VrPanoramaView panoWidgetView;
+    private ImageView panoWidgetView;
     private BeaconID currentID;
+    private RelativeLayout rl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         setContentView(R.layout.activity_place_view);
 
         position = getIntent().getIntExtra(Constants.INDEX, -1);
+         rl = (RelativeLayout)findViewById(R.id.place_view_layout);
+        //L_WIDTH = rl.getWidth();
 
         if (position >= 0){
             itemList =  PathFinder.getInstance().getPath();
@@ -109,22 +118,36 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         name = (TextView) findViewById(R.id.node_name);
         direction = (TextView) findViewById(R.id.node_direct);
         checkBox = (CheckBox) findViewById(R.id.arrive_check);
-        panoWidgetView = (VrPanoramaView) findViewById(R.id.pano_view);
+        panoWidgetView = (ImageView) findViewById(R.id.sell_img);
     }
 
     private void bindPage(){
         currentID = itemList.get(position).first.get_id();
         name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
-        /*Bitmap image = PathFinder.getInstance().getImage(position);
-        if (image == null){
+        Bitmap image = PathFinder.getInstance().getImage(position);
+        new AsyncTask<Bitmap,Bitmap,Bitmap>(){
+            @Override
+            protected Bitmap doInBackground(Bitmap... params) {
+                Bitmap scaled = ThumbnailUtils.extractThumbnail(params[0],500,300, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                return scaled;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap aVoid) {
+
+                loadImageto3D(aVoid);
+            }
+        }.execute(image);
+        /*if (image == null){
             NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
         }else{
             loadImageto3D(image);
         }*/
-        if(itemList.get(position).first.getImage() != null) {
+       /* if(itemList.get(position).first.getImage() != null) {
             loadImageto3D(itemList.get(position).first.getImage());
-        }
+        }*/
+
     }
 
     private void initBottomSheet() {
@@ -176,7 +199,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onResume() {
         super.onResume();
-        panoWidgetView.resumeRendering();
         // register beacon listener
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();
@@ -190,7 +212,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onPause() {
         super.onPause();
-        panoWidgetView.pauseRendering();
         // unregister beacon listeners
         ((MyApplication)getApplication()).stopRanging();
         ((MyApplication)getApplication()).unRegisterListener(this);
@@ -250,9 +271,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void loadImageto3D(Bitmap res) {
-        VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
-        viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
-        panoWidgetView.loadImageFromBitmap(res, viewOptions);
+        panoWidgetView.setImageBitmap(res);
     }
 
     @Override
@@ -271,7 +290,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        panoWidgetView.shutdown();
     }
     /*
     * triggered when a beacon event happens
@@ -317,4 +335,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
 
+    public void onClickCam(View view) {
+        Intent intent = new Intent(this, PanoramicImageActivity.class);
+        intent.putExtra(Constants.ID, currentID);
+        startActivity(intent);
+    }
 }

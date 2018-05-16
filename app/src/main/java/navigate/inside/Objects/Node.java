@@ -1,5 +1,6 @@
 package navigate.inside.Objects;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.util.Pair;
@@ -199,4 +200,19 @@ public class Node {
     }
 
 
+    public static ContentValues getContentValues(Node node) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(Constants.BEACONID, node.get_id().toString());
+        cv.put(Constants.Junction, node.isJunction());
+        cv.put(Constants.Elevator, node.isElevator());
+        cv.put(Constants.Building, node.getBuilding());
+        cv.put(Constants.Floor, node.getFloor());
+        cv.put(Constants.Outside, node.isOutside());
+        cv.put(Constants.NessOutside, node.isNessOutside());
+        cv.put(Constants.Direction, node.isOutside());
+
+        return cv;
+
+    }
 }

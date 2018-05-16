@@ -7,9 +7,6 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-/**
- * Created by StiPro on 4/22/2018.
- */
 
 public final class Converter {
 
@@ -28,7 +25,7 @@ public final class Converter {
         byte[] bArray;
         try {
             bas = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG,0 ,bas);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,75 ,bas);
             bArray = bas.toByteArray();
             bas.flush();
             bas.close();
@@ -38,6 +35,11 @@ public final class Converter {
         }
         return bArray;
 
+    }
+
+    public static Bitmap compreesBitmap(Bitmap img){
+        byte[] arr = getBitmapAsByteArray(img);
+        return BitmapFactory.decodeByteArray(arr, 0, arr.length);
     }
 
 }
