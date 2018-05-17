@@ -2,6 +2,7 @@ package navigate.inside.Utills;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,10 @@ public final class Converter {
     public static Bitmap compreesBitmap(Bitmap img){
         byte[] arr = getBitmapAsByteArray(img);
         return BitmapFactory.decodeByteArray(arr, 0, arr.length);
+    }
+
+    public static Bitmap getImageTHumbnail(Bitmap img){
+        return ThumbnailUtils.extractThumbnail(img,500,300, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
     }
 
 }

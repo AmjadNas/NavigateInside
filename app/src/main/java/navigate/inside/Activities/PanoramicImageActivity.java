@@ -2,6 +2,7 @@ package navigate.inside.Activities;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,6 +91,9 @@ public class PanoramicImageActivity extends AppCompatActivity {
     };
     private PanoramaImageView pamimageview;
     private GyroscopeObserver observer;
+    private Bitmap image;
+    private final int I_WIDTH = 3992;
+    private final int I_HEIGHT = 1104;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,16 +107,27 @@ public class PanoramicImageActivity extends AppCompatActivity {
         observer = new GyroscopeObserver();
         observer.setMaxRotateRadian(Math.PI/9);
 
-        BeaconID  id = (BeaconID)getIntent().getExtras().get(Constants.ID);
+        final BeaconID  id = (BeaconID)getIntent().getExtras().get(Constants.ID);
         if (id != null){
-            Bitmap image = SysData.getInstance().getImageForNode(id);
-            if (image != null){
-                pamimageview.setImageBitmap(image);
-                pamimageview.setGyroscopeObserver(observer);
-            }
+            new AsyncTask<Void,Void,Void>(){
+                @Override
+                protected Void doInBackground(Void... params) {
+                    image = Bitmap.createScaledBitmap(SysData.getInstance().getImageForNode(id), I_WIDTH, I_HEIGHT,false);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    if (image != null){
+                        pamimageview.setImageBitmap(image);
+                        pamimageview.setGyroscopeObserver(observer);
+                    }
+
+                }
+            }.execute();
+
         }
-
-
+        pamimageview.setOnTouchListener(mDelayHideTouchListener);
         // Set up the user interaction to manually show or hide the system UI.
         pamimageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +135,18 @@ public class PanoramicImageActivity extends AppCompatActivity {
                 toggle();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("BitmapImage", image);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        image = savedInstanceState.getParcelable("BitmapImage");
+        pamimageview.setImageBitmap(image);
     }
 
     @Override

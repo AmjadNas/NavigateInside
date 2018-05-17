@@ -41,12 +41,14 @@ import navigate.inside.Logic.GridSpacingItemDecoration;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
+import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
+import navigate.inside.Utills.Converter;
 
 public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener, NetworkResListener{
     // layout containers
@@ -126,24 +128,18 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         new AsyncTask<Bitmap,Bitmap,Bitmap>(){
             @Override
             protected Bitmap doInBackground(Bitmap... params) {
-                Bitmap scaled = ThumbnailUtils.extractThumbnail(params[0],500,300, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-                return scaled;
+                return Converter.getImageTHumbnail(params[0]);
             }
 
             @Override
             protected void onPostExecute(Bitmap aVoid) {
-
-                loadImageto3D(aVoid);
+                if (aVoid != null)
+                    loadImageto3D(aVoid);
+               /* else
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
+                    */
             }
         }.execute(image);
-        /*if (image == null){
-            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
-        }else{
-            loadImageto3D(image);
-        }*/
-       /* if(itemList.get(position).first.getImage() != null) {
-            loadImageto3D(itemList.get(position).first.getImage());
-        }*/
 
     }
 

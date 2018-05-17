@@ -87,8 +87,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
         new AsyncTask<Void, Void, Bitmap>(){
             @Override
             protected void onPostExecute(Bitmap aVoid) {
-                Bitmap scaled = ThumbnailUtils.extractThumbnail(aVoid,500,300);
-                panoWidgetView.setImageBitmap(scaled);
+                panoWidgetView.setImageBitmap(Converter.getImageTHumbnail(aVoid));
                 img = aVoid;
             }
 
