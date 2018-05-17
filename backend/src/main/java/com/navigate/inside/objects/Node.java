@@ -1,5 +1,5 @@
 package com.navigate.inside.objects;
-
+/*
 import com.letgo.objects.Item;
 import com.navigate.inside.utils.Constants;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
@@ -13,9 +13,7 @@ import java.util.List;
 
 import javafx.util.Pair;
 
-/**
- * Created by StiPro on 4/23/2018.
- */
+
 
 public class Node {
 
@@ -43,13 +41,7 @@ public class Node {
         RoomsNearby = new ArrayList<>();
     }
 
-    /*public Bitmap getImage(){
-        return image;
-    }*/
 
-   /*public void setImage(Bitmap image){
-        this.image=image;
-    }*/
     public int getDirection() {
         return direction;
     }
@@ -226,3 +218,4 @@ public class Node {
 
 
 }
+*/

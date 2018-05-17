@@ -1,5 +1,5 @@
 package com.navigate.inside.servlets;
-
+/*
 
 import com.navigate.inside.database.operations.ConnPool;
 import com.navigate.inside.database.operations.NodeResProvider;
@@ -112,3 +112,4 @@ public class ProjectResourceServlet extends HttpServlet {
 
 
     }
+*/

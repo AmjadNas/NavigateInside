@@ -1,6 +1,6 @@
 package com.navigate.inside.database.operations;
 
-
+/*
 import com.navigate.inside.objects.Node;
 
 import java.sql.Connection;
@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by StiPro on 4/23/2018.
- */
 
 
 public class NodeResProvider {
@@ -81,3 +78,4 @@ public class NodeResProvider {
 
 
 }
+*/
