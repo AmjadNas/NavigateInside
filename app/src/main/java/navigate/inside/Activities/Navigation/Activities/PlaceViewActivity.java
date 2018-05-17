@@ -1,4 +1,4 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Navigation.Activities;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import navigate.inside.Activities.PanoramicImageActivity;
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.GridSpacingItemDecoration;
 import navigate.inside.Logic.MyApplication;
@@ -48,7 +49,6 @@ import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
 public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener, NetworkResListener{
-    private static int L_WIDTH  ;
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -80,7 +80,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     private CheckBox checkBox;
     private ImageView panoWidgetView;
     private BeaconID currentID;
-    private RelativeLayout rl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +87,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         setContentView(R.layout.activity_place_view);
 
         position = getIntent().getIntExtra(Constants.INDEX, -1);
-         rl = (RelativeLayout)findViewById(R.id.place_view_layout);
-        //L_WIDTH = rl.getWidth();
 
         if (position >= 0){
             itemList =  PathFinder.getInstance().getPath();

@@ -1,4 +1,4 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Addition.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

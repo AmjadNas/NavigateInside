@@ -7,13 +7,11 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import navigate.inside.Activities.PlaceViewActivity;
+import navigate.inside.Activities.Navigation.Activities.PlaceViewActivity;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 
@@ -57,7 +55,7 @@ public class PageAdapter extends RecyclerView.Adapter {
 
         public void bind(final int position) {
 
-           name.setText(String.valueOf(itemList.get(position).first.get_id()));
+           name.setText(itemList.get(position).first.toString());
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

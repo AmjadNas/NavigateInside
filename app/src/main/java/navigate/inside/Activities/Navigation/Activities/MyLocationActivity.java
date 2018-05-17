@@ -1,10 +1,10 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Navigation.Activities;
 
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,51 +12,55 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.recognition.packets.Beacon;
-import com.gjiazhe.panoramaimageview.PanoramaImageView;
+
 import org.json.JSONObject;
 
 import navigate.inside.Logic.BeaconListener;
-import navigate.inside.Logic.PathFinder;
+import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
-import navigate.inside.Utills.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyLocationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MyLocationFragment extends Fragment implements NetworkResListener, View.OnClickListener{
+
+public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener{
     private TextView name, direction;
     private ImageView panoWidgetView;
+    private BeaconID CurrentBeacon;
 
-    public MyLocationFragment() {
-        // Required empty public constructor
-    }
-
-    public static MyLocationFragment newInstance() {
-        return new MyLocationFragment();
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_location, container, false);
-        initView(view);
-        return view;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_my_location);
     }
 
     private void initView(View view){
         name = (TextView) view.findViewById(R.id.node_name);
         direction = (TextView) view.findViewById(R.id.node_direct);
         panoWidgetView = (ImageView) view.findViewById(R.id.sell_img);
-        panoWidgetView.setOnClickListener(this);
+       // panoWidgetView.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+
+        ((MyApplication)getApplication()).registerListener(this);
+        ((MyApplication)getApplication()).startRanging();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // unregister beacon listeners
+        ((MyApplication)getApplication()).stopRanging();
+        ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
     public void bindPage(Node node){
@@ -98,13 +102,26 @@ public class MyLocationFragment extends Fragment implements NetworkResListener, 
             }
 
         }else
-            Toast.makeText(getContext(), R.string.loadfailed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.loadfailed, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
-    public void onClick(View v) {
-        /*Intent intent = new Intent(this, PanoramicImageActivity.class);
-        intent.putExtra(Constants.ID, currentID);
-        startActivity(intent);*/
+    public void onBeaconEvent(Beacon beacon) {
+        BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
+        if(CurrentBeacon == null){
+            CurrentBeacon = temp;
+        }else{
+            if(!CurrentBeacon.equals(temp)){
+                CurrentBeacon = temp;
+                if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
+
+                    //   bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+                }else{
+                    Toast.makeText(this,"Failed to fetch location",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
     }
 }

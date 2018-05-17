@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/linear_add_layout"
     android:orientation="vertical"
-    tools:context="navigate.inside.Activities.AddNodeActivity">
+    tools:context="navigate.inside.Activities.Addition.Activities.AddNodeActivity">
 
 <ScrollView
     android:layout_width="match_parent"

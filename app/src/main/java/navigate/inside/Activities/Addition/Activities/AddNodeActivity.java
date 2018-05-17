@@ -1,4 +1,4 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Addition.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,7 +60,6 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
     private int mAzimuth;
 
     private ImageView panoWidgetView;
-    private int L_WIDTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +78,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
         imageView = (ImageView)findViewById(R.id.prof_img);
         panoWidgetView = (ImageView) findViewById(R.id.sell_img);
 
-        LinearLayout ll = (LinearLayout) findViewById(R.id.linear_add_layout);
-        L_WIDTH = ll.getWidth();
+
         
         initSensor();
     }

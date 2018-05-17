@@ -24,8 +24,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".Activities.PlaceViewActivity" />
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity android:name=".Activities.Navigation.Activities.PlaceViewActivity" />
         <activity
             android:name=".Activities.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -35,14 +35,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.AddNodeActivity" />
+        <activity android:name=".Activities.Addition.Activities.AddNodeActivity" />
         <activity
             android:name=".Activities.PanoramicImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_panoramic_image"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".Activities.ADNEBERACtivity" />
-        <activity android:name=".Activities.AddRoomActivity"></activity>
+
+        <activity android:name=".Activities.Addition.Activities.AddStuff" />
+        <activity android:name=".Activities.Navigation.Activities.MyLocationActivity" />
+        <activity android:name=".Activities.Addition.Activities.ADNEBERACtivity" />
+        <activity android:name=".Activities.Addition.Activities.AddRoomActivity" />
+        <activity android:name=".Activities.Navigation.Activities.GetDirectionsActivity"></activity>
     </application>
 
 </manifest>

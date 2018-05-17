@@ -189,9 +189,28 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "id=" + _id.getMajor() +
-                '}';
+
+        StringBuilder sb = new StringBuilder();
+
+        if (rooms.isEmpty()){
+            if (isJunction()){
+
+                return "Building :"+ getBuilding() + " stairs";
+
+            }else if (isElevator()){
+                return "Building :"+ getBuilding() + " elevator";
+            }
+
+        }else{
+            for (Room r : rooms){
+                sb.append(r);
+            }
+            return "Building :"+ getBuilding() +
+                    "\nAvailable Rooms :" + sb.toString();
+        }
+
+        return null;
+
     }
 
     public void setDirection(int d) {

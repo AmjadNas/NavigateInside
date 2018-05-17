@@ -1,4 +1,4 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Addition.Activities;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

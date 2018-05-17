@@ -54,7 +54,7 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.NUMBER + " VARCHAR(12), "+
             Constants.NAME + " VARCHAR(50), "+
             "FOREIGN KEY (" + Constants.BEACONID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
-            "CONSTRAINT PK2 PRIMARY KEY (" + Constants.FirstID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
+            "CONSTRAINT PK2 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
             " )";
 
 

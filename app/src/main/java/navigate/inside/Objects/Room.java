@@ -19,6 +19,27 @@ public class Room {
         return roomName;
     }
 
+    @Override
+    public String toString() {
+        return "Room number: "+ roomNum + "\n Room name: " + roomName + "\n";
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Room room = (Room) o;
+
+        if (roomNum != null ? !roomNum.equals(room.roomNum) : room.roomNum != null) return false;
+        return roomName != null ? roomName.equals(room.roomName) : room.roomName == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = roomNum != null ? roomNum.hashCode() : 0;
+        result = 31 * result + (roomName != null ? roomName.hashCode() : 0);
+        return result;
+    }
 }
