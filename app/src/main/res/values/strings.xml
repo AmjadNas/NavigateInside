@@ -11,7 +11,7 @@
     <string name="no_path_found">Could not find requested path</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="firstLaunch">firstLaunch</string>
-    <string name="loadfailed">Couldn\'t load Image</string>
+    <string name="loadfailed">Could not load Image</string>
     <string-array name="choice">
         <item>From Gallery</item>
         <item>Capture Image</item>
@@ -20,4 +20,5 @@
     <string name="title_activity_panoramic_image">PanoramicImageActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="cant_find_location">Failed to fetch location</string>
 </resources>

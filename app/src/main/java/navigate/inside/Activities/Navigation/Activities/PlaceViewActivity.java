@@ -7,7 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,14 +21,13 @@ import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
-import com.gjiazhe.panoramaimageview.PanoramaImageView;
 
 import org.json.JSONObject;
 
@@ -41,7 +39,7 @@ import navigate.inside.Logic.GridSpacingItemDecoration;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
-import navigate.inside.Network.NetworkConnector;
+import navigate.inside.Logic.SysData;
 import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
@@ -50,7 +48,7 @@ import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, BeaconListener, NetworkResListener{
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, BeaconListener, NetworkResListener{
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -117,7 +115,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         name = (TextView) findViewById(R.id.node_name);
         direction = (TextView) findViewById(R.id.node_direct);
         checkBox = (CheckBox) findViewById(R.id.arrive_check);
-        panoWidgetView = (ImageView) findViewById(R.id.sell_img);
+        checkBox.setOnCheckedChangeListener(this);
+        panoWidgetView = (ImageView) findViewById(R.id.thumb_place_activity);
     }
 
     private void bindPage(){
@@ -125,21 +124,10 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
         Bitmap image = PathFinder.getInstance().getImage(position);
-        new AsyncTask<Bitmap,Bitmap,Bitmap>(){
-            @Override
-            protected Bitmap doInBackground(Bitmap... params) {
-                return Converter.getImageTHumbnail(params[0]);
-            }
+        if (image != null)
+            loadImageto3D(image, false);
 
-            @Override
-            protected void onPostExecute(Bitmap aVoid) {
-                if (aVoid != null)
-                    loadImageto3D(aVoid);
-               /* else
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
-                    */
-            }
-        }.execute(image);
+
 
     }
 
@@ -263,8 +251,26 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         }
     }
 
-    private void loadImageto3D(Bitmap res) {
-        panoWidgetView.setImageBitmap(res);
+    private void loadImageto3D(final Bitmap res, final boolean downloaded) {
+        new AsyncTask<Bitmap,Bitmap,Bitmap>(){
+            @Override
+            protected Bitmap doInBackground(Bitmap... params) {
+                if (downloaded)
+                    SysData.getInstance().insertImageToDB(currentID, res);
+
+                return Converter.getImageTHumbnail(params[0]);
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap aVoid) {
+                if (aVoid != null)
+                    panoWidgetView.setImageBitmap(aVoid);
+               /* else
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
+                    */
+            }
+        }.execute();
+
     }
 
     @Override
@@ -320,17 +326,24 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     public void onPostUpdate(Bitmap res, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-               loadImageto3D(res);
+               loadImageto3D(res, true);
             }
 
         }else
-            Toast.makeText(this,"Couldn't load Image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.loadfailed, Toast.LENGTH_SHORT).show();
     }
 
 
-    public void onClickCam(View view) {
+    public void viewPanorama(View view) {
         Intent intent = new Intent(this, PanoramicImageActivity.class);
         intent.putExtra(Constants.ID, currentID);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked)
+            setPage(++position);
+
     }
 }

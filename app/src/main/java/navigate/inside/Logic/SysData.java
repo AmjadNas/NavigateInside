@@ -387,7 +387,7 @@ public class SysData {
         node.setOutside(outside);
         node.setDirection(dir);
         db.insertNode(Node.getContentValues(node));
-        db.insertImage(bid, img);
+        insertImageToDB(bid, img);
 
         AllNodes.add(node);
 
@@ -404,5 +404,9 @@ public class SysData {
         Node node = getNodeByBeaconID(BeaconID.from(bid));
         node.AddRoom(new Room(num, nm));
         db.insertRoom(bid, nm, num);
+    }
+
+    public void insertImageToDB(BeaconID currentBeacon, Bitmap res) {
+        db.insertImage(currentBeacon, res);
     }
 }

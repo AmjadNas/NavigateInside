@@ -1,13 +1,13 @@
 package navigate.inside.Activities.Navigation.Activities;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +17,7 @@ import com.estimote.coresdk.recognition.packets.Beacon;
 
 import org.json.JSONObject;
 
+import navigate.inside.Activities.PanoramicImageActivity;
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
@@ -25,6 +26,8 @@ import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
+import navigate.inside.Utills.Constants;
+import navigate.inside.Utills.Converter;
 
 
 public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener{
@@ -37,13 +40,13 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_my_location);
+        initView();
     }
 
-    private void initView(View view){
-        name = (TextView) view.findViewById(R.id.node_name);
-        direction = (TextView) view.findViewById(R.id.node_direct);
-        panoWidgetView = (ImageView) view.findViewById(R.id.sell_img);
-       // panoWidgetView.setOnClickListener(this);
+    private void initView(){
+        name = (TextView) findViewById(R.id.node_name);
+        direction = (TextView) findViewById(R.id.node_direct);
+        panoWidgetView = (ImageView) findViewById(R.id.thumb_find_location);
     }
 
     @Override
@@ -64,24 +67,35 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     }
 
     public void bindPage(Node node){
-        // todo needs improving, cuz keeps crashing
-        int m =node.get_id().getMajor();
-      //  name.setText(String.valueOf(m));
-      /*  Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
-        if (image != null){
-        //    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, node, this);
-       // }else{
-            loadImageto3D(image);
-        }*/
-       /* if(node.getImage() != null) {
-            VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
-            viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
-            panoWidgetView.loadImageFromBitmap(node.getImage(), viewOptions);
-        }*/
+        int m = node.get_id().getMajor();
+        name.setText(String.valueOf(m));
+        Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
+        if (image != null)
+            loadImageto3D(image, false);
+
+
     }
 
-    private void loadImageto3D(Bitmap res) {
-        panoWidgetView.setImageBitmap(res);
+    private void loadImageto3D(final Bitmap res, final boolean downloaded) {
+        new AsyncTask<Void, Void, Bitmap>(){
+            @Override
+            protected void onPostExecute(Bitmap aVoid) {
+                if (aVoid != null)
+                    panoWidgetView.setImageBitmap(aVoid);
+                /* else
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET, itemList.get(position).first, this);
+                    */
+            }
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                if (downloaded)
+                    SysData.getInstance().insertImageToDB(CurrentBeacon, res);
+
+                return Converter.getImageTHumbnail(res);
+            }
+        }.execute();
+
     }
 
     @Override
@@ -98,7 +112,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     public void onPostUpdate(Bitmap res, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-                loadImageto3D(res);
+                loadImageto3D(res, true);
             }
 
         }else
@@ -116,12 +130,18 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
                 CurrentBeacon = temp;
                 if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
 
-                    //   bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+                    bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
                 }else{
-                    Toast.makeText(this,"Failed to fetch location",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.cant_find_location,Toast.LENGTH_SHORT).show();
                 }
 
             }
         }
+    }
+
+    public void viewPanoramic(View view) {
+        Intent intent = new Intent(this,PanoramicImageActivity.class);
+        intent.putExtra(Constants.ID, CurrentBeacon);
+        startActivity(intent);
     }
 }

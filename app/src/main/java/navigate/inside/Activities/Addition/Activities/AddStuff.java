@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.Room;
 import navigate.inside.R;
 
 
@@ -25,18 +26,20 @@ public class AddStuff extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_get_directions);
+
+        initView();
     }
 
-    private void initView(View view){
+    private void initView(){
     //todo DISABLED TEMPORARILY
         /*sNode = (TextView)view.findViewById(R.id.start);
         gNode = (TextView)view.findViewById(R.id.goal);
         chElevator = (CheckBox)view.findViewById(R.id.elevator);
         search = (Button) view.findViewById(R.id.search);*/
 
-        addroom = (Button) view.findViewById(R.id.addRoom_btn);
-        add = (Button) view.findViewById(R.id.addnode);
-        relate = (Button) view.findViewById(R.id.relaetnode);
+        addroom = (Button) findViewById(R.id.addRoom_btn);
+        add = (Button) findViewById(R.id.addnode);
+        relate = (Button) findViewById(R.id.relaetnode);
 
         //search.setOnClickListener(this);
 
@@ -63,8 +66,6 @@ public class AddStuff extends AppCompatActivity {
         });
     }
 
-    public void BindText(Node n){
-        //sNode.setText(n.getRooms().get(0).GetRoomName());
-    }
+
 
 }

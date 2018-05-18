@@ -16,6 +16,7 @@ import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.Room;
 import navigate.inside.R;
 
 public class GetDirectionsActivity extends AppCompatActivity implements BeaconListener {
@@ -39,7 +40,10 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     }
 
     public void BindText(Node n){
-        //sNode.setText(n.getRooms().get(0).GetRoomName());
+        if(!n.getRooms().isEmpty()) {
+            Room r = n.getRooms().get(0);
+            sNode.setText(r.GetRoomName());
+        }
     }
 
 
@@ -104,9 +108,9 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
             if(!CurrentBeacon.equals(temp)){
                 CurrentBeacon = temp;
                 if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
-                   //BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+                   BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
                 }else{
-                    Toast.makeText(this,"Failed to fetch location",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.cant_find_location, Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -14,11 +14,8 @@ public final class Converter {
     private Converter(){}
 
     public static Bitmap decodeImage(byte[] arr){
-        Bitmap img;
 
-        img = BitmapFactory.decodeByteArray(arr, 0,arr.length);
-
-        return img;
+        return BitmapFactory.decodeByteArray(arr, 0,arr.length);
     }
 
     public static byte[] getBitmapAsByteArray(Bitmap bitmap){
@@ -40,7 +37,7 @@ public final class Converter {
 
     public static Bitmap compreesBitmap(Bitmap img){
         byte[] arr = getBitmapAsByteArray(img);
-        return BitmapFactory.decodeByteArray(arr, 0, arr.length);
+        return decodeImage(arr);
     }
 
     public static Bitmap getImageTHumbnail(Bitmap img){

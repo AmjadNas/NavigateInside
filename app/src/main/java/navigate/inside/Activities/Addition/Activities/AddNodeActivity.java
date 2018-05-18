@@ -1,6 +1,5 @@
 package navigate.inside.Activities.Addition.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,24 +7,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
-import com.gjiazhe.panoramaimageview.PanoramaImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +40,6 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
     private TextView major, floar, building,minor;
     private CheckBox elevator, junction, outside;
     private Bitmap img;
-    private ImageView imageView;
     private SysData data;
     private BeaconID currntID;
 
@@ -75,8 +67,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
         minor = (TextView)findViewById(R.id.edit_node_minor);
         major = (TextView)findViewById(R.id.edit_node_major);
 
-        imageView = (ImageView)findViewById(R.id.prof_img);
-        panoWidgetView = (ImageView) findViewById(R.id.sell_img);
+        panoWidgetView = (ImageView) findViewById(R.id.thumb_add_node);
 
 
         
@@ -100,6 +91,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
 
     }
 
+    /*
     public static String saveImage(String id, Bitmap bitmap){
         try{
             String name = id+".png";
@@ -122,7 +114,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
             return null;
         }
 
-    }
+    }*/
 
     private void initSensor(){
         // initialize your android device sensor capabilities
