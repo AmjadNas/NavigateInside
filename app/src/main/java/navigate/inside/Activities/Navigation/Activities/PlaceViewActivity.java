@@ -244,11 +244,17 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     public void setPage(int page) {
         if(position != page) {
-            position = page;
-            bindPage();
-            if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            if (page < itemList.size()){
+                position = page;
+
+                bindPage();
+                if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }else if (page == itemList.size()){
+                Toast.makeText(this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
+            }
         }
+
     }
 
     private void loadImageto3D(final Bitmap res, final boolean downloaded) {
@@ -258,7 +264,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 if (downloaded)
                     SysData.getInstance().insertImageToDB(currentID, res);
 
-                return Converter.getImageTHumbnail(params[0]);
+                return Converter.getImageTHumbnail(res);
             }
 
             @Override
@@ -302,7 +308,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             Log.i("onBeaconEvent ", "Called " + beacon);
 
             if (index >= 0) {
-                setPage(index);
+                setPage(++index);
             }
         }
     }
@@ -342,8 +348,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)
-            setPage(++position);
-
+        if (isChecked) {
+            setPage(position+1);
+            checkBox.setChecked(false);
+        }
     }
 }

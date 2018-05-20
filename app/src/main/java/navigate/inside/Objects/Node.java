@@ -195,21 +195,20 @@ public class Node {
         if (rooms.isEmpty()){
             if (isJunction()){
 
-                return "Building :"+ getBuilding() + " stairs";
+                return "Building :"+ getBuilding() + " floor"+ getFloor() + " stairs";
 
             }else if (isElevator()){
-                return "Building :"+ getBuilding() + " elevator";
-            }
+                return "Building :"+ getBuilding() + " floor"+ getFloor() +  " elevator";
+            }else
+                return "Building :"+ getBuilding() + " floor"+ getFloor() +  " elevator";
 
         }else{
             for (Room r : rooms){
                 sb.append(r);
             }
-            return "Building :"+ getBuilding() +
+            return "Building :"+ getBuilding() + " floor"+ getFloor() +
                     "\nAvailable Rooms :" + sb.toString();
         }
-
-        return null;
 
     }
 

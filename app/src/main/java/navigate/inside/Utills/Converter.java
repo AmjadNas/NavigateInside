@@ -41,7 +41,7 @@ public final class Converter {
     }
 
     public static Bitmap getImageTHumbnail(Bitmap img){
-        return ThumbnailUtils.extractThumbnail(img,500,300, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        return ThumbnailUtils.extractThumbnail(img,500,300);
     }
 
 }

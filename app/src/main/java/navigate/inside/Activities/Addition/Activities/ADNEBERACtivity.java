@@ -81,7 +81,6 @@ public class ADNEBERACtivity extends AppCompatActivity implements SensorEventLis
         String s1 = (String) node1.getSelectedItem();
         String s2 = (String) node2.getSelectedItem();
 
-
         data.linkNodes(s1,s2, mAzimuth, box.isChecked());
 
         finish();

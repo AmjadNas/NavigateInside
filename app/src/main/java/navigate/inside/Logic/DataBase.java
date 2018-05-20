@@ -84,7 +84,7 @@ public class DataBase extends SQLiteOpenHelper {
             cv.put(Constants.NAME, name);
             cv.put(Constants.NUMBER, number);
 
-            db.insert(Constants.Node, null, cv);
+            db.insert(Constants.Room, null, cv);
 
             db.close();
         }catch (Throwable th){

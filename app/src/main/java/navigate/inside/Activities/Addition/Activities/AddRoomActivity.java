@@ -41,7 +41,7 @@ public class AddRoomActivity extends AppCompatActivity {
             strings.add(node.get_id().toString());
         }
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, new ArrayList<String>());
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
         lView.setAdapter(arrayAdapter);
 
         node1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strings));

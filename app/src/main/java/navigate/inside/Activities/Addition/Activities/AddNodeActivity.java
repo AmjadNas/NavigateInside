@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.recognition.packets.Beacon;
 
 import java.io.File;
@@ -138,6 +139,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
     @Override
     protected void onResume() {
         super.onResume();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
         // register beacon listener
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();

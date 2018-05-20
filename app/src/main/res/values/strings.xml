@@ -21,4 +21,5 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="cant_find_location">Failed to fetch location</string>
+    <string name="you_have_arrived">You have arrived to destination</string>
 </resources>
