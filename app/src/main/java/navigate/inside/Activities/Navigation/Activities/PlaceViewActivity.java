@@ -311,7 +311,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 beacon.getMajor(), beacon.getMinor());
         if (!currentID.equals(tempID)) {
             int index = PathFinder.getInstance().getIndexOfNode(tempID);
-            Log.i("onBeaconEvent ", "Called " + beacon);
 
             if (index >= 0) {
                 setPage(++index);
