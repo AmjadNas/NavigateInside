@@ -1,5 +1,6 @@
 package navigate.inside.Activities.Navigation.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import navigate.inside.Activities.PanoramicImageActivity;
 import navigate.inside.Logic.BeaconListener;
 import navigate.inside.Logic.GridSpacingItemDecoration;
+import navigate.inside.Logic.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
@@ -47,8 +49,10 @@ import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
+import navigate.inside.Utills.ImageLoader;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, BeaconListener, NetworkResListener{
+public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, BeaconListener, NetworkResListener, ImageLoadedListener{
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -125,7 +129,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
         Bitmap image = PathFinder.getInstance().getImage(position);
         if (image != null)
-            loadImageto3D(image, false);
+            new ImageLoader(currentID, this, false).execute(image);
+           // loadImageto3D(image, false);
 
 
 
@@ -257,6 +262,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void loadImageto3D(final Bitmap res, final boolean downloaded) {
         new AsyncTask<Bitmap,Bitmap,Bitmap>(){
             @Override
@@ -332,7 +338,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     public void onPostUpdate(Bitmap res, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-               loadImageto3D(res, true);
+                new ImageLoader(currentID, this, true).execute(res);
+              // loadImageto3D(res, true);
             }
 
         }else
@@ -352,5 +359,15 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             setPage(position+1);
             checkBox.setChecked(false);
         }
+    }
+
+    @Override
+    public void onImageLoaded(Bitmap image) {
+        if (image != null)
+            panoWidgetView.setImageBitmap(image);
+               /* else
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
+                    */
+
     }
 }

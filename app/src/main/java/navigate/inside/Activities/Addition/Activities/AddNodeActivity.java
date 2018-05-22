@@ -3,6 +3,7 @@ package navigate.inside.Activities.Addition.Activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -53,6 +54,7 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
     private int mAzimuth;
 
     private ImageView panoWidgetView;
+    private Bitmap tmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,8 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
         new AsyncTask<Void, Void, Bitmap>(){
             @Override
             protected void onPostExecute(Bitmap aVoid) {
-                panoWidgetView.setImageBitmap(Converter.getImageTHumbnail(aVoid));
+                tmp = Converter.getImageTHumbnail(aVoid);
+                panoWidgetView.setImageBitmap(tmp);
                 img = aVoid;
             }
 
@@ -228,4 +231,12 @@ public class AddNodeActivity extends AppCompatActivity implements BeaconListener
 
     }
 
+    public void Rotatepic(View view) {
+
+        Matrix m = new Matrix();
+        m.postRotate(90);
+        img = Bitmap.createBitmap(img,0,0,img.getWidth(),img.getHeight(),m,false);
+        tmp = Bitmap.createBitmap(tmp,0,0,tmp.getWidth(),tmp.getHeight(),m,false);
+        panoWidgetView.setImageBitmap(tmp);
+    }
 }

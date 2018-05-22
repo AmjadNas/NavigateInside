@@ -1,6 +1,7 @@
 package navigate.inside.Activities.Navigation.Activities;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import navigate.inside.Activities.PanoramicImageActivity;
 import navigate.inside.Logic.BeaconListener;
+import navigate.inside.Logic.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Network.NetworkResListener;
@@ -28,9 +30,10 @@ import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
+import navigate.inside.Utills.ImageLoader;
 
 
-public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener{
+public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener, ImageLoadedListener{
     private TextView name, direction;
     private ImageView panoWidgetView;
     private BeaconID CurrentBeacon;
@@ -71,11 +74,14 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
         name.setText(String.valueOf(m));
         Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
         if (image != null)
-            loadImageto3D(image, false);
+            new ImageLoader(CurrentBeacon, this, false).execute(image);
+
+        // loadImageto3D(image, false);
 
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void loadImageto3D(final Bitmap res, final boolean downloaded) {
         new AsyncTask<Void, Void, Bitmap>(){
             @Override
@@ -112,7 +118,9 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     public void onPostUpdate(Bitmap res, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-                loadImageto3D(res, true);
+                new ImageLoader(CurrentBeacon, this, true).execute(res);
+
+                //   loadImageto3D(res, true);
             }
 
         }else
@@ -137,6 +145,16 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
 
             }
         }
+    }
+
+    @Override
+    public void onImageLoaded(Bitmap image) {
+        if (image != null)
+            panoWidgetView.setImageBitmap(image);
+               /* else
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
+                    */
+
     }
 
     public void viewPanoramic(View view) {
