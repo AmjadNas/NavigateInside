@@ -395,7 +395,12 @@ public class SysData {
 
 
     public void linkNodes(String s1, String s2, int direction, boolean isdirect) {
+        Node node1 = getNodeByBeaconID(BeaconID.from(s1));
+        Node node2 = getNodeByBeaconID(BeaconID.from(s2));
+        int dir = (direction + 180) % 360;
 
+        node1.AddNeighbour(new Pair<Node, Integer>(node2, direction));
+        node2.AddNeighbour(new Pair<Node, Integer>(node1, dir));
         db.insertRelation(s1,s2, direction, isdirect);
     }
 

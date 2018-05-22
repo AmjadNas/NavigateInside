@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,10 +35,10 @@ import navigate.inside.Utills.ImageLoader;
 
 
 public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener, ImageLoadedListener{
+
     private TextView name, direction;
     private ImageView panoWidgetView;
     private BeaconID CurrentBeacon;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,8 +72,10 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
 
     public void bindPage(Node node){
         int m = node.get_id().getMajor();
-        name.setText(String.valueOf(m));
+        name.setText(String.valueOf(node.toNameString()));
+        direction.setText(node.toRoomsString());
         Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
+
         if (image != null)
             new ImageLoader(CurrentBeacon, this, false).execute(image);
 
@@ -131,22 +134,19 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
-        if(CurrentBeacon == null){
+        if(CurrentBeacon == null || !CurrentBeacon.equals(temp)){
             CurrentBeacon = temp;
-        }else{
-            if(!CurrentBeacon.equals(temp)){
-                CurrentBeacon = temp;
-                if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
-
-                    bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
-                }else{
-                    Toast.makeText(this, R.string.cant_find_location,Toast.LENGTH_SHORT).show();
-                }
-
-            }
+            doStuff();
         }
     }
+    private void doStuff(){
+        if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
 
+            bindPage(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+        }else{
+            Toast.makeText(this, R.string.cant_find_location,Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public void onImageLoaded(Bitmap image) {
         if (image != null)

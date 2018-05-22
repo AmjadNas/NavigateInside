@@ -112,7 +112,10 @@ public class PanoramicImageActivity extends AppCompatActivity {
             new AsyncTask<Void,Void,Void>(){
                 @Override
                 protected Void doInBackground(Void... params) {
-                    image = Bitmap.createScaledBitmap(SysData.getInstance().getImageForNode(id), I_WIDTH, I_HEIGHT,false);
+                    image = SysData.getInstance().getImageForNode(id);
+                    if (image != null)
+                        image = Bitmap.createScaledBitmap(image, I_WIDTH, I_HEIGHT,false);
+
                     return null;
                 }
 

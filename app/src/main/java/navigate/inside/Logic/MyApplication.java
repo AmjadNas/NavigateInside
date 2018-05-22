@@ -24,9 +24,9 @@ public class MyApplication extends Application {
 
         listeners = new ArrayList<>();
         beaconManager = new BeaconManager(getApplicationContext());
-        beaconManager.setBackgroundScanPeriod(1000,500);
+        //beaconManager.setBackgroundScanPeriod(1000,500);
 
-        //beaconManager.setForegroundScanPeriod(200, 2000);
+        beaconManager.setForegroundScanPeriod(1000, 1000);
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
             public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
@@ -54,19 +54,20 @@ public class MyApplication extends Application {
             @Override
             public void onServiceReady() {
                 region = new BeaconRegion(
-                        "monitored region",
+                        "ranged region",
                         null,
                         null, null);
-                beaconManager.startMonitoring(region);
+               // beaconManager.startMonitoring(region);
                 // ranged region
-                //beaconManager.startRanging(region);
+                beaconManager.startRanging(region);
             }
         });
     }
 
     public void stopRanging(){
         if (region != null)
-            beaconManager.stopMonitoring(region.getIdentifier());
+            beaconManager.stopRanging(region);
+           // beaconManager.stopMonitoring(region.getIdentifier());
     }
 
     public void registerListener(BeaconListener listener){

@@ -187,6 +187,19 @@ public class Node {
 
     }
 
+    public String toNameString(){
+        return "Building :"+ getBuilding() + " floor"+ getFloor();
+    }
+
+    public String toRoomsString(){
+        StringBuilder sb = new StringBuilder();
+        for (Room r : rooms){
+            sb.append(r);
+        }
+        return "Building :"+ getBuilding() + " floor"+ getFloor() +
+                "\nAvailable Rooms :" + sb.toString();
+    }
+
     @Override
     public String toString() {
 
@@ -200,14 +213,10 @@ public class Node {
             }else if (isElevator()){
                 return "Building :"+ getBuilding() + " floor"+ getFloor() +  " elevator";
             }else
-                return "Building :"+ getBuilding() + " floor"+ getFloor() +  " elevator";
+                return toNameString();
 
         }else{
-            for (Room r : rooms){
-                sb.append(r);
-            }
-            return "Building :"+ getBuilding() + " floor"+ getFloor() +
-                    "\nAvailable Rooms :" + sb.toString();
+            return toRoomsString();
         }
 
     }
@@ -228,7 +237,7 @@ public class Node {
         cv.put(Constants.Floor, node.getFloor());
         cv.put(Constants.Outside, node.isOutside());
         cv.put(Constants.NessOutside, node.isNessOutside());
-        cv.put(Constants.Direction, node.isOutside());
+        cv.put(Constants.Direction, node.getDirection());
 
         return cv;
 

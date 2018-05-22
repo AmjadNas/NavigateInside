@@ -100,22 +100,20 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
+    private void doStuff(){
+        if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
+            BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
+        }else{
+            Toast.makeText(this, R.string.cant_find_location, Toast.LENGTH_SHORT).show();
+        }
 
+    }
     @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
-        if(CurrentBeacon == null){
+        if(CurrentBeacon == null || !CurrentBeacon.equals(temp)){
             CurrentBeacon = temp;
-        }else{
-            if(!CurrentBeacon.equals(temp)){
-                CurrentBeacon = temp;
-                if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
-                   BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
-                }else{
-                    Toast.makeText(this, R.string.cant_find_location, Toast.LENGTH_SHORT).show();
-                }
-
-            }
+            doStuff();
         }
     }
 
