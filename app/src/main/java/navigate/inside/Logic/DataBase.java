@@ -175,10 +175,10 @@ public class DataBase extends SQLiteOpenHelper {
                 for (Node nb : nodes)
                     if (nb.get_id().equals(Id) && !nb.equals(n)) {
                         dir = (r.getInt(1) + 180) % 360;
-                        if(r.getInt(2) == 1)
+                       // if(r.getInt(2) == 1)
                             nb.AddNeighbour(new Pair<Node, Integer>(n, dir));
-                        else
-                            nb.AddNeighbour(new Pair<Node, Integer>(n, nb.getDirection()));
+                       // else
+                         //   nb.AddNeighbour(new Pair<Node, Integer>(n, nb.getDirection()));
                         n.AddNeighbour(new Pair<Node, Integer>(nb, r.getInt(1)));
 
                         break;
