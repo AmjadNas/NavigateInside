@@ -19,8 +19,8 @@ import com.estimote.coresdk.recognition.packets.Beacon;
 import org.json.JSONObject;
 
 import navigate.inside.Activities.PanoramicImageActivity;
-import navigate.inside.Logic.BeaconListener;
-import navigate.inside.Logic.ImageLoadedListener;
+import navigate.inside.Logic.Listeners.BeaconListener;
+import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Network.NetworkResListener;

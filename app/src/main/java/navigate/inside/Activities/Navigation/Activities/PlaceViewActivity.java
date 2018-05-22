@@ -35,9 +35,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import navigate.inside.Activities.PanoramicImageActivity;
-import navigate.inside.Logic.BeaconListener;
+import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.GridSpacingItemDecoration;
-import navigate.inside.Logic.ImageLoadedListener;
+import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;

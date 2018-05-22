@@ -1,7 +1,6 @@
 package navigate.inside.Logic;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 import com.estimote.coresdk.recognition.packets.Beacon;
@@ -9,6 +8,8 @@ import com.estimote.coresdk.service.BeaconManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import navigate.inside.Logic.Listeners.BeaconListener;
 
 
 public class MyApplication extends Application {
@@ -25,7 +26,7 @@ public class MyApplication extends Application {
         beaconManager = new BeaconManager(getApplicationContext());
         beaconManager.setBackgroundScanPeriod(1000,500);
 
-        beaconManager.setForegroundScanPeriod(200, 2000);
+        //beaconManager.setForegroundScanPeriod(200, 2000);
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
             public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> beacons) {
@@ -43,12 +44,7 @@ public class MyApplication extends Application {
 
             }
             @Override
-            public void onExitedRegion(BeaconRegion region) {
-                // could add an "exit" notification too if you want (-:
-                //beaconManager.stopMonitoring(region.getIdentifier());
-               // beaconManager.stop();
-              //  Log.i("exit becon", region.getProximityUUID().toString());
-            }
+            public void onExitedRegion(BeaconRegion region) { }
         });
 
     }
@@ -62,6 +58,8 @@ public class MyApplication extends Application {
                         null,
                         null, null);
                 beaconManager.startMonitoring(region);
+                // ranged region
+                //beaconManager.startRanging(region);
             }
         });
     }

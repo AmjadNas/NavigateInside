@@ -1,4 +1,4 @@
-package navigate.inside.Logic;
+package navigate.inside.Logic.Listeners;
 
 import com.estimote.coresdk.recognition.packets.Beacon;
 

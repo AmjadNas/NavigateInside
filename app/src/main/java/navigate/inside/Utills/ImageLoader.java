@@ -2,11 +2,9 @@ package navigate.inside.Utills;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.widget.ImageView;
 
-import navigate.inside.Logic.ImageLoadedListener;
+import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.SysData;
-import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Objects.BeaconID;
 
 public class ImageLoader extends AsyncTask<Bitmap,Bitmap,Bitmap> {
