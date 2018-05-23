@@ -48,6 +48,21 @@ public class Node {
         this.rooms = new ArrayList<>();
     }
 
+    public ArrayList<String> getRoomsNumbers(){
+        ArrayList<String> room = new ArrayList<>();
+        if(rooms.isEmpty()){
+            return null;
+        }
+        if(rooms.size() == 1 ){
+            room.add(rooms.get(0).GetRoomNum());
+        }
+        if(rooms.size() > 1 ){
+            room.add(rooms.get(0).GetRoomNum());
+            room.add(rooms.get(rooms.size()-1).GetRoomNum());
+        }
+        return room;
+    }
+
     public BeaconID get_id() {
         return _id;
     }
@@ -119,12 +134,30 @@ public class Node {
         Junction = junction;
     }
 
+    public void setJunction(int i){
+        if(i == 1 ){
+            Junction=true;
+        }
+        if(i == 0){
+            Junction=false;
+        }
+    }
+
     public boolean isElevator() {
         return Elevator;
     }
 
     public void setElevator(boolean elevator) {
         Elevator = elevator;
+    }
+
+    public void setElevator(int i){
+        if(i == 1){
+            Elevator=true;
+        }
+        if(i == 0){
+            Elevator=false;
+        }
     }
 
     public String getBuilding() {

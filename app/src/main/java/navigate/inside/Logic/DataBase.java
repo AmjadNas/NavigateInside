@@ -139,6 +139,8 @@ public class DataBase extends SQLiteOpenHelper {
             Id = new BeaconID(UUID.fromString(beaconID[0]), major, minor);
 
             Node n = new Node(Id,Boolean.valueOf(r.getString(1)),Boolean.valueOf(r.getString(2)),r.getString(3),r.getString(4));
+            n.setJunction(r.getInt(1));
+            n.setElevator(r.getInt(2));
             n.setOutside(Boolean.valueOf(r.getString(5)));
             n.setNessOutside(Boolean.valueOf(r.getString(6)));
             n.setDirection(r.getInt(7));
