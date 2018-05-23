@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pageLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/pageLayout">
+    android:background="@color/CustomBackgroundColor">
 
     <!-- <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -15,48 +16,54 @@
         android:id="@+id/node_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
 
     <ImageView
         android:id="@+id/thumb_place_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/node_name"
+        android:layout_margin="10dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_menu_camera"
         android:clickable="true"
         android:maxHeight="250dp"
         android:maxWidth="250dp"
         android:minHeight="50dp"
         android:minWidth="50dp"
         android:onClick="viewPanorama"
+        android:padding="10dp"
         android:scaleType="fitXY"
-        android:layout_below="@+id/node_name" />
+        android:src="@drawable/ic_menu_camera" />
 
 
     <TextView
         android:id="@+id/node_direct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/arrive_check"
+        android:layout_below="@+id/thumb_place_activity"
+        android:layout_marginTop="21dp"
         android:text="TextView"
-        android:textSize="30sp"
-        android:layout_alignTop="@+id/arrive_check"
-        android:layout_alignStart="@+id/thumb_place_activity"
-        android:layout_marginStart="13dp" />
+        android:textSize="30sp" />
 
     <CheckBox
         android:id="@+id/arrive_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="162dp"
-        android:text="@string/checkbox"
-        android:layout_marginStart="12dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/node_direct" />
+        android:layout_alignStart="@+id/thumb_place_activity"
+        android:layout_below="@+id/node_direct"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/checkbox" />
 
 
-</RelativeLayout >
+</RelativeLayout>

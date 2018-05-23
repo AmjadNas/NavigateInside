@@ -4,47 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     tools:context="navigate.inside.Activities.Navigation.Activities.GetDirectionsActivity">
 
     <LinearLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="115dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-    <EditText
-               android:id="@+id/start"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_margin="10dp"
-               android:ems="10"
-               android:hint="What do you see ?"
-               android:inputType="textPersonName" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="94dp"
+        android:orientation="vertical">
 
-           <EditText
-               android:id="@+id/goal"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_margin="10dp"
-               android:ems="10"
-               android:hint="Where you want to go?"
-               android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:ems="10"
+            android:hint="What do you see around you ?"
+            android:inputType="textPersonName" />
 
-           <CheckBox
-                android:id="@+id/elevator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="go through elevator" />
+        <EditText
+            android:id="@+id/goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:ems="10"
+            android:hint="Where you want to go?"
+            android:inputType="textPersonName" />
 
-                <Button
-                android:id="@+id/search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Search"
-                    android:onClick="Search"/>
+        <CheckBox
+            android:id="@+id/elevator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Go through elevator" />
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="158dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+                   android:layout_margin="10dp"
+            android:onClick="Search"
+            android:text="Go" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/frame"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/logo" />
 </RelativeLayout>
