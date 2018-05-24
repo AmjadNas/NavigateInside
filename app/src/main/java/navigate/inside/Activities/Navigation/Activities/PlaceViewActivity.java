@@ -123,7 +123,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void bindPage(){
-        String text;
+
         Node temp = itemList.get(position).first;
         currentID = temp.get_id();
 
