@@ -17,7 +17,7 @@
         <item>Capture Image</item>
     </string-array>
 
-    <string name="title_activity_panoramic_image">PanoramicImageActivity</string>
+    <string name="title_activity_panoramic_image">View Image</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="cant_find_location">Failed to fetch location</string>
@@ -27,4 +27,7 @@
     <string name="what_do_you_see_around_you">What do you see around you ?</string>
     <string name="go_through_elevator">Go through elevator</string>
     <string name="go">Go</string>
+    <string name="navigation">Navigation</string>
+    <string name="getDirections">Get Directions</string>
+    <string name="currentlocal">Current Location</string>
 </resources>

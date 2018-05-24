@@ -27,6 +27,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.Navigation.Activities.PlaceViewActivity"
+            android:label="@string/navigation"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity
@@ -48,14 +49,27 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_panoramic_image"
-            android:theme="@style/FullscreenTheme" />
+            android:parentActivityName=".Activities.Navigation.Activities.PlaceViewActivity"
+            android:theme="@style/FullscreenTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Navigation.Activities.PlaceViewActivity"
+                />
+        </activity>
 
         <activity android:name=".Activities.Addition.Activities.AddStuff"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.Navigation.Activities.MyLocationActivity"
+            android:label="@string/currentlocal"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.MainActivity"
+                />
+        </activity>
         <activity android:name=".Activities.Addition.Activities.ADNEBERACtivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
@@ -63,8 +77,15 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activities.Navigation.Activities.GetDirectionsActivity"
+            android:label="@string/getDirections"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.MainActivity"
+                />
+        </activity>>
     </application>
 
 </manifest>
