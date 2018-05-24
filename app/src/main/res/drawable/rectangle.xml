@@ -5,7 +5,7 @@
     android:shape="rectangle" >
     <!-- View background color -->
     <solid
-        android:color="#faf3ff" >
+        android:color="@color/colorPrimary" >
     </solid>
 
     <corners
