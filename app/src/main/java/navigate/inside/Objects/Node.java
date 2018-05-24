@@ -48,20 +48,6 @@ public class Node {
         this.rooms = new ArrayList<>();
     }
 
-    public ArrayList<String> getRoomsNumbers(){
-        ArrayList<String> room = new ArrayList<>();
-        if(rooms.isEmpty()){
-            return null;
-        }
-        if(rooms.size() == 1 ){
-            room.add(rooms.get(0).GetRoomNum());
-        }
-        if(rooms.size() > 1 ){
-            room.add(rooms.get(0).GetRoomNum());
-            room.add(rooms.get(rooms.size()-1).GetRoomNum());
-        }
-        return room;
-    }
 
     public BeaconID get_id() {
         return _id;
@@ -72,7 +58,15 @@ public class Node {
     }
 
     public String getRoomsRange() {
-        return roomsRange;
+        if (!rooms.isEmpty()){
+            if (rooms.size() > 1){
+                return "Rooms: " + rooms.get(0).GetRoomNum() + " - " + rooms.get(rooms.size()-1);
+            }else{
+                return "Room: " + rooms.get(0).GetRoomNum();
+            }
+        }
+
+        return "No rooms";
     }
 
     public Bitmap getImage(){
@@ -184,12 +178,30 @@ public class Node {
         Outside = outside;
     }
 
+    public void setOutside(int i) {
+        if(i == 1){
+            Outside=true;
+        }
+        if(i == 0){
+            Outside=false;
+        }
+
+    }
+
     public boolean isNessOutside() {
         return NessOutside;
     }
 
     public void setNessOutside(boolean nessOutside) {
         NessOutside = nessOutside;
+    }
+    public void setNessOutside(int i) {
+        if(i == 1){
+            NessOutside=true;
+        }
+        if(i == 0){
+            NessOutside=false;
+        }
     }
 
     public ArrayList<Room> getRooms(){

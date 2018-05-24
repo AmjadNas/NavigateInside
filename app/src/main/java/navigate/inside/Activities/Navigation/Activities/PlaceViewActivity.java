@@ -80,7 +80,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         }
     };
     private ArrayList<Pair<Node,Integer>> itemList;
-    private ArrayList<String> roomRange;
     private TextView name, direction;
     private CheckBox checkBox;
     private ImageView panoWidgetView;
@@ -90,7 +89,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_view);
-        roomRange = new ArrayList<>();
         position = getIntent().getIntExtra(Constants.INDEX, -1);
 
         if (position >= 0){
@@ -125,17 +123,14 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void bindPage(){
-
-        Node temp;
-
-        temp = itemList.get(position).first;
-        temp.isElevator();
-        currentID = itemList.get(position).first.get_id();
+        String text;
+        Node temp = itemList.get(position).first;
+        currentID = temp.get_id();
 
         /*Message for Elevator*/
         if(itemList.size() > position+1){
             if(temp.isElevator() && itemList.get(position+1).first.isElevator()){
-                name.setText("Next Step : Go to Floor "+itemList.get(position+1).first.getFloor()+" by elevator");
+                name.setText("Next Step : Go to Floor " + itemList.get(position+1).first.getFloor()+" by elevator");
                 position++;
             }
         }
@@ -143,27 +138,18 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         /*Message for Stairs*/
         if(itemList.size() > position+1) {
             if (temp.isJunction() && itemList.get(position + 1).first.isJunction()) {
+
                 if (Integer.parseInt(temp.getFloor()) < Integer.parseInt(itemList.get(position + 1).first.getFloor())) {
                     name.setText("Next Step : Go up the stairs to Floor " + itemList.get(position + 1).first.getFloor());
                 } else {
-                    name.setText("Next Step : Go down the stairs to Floor " + itemList.get(position + 1).first.getFloor());
+                    name.setText("Next Step : Go down  the stairs to Floor " + itemList.get(position + 1).first.getFloor());
                 }
                 position++;
             }
         }
         /*Getting the rooms range and display for Regular Node */
         if(!temp.isJunction() && !temp.isElevator()){
-            roomRange = temp.getRoomsNumbers();
-            if(roomRange.size() == 1 ){
-                name.setText("Next Step : Room "+String.valueOf(roomRange.get(0)));
-            }
-            if(roomRange.size() > 1){
-                name.setText("Next Step : Rooms "+String.valueOf(roomRange.get(0))+" - "+String.valueOf(roomRange.get(1)));
-            }
-            if(roomRange == null){
-                Toast.makeText(this,"Room Range is null !! ",Toast.LENGTH_SHORT).show();
-            }
-            roomRange.clear();
+            name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
         }
       //  name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
         direction.setText(getDirection(mAzimuth, itemList.get(position).second));
@@ -357,26 +343,11 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
-    public void onPreUpdate(String str) {
-
-    }
-
-    @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
-
-    }
-
-    @Override
     public void onPostUpdate(Bitmap res, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new ImageLoader(currentID, this, true).execute(res);
-              // loadImageto3D(res, true);
+                // loadImageto3D(res, true);
             }
 
         }else
@@ -407,4 +378,21 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                     */
 
     }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onPreUpdate(String str) {
+
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, ResStatus status) {
+
+    }
+
+
 }
