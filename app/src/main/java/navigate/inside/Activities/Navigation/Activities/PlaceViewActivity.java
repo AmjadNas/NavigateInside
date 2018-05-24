@@ -277,13 +277,13 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 position = page;
 
                 bindPage();
-                if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
             }else if (page == itemList.size()){
                 Toast.makeText(this, R.string.you_have_arrived, Toast.LENGTH_LONG).show();
             }
         }
-
+        if(sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -334,10 +334,13 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
                 beacon.getMajor(), beacon.getMinor());
         if (!currentID.equals(tempID)) {
+            currentID = tempID;
             int index = PathFinder.getInstance().getIndexOfNode(tempID);
 
             if (index >= 0) {
-                setPage(++index);
+                setPage(index+1);
+            }else {
+                Toast.makeText(this, "doesn't", Toast.LENGTH_SHORT).show();
             }
         }
     }
