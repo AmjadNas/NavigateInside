@@ -21,7 +21,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room number: "+ roomNum + "\n Room name: " + roomName + "\n";
+        return "\nRoom number: "+ roomNum + "\nRoom name: " + roomName;
     }
 
     @Override

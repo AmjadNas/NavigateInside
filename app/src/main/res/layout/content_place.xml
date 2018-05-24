@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pageLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/CustomBackgroundColor">
+    android:background="@color/CustomBackgroundColor"
+    android:orientation="vertical">
 
     <!-- <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -17,8 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:text="TextView"
+        android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginLeft="10dp"
@@ -26,34 +26,47 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
 
-
-    <ImageView
-        android:id="@+id/thumb_place_activity"
+    <android.support.v7.widget.CardView
+        android:id="@+id/image_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/node_name"
-        android:layout_margin="10dp"
-        android:adjustViewBounds="true"
-        android:clickable="true"
-        android:maxHeight="250dp"
-        android:maxWidth="250dp"
-        android:minHeight="50dp"
-        android:minWidth="50dp"
-        android:onClick="viewPanorama"
-        android:padding="10dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_menu_camera" />
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/card_margin"
+        android:elevation="20dp">
+        <ImageView
+            android:id="@+id/thumb_place_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/node_name"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:maxHeight="250dp"
+            android:maxWidth="250dp"
+            android:minHeight="50dp"
+            android:minWidth="50dp"
+            android:onClick="viewPanorama"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_menu_camera" />
+    </android.support.v7.widget.CardView>
 
-
-    <TextView
-        android:id="@+id/node_direct"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/arrive_check"
-        android:layout_below="@+id/thumb_place_activity"
-        android:layout_marginTop="21dp"
-        android:text="TextView"
-        android:textSize="30sp" />
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/anchor30"
+            android:layout_marginEnd="10dp"/>
+        <TextView
+            android:id="@+id/node_direct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+    </LinearLayout>
+
 
     <CheckBox
         android:id="@+id/arrive_check"
@@ -66,4 +79,4 @@
         android:text="@string/checkbox" />
 
 
-</RelativeLayout>
+</LinearLayout>

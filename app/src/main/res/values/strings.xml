@@ -23,4 +23,8 @@
     <string name="cant_find_location">Failed to fetch location</string>
     <string name="you_have_arrived">You have arrived to destination</string>
     <string name="nextStep">Next Step : %1$s</string>
+    <string name="where_you_want_to_go">Where you want to go?</string>
+    <string name="what_do_you_see_around_you">What do you see around you ?</string>
+    <string name="go_through_elevator">Go through elevator</string>
+    <string name="go">Go</string>
 </resources>
