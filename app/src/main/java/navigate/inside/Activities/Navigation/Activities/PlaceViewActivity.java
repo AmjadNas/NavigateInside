@@ -348,10 +348,11 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
                 beacon.getMajor(), beacon.getMinor());
         if (!currentID.equals(tempID)) {
-            currentID = tempID;
+
             int index = PathFinder.getInstance().getIndexOfNode(tempID);
 
             if (index >= 0) {
+                currentID = tempID;
                 setPage(index+1);
             }
         }
