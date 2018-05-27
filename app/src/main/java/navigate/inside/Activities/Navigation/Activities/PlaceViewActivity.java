@@ -147,6 +147,12 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 position++;
             }
         }
+        if(itemList.size() > position+1) {
+            if (temp.isJunction() && !itemList.get(position + 1).first.isJunction()) {
+
+                name.setText("Next step : Stairs");
+            }
+        }
         /*Getting the rooms range and display for Regular Node */
         if(!temp.isJunction() && !temp.isElevator()){
             name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
