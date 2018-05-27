@@ -353,8 +353,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
             if (index >= 0) {
                 setPage(index+1);
-            }else {
-                Toast.makeText(this, "doesn't", Toast.LENGTH_SHORT).show();
             }
         }
     }
