@@ -134,6 +134,14 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 position++;
             }
         }
+
+        if(itemList.size() > position+1){
+            if(temp.isElevator() && !itemList.get(position+1).first.isElevator()){
+                name.setText("Next Step :  elevator");
+
+            }
+        }
+
         //Two Staris solution !
         /*Message for Stairs*/
         if(itemList.size() > position+1) {
