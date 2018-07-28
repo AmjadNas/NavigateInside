@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //IMPORTANT: if you want to change the buttons to Image (ImageView)
-    // use these methods in the onClick attribute in the XML Layout edit
     public void find_location(View view) {
         launchActivity(MyLocationActivity.class);
     }

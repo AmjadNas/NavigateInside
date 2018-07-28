@@ -30,13 +30,6 @@
             android:text="Get Directions"
             android:onClick="get_directions"/>
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Manage nodes"
-            android:layout_gravity="center"
-            android:onClick="manage_nodes"/>
     </GridLayout>
 
 </android.support.design.widget.CoordinatorLayout>
