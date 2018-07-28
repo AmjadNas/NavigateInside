@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-
-import navigate.inside.Activities.Addition.Activities.AddStuff;
 import navigate.inside.Activities.Navigation.Activities.GetDirectionsActivity;
 import navigate.inside.Activities.Navigation.Activities.MyLocationActivity;
 import navigate.inside.Logic.SysData;
@@ -45,7 +43,5 @@ public class MainActivity extends AppCompatActivity {
         launchActivity(GetDirectionsActivity.class);
     }
 
-    public void manage_nodes(View view) {
-        launchActivity(AddStuff.class);
-    }
+
 }

@@ -41,9 +41,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.Addition.Activities.AddNodeActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activities.PanoramicImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -57,9 +54,6 @@
                 />
         </activity>
 
-        <activity android:name=".Activities.Addition.Activities.AddStuff"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
         <activity android:name=".Activities.Navigation.Activities.MyLocationActivity"
             android:label="@string/currentlocal"
             android:configChanges="orientation"
@@ -70,12 +64,6 @@
                 android:value=".Activities.MainActivity"
                 />
         </activity>
-        <activity android:name=".Activities.Addition.Activities.ADNEBERACtivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activities.Addition.Activities.AddRoomActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
         <activity android:name=".Activities.Navigation.Activities.GetDirectionsActivity"
             android:label="@string/getDirections"
             android:configChanges="orientation"
