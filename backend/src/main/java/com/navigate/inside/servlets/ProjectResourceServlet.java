@@ -1,9 +1,9 @@
 package com.navigate.inside.servlets;
-/*
 
 import com.navigate.inside.database.operations.ConnPool;
 import com.navigate.inside.database.operations.NodeResProvider;
 import com.navigate.inside.objects.Node;
+import com.navigate.inside.utils.Constants;
 import com.navigate.inside.utils.FilesUtils;
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ public class ProjectResourceServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static final int GET_ALL_NODES_JSON_REQ = 0;
-
+    private static final int GET_NODE_IMAGE = 1;
 
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
     private static final String RESOURCE_SUCCESS_TAG = "{\"result_code\":1}";
@@ -44,7 +45,6 @@ public class ProjectResourceServlet extends HttpServlet {
             System.out.println(FilesUtils.appDirName);
 
         }
-
     }
 
 
@@ -64,52 +64,69 @@ public class ProjectResourceServlet extends HttpServlet {
             System.out.println("ProjectResourceServlet:: req code ==>" + reqNo);
 
             while (retry > 0) {
+                try {
+                    switch (reqNo) {
+                        case GET_ALL_NODES_JSON_REQ: {
+                            conn = ConnPool.getInstance().getConnection();
+                            respPage = RESOURCE_FAIL_TAG;
+                            NodeResProvider NodeProvider = new NodeResProvider();
 
-                switch (reqNo) {
-                    case GET_ALL_NODES_JSON_REQ: {
-                        conn = ConnPool.getInstance().getConnection();
-                        respPage = RESOURCE_FAIL_TAG;
-                        NodeResProvider NodeProvider = new NodeResProvider();
+                            List<Node> getAllNodes = NodeProvider.getAllNodes(conn);
 
-                        List<Node> getAllNodes = null;
-                        try {
-                            getAllNodes = NodeProvider.getAllNodes(conn);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
+                            String resultJson = Node.toJson(getAllNodes);
+                            resp.addHeader("Content-Type",
+                                    "application/json; charset=UTF-8");
+                            if (resultJson != null && !resultJson.isEmpty()) {
+                                respPage = resultJson;
+
+                            } else {
+                                resp.sendError(404);
+                            }
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
+                            retry = 0;
+                            break;
+
                         }
-                        String resultJson = Node.toJson(getAllNodes);
+                        case GET_NODE_IMAGE: {
+                            String id = req.getParameter(Constants.ID);
+                            respPage = RESOURCE_FAIL_TAG;
 
-                        resp.addHeader("Content-Type",
-                                "application/json; charset=UTF-8");
-                        if (resultJson != null && !resultJson.isEmpty()) {
-                            respPage = resultJson;
+                            conn = ConnPool.getInstance().getConnection();
+                            NodeResProvider itemsResProvider = new NodeResProvider();
 
-                        } else {
-                            resp.sendError(404);
+                            byte[] imgBlob = itemsResProvider.getImage(id, conn);
+
+                            if (imgBlob != null && imgBlob.length > 0) {
+                                ServletOutputStream os = resp.getOutputStream();
+                                os.write(imgBlob);
+                            } else {
+                                resp.sendError(404);
+                            }
+
+                            retry = 0;
+                            break;
                         }
-                        PrintWriter pw = resp.getWriter();
-                        pw.write(respPage);
-                        retry = 0;
-                        break;
+                        default: {
+                            retry = 0;
+                            break;
+                        }
 
                     }
-                    default: {
-                        retry = 0;
-                        break;
+                }catch (SQLException e) {
+                    e.printStackTrace();
+                    retry--;
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    retry = 0;
+                } finally {
+                    if (conn != null) {
+                        ConnPool.getInstance().returnConnection(conn);
                     }
-
                 }
 
             }
-
-
         }
-
     }
 
-
-
-
-
-    }
-*/
+}

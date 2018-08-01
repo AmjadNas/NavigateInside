@@ -1,5 +1,5 @@
 package com.navigate.inside.objects;
-/*
+
 import com.letgo.objects.Item;
 import com.navigate.inside.utils.Constants;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.util.Pair;
-
+import jdk.internal.util.xml.impl.Pair;
 
 
 public class Node {
 
-    private int id;
+    private String id;
     private boolean Junction;
     private boolean Elevator;
     private String Building;
@@ -26,12 +26,23 @@ public class Node {
     private boolean NessOutside;
     private boolean Visited=false;
     private Node Father=null;
-    private ArrayList<Pair<Node,Integer>> Neighbours;
+    private ArrayList<Pair> Neighbours;
     private ArrayList<String> RoomsNearby;
     private int direction;
+    private byte[] image;
 //    private Bitmap image = null;
 
-    public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
+    public Node(String id,boolean Junction, boolean Elevator,String Building,String Floor, byte[] image){
+        this.id = id;
+        this.Junction=Junction;
+        this.Elevator=Elevator;
+        this.Building=Building;
+        this.Floor=Floor;
+        this.image = image;
+        Neighbours = new ArrayList<>();
+        RoomsNearby = new ArrayList<>();
+    }
+    public Node(String id,boolean Junction, boolean Elevator,String Building,String Floor){
         this.id = id;
         this.Junction=Junction;
         this.Elevator=Elevator;
@@ -41,6 +52,13 @@ public class Node {
         RoomsNearby = new ArrayList<>();
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public int getDirection() {
         return direction;
@@ -54,14 +72,14 @@ public class Node {
         return Father;
     }
 
-    public ArrayList<Node> getNeighbours() {
+  /*  public ArrayList<Node> getNeighbours() {
         ArrayList<Node> node = new ArrayList<>();
         for(Pair p : Neighbours){
-            node.add((Node) p.getKey());
+            node.add((Node) p);
         }
         return node;
     }
-
+*/
     public ArrayList<String> getRoomsNearby() {
         return RoomsNearby;
     }
@@ -78,7 +96,7 @@ public class Node {
         this.Father=null;
     }
 
-    public void AddNeighbour(Pair<Node,Integer> Neighbour){
+    public void AddNeighbour(Pair Neighbour){
         if(!Neighbours.contains(Neighbour))
             Neighbours.add(Neighbour);
     }
@@ -87,11 +105,11 @@ public class Node {
         RoomsNearby.add(Room);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -156,7 +174,7 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return id;
+        return id.hashCode();
     }
 
     @Override
@@ -215,7 +233,4 @@ public class Node {
 
     }
 
-
-
 }
-*/
