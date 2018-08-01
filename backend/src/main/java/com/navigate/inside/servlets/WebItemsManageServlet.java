@@ -75,7 +75,7 @@ public class WebItemsManageServlet extends HttpServlet {
         String id = null;
         boolean Junction = false;
         boolean Elevator = false;
-        int direction;
+        int direction = 0;
         String Building = null;
         boolean Outside = false;
         boolean NessOutside = false;
@@ -154,7 +154,7 @@ public class WebItemsManageServlet extends HttpServlet {
                     Node item = new Node(id, Junction, Elevator, Building, Floor, image);
 					item.setOutside(Outside);
 					item.setNessOutside(NessOutside);
-					
+					item.setDirection(direction);
 					if(isDelete){
 						
 						
