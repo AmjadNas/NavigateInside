@@ -26,7 +26,6 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     //compile files('src/main/webapp/lib/json-lib-2.4-jdk15.jar')
     compile fileTree(dir: 'src/main/webapp/libs', include: ['*.jar'])
-    compile project(path: ':app')
 }
 
 appengine {
