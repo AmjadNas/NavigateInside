@@ -53,49 +53,76 @@ public class NodeResProvider {
         ResultSet rs = null;
         PreparedStatement ps = null;
 
-        ps = conn.prepareStatement(Get_All_Nodes);
+        try{
+            ps = conn.prepareStatement(Get_All_Nodes);
 
-        rs = ps.executeQuery();
-        //todo get nabers also
-        while(rs.next()){
-            boolean Junction;
+            rs = ps.executeQuery();
+            while(rs.next()){
+                boolean Junction;
 
-            String id = rs.getNString(1);
-            if(rs.getInt(2) == 0){
-                 Junction = false;
-            }else{
-                Junction=true;
+                String id = rs.getNString(1);
+                if(rs.getInt(2) == 0){
+                    Junction = false;
+                }else{
+                    Junction=true;
+                }
+                boolean Elevator;
+                if(rs.getInt(3) == 0){
+                    Elevator = false;
+                }else{
+                    Elevator=true;
+                }
+                String Building = rs.getString(4);
+                String Floor =  rs.getString(5);
+
+                boolean Outside;
+                boolean NessOutside;
+                if(rs.getInt(6) == 0){
+                    Outside =false;
+                }else{
+                    Outside = true;
+                }
+
+                if(rs.getInt(7) == 0){
+                    NessOutside = false;
+                }else{
+                    NessOutside = true;
+                }
+
+                Node n = new Node(id,Junction,Elevator,Building,Floor);
+                RoomResProvider roomResProvider = new RoomResProvider();
+
+                n.setRoomsNearBy(roomResProvider.getRoomsForNode(n.getId(), conn));
+                n.setOutside(Outside);
+                n.setNessOutside(NessOutside);
+                results.add(n);
+
+
             }
-            boolean Elevator;
-            if(rs.getInt(3) == 0){
-                Elevator = false;
-            }else{
-                Elevator=true;
-            }
-            String Building = rs.getString(4);
-            String Floor =  rs.getString(5);
+        }catch (SQLException e){
+            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
 
-            boolean Outside;
-            boolean NessOutside;
-            if(rs.getInt(6) == 0){
-                Outside =false;
-            }else{
-                Outside = true;
+        }finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
             }
 
-            if(rs.getInt(7) == 0){
-                NessOutside = false;
-            }else{
-                NessOutside = true;
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-
-           Node n = new Node(id,Junction,Elevator,Building,Floor);
-            n.setOutside(Outside);
-            n.setNessOutside(NessOutside);
-            results.add(n);
-
-
         }
+
         return results;
     }
 

@@ -25,7 +25,7 @@ public class Node {
     private boolean Outside;
     private boolean NessOutside;
     private ArrayList<Pair> Neighbours;
-    private ArrayList<Room> RoomsNearby;
+    private List<Room> RoomsNearby;
     private int direction;
     private byte[] image;
 
@@ -45,8 +45,6 @@ public class Node {
         this.Elevator=Elevator;
         this.Building=Building;
         this.Floor=Floor;
-        Neighbours = new ArrayList<>();
-        RoomsNearby = new ArrayList<>();
     }
 
     public byte[] getImage() {
@@ -70,7 +68,7 @@ public class Node {
         return node;
     }
 */
-    public ArrayList<Room> getRoomsNearby() {
+    public List<Room> getRoomsNearby() {
         return RoomsNearby;
     }
 
@@ -217,4 +215,7 @@ public class Node {
 
     }
 
+    public void setRoomsNearBy(List<Room> roomsNearBy) {
+        this.RoomsNearby = roomsNearBy;
+    }
 }
