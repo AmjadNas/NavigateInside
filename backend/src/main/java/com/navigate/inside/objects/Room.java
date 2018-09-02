@@ -1,5 +1,7 @@
 package com.navigate.inside.objects;
 
+import net.sf.json.JSONObject;
+import com.navigate.inside.utils.Constants;
 public class Room {
 
     String roomNum;
@@ -40,6 +42,15 @@ public class Room {
         int result = roomNum != null ? roomNum.hashCode() : 0;
         result = 31 * result + (roomName != null ? roomName.hashCode() : 0);
         return result;
+    }
+
+    public JSONObject toJson(){
+        JSONObject obj = new JSONObject();
+
+        obj.put(Constants.NUMBER, roomNum);
+        obj.put(Constants.NAME, roomName);
+
+        return obj;
     }
 }
 

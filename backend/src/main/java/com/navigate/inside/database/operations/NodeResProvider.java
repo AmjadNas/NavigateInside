@@ -56,7 +56,7 @@ public class NodeResProvider {
         ps = conn.prepareStatement(Get_All_Nodes);
 
         rs = ps.executeQuery();
-
+        //todo get nabers also
         while(rs.next()){
             boolean Junction;
 

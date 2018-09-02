@@ -24,13 +24,10 @@ public class Node {
     private String Floor;
     private boolean Outside;
     private boolean NessOutside;
-    private boolean Visited=false;
-    private Node Father=null;
     private ArrayList<Pair> Neighbours;
-    private ArrayList<String> RoomsNearby;
+    private ArrayList<Room> RoomsNearby;
     private int direction;
     private byte[] image;
-//    private Bitmap image = null;
 
     public Node(String id,boolean Junction, boolean Elevator,String Building,String Floor, byte[] image){
         this.id = id;
@@ -64,13 +61,6 @@ public class Node {
         return direction;
     }
 
-    public void setFather(Node Father){
-        this.Father=Father;
-    }
-
-    public Node getFather() {
-        return Father;
-    }
 
   /*  public ArrayList<Node> getNeighbours() {
         ArrayList<Node> node = new ArrayList<>();
@@ -80,28 +70,17 @@ public class Node {
         return node;
     }
 */
-    public ArrayList<String> getRoomsNearby() {
+    public ArrayList<Room> getRoomsNearby() {
         return RoomsNearby;
     }
 
-    public boolean isVisited() {
-        return Visited;
-    }
-
-    public void setVisited(boolean visited) {
-        Visited = visited;
-    }
-
-    public void SetFatherNull(){
-        this.Father=null;
-    }
 
     public void AddNeighbour(Pair Neighbour){
         if(!Neighbours.contains(Neighbour))
             Neighbours.add(Neighbour);
     }
 
-    public void AddNearbyRoom(String Room){
+    public void AddNearbyRoom(Room Room){
         RoomsNearby.add(Room);
     }
 
@@ -192,14 +171,19 @@ public class Node {
 
     public JSONObject toJson(){
         JSONObject object = null;
-        object.put(Constants.ID,id);
+        JSONArray arr = new JSONArray();
+
+        object.put(Constants.BEACONID,id);
         object.put(Constants.Junction,Junction);
         object.put(Constants.Elevator,Elevator);
         object.put(Constants.Building,Building);
         object.put(Constants.Floor,Floor);
         object.put(Constants.Outside,Outside);
         object.put(Constants.NessOutside,NessOutside);
+        for(Room n : RoomsNearby)
+            arr.add(n.toJson());
 
+        object.put(Constants.ROOMS, arr);
         return object;
     }
 
