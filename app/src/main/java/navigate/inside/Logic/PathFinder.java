@@ -31,6 +31,7 @@ public class PathFinder {
         return instance;
     }
 
+    // BFS to find path
     public ArrayList<Pair<Node,Integer>> FindPath(BeaconID SNode,BeaconID GNode , boolean ok){
         path = new ArrayList<>();
         Node first = data.getNodeByBeaconID(SNode);
