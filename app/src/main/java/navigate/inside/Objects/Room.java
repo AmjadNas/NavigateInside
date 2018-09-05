@@ -1,6 +1,13 @@
 package navigate.inside.Objects;
 
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import navigate.inside.Utills.Constants;
+
 public class Room {
 
     String roomNum;
@@ -35,6 +42,24 @@ public class Room {
         return roomName != null ? roomName.equals(room.roomName) : room.roomName == null;
 
     }
+
+
+    public static Room parseJson(JSONObject obj){
+        Room room = null;
+        try{
+
+            String RoomNumber = obj.getString(Constants.NUMBER);
+            String RoomName = obj.getString(Constants.NAME);
+
+            room = new Room(RoomNumber,RoomName);
+
+            return room;
+        }catch (JSONException e){
+            Log.e("Exception :", e.getMessage());
+            return null;
+        }
+    }
+
 
     @Override
     public int hashCode() {
