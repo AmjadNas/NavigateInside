@@ -78,10 +78,10 @@ public class SysData {
         db.insertImage(currentBeacon, res);
     }
 
-    public void insertNode(Node n) {
+    public boolean insertNode(Node n) {
         if(db.insertNode(Node.getContentValues(n)))
-            AllNodes.add(n);
-
+           return AllNodes.add(n);
+        return false;
     }
 
     public void insertNeighbourToNode(String string, String string1, int dir) {
@@ -92,6 +92,13 @@ public class SysData {
             int d = (dir + 180) % 360;
             n1.AddNeighbour(new Pair<Node, Integer>(n2, dir));
             n2.AddNeighbour(new Pair<Node, Integer>(n1, d));
+        }
+
+    }
+
+    public void insertRoomToNode(Room r, Node n) {
+        if(db.insertRoom(n.get_id().toString(), r.GetRoomName(), r.GetRoomNum())){
+            n.AddRoom(r);
         }
 
     }

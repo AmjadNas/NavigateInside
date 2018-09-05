@@ -274,13 +274,7 @@ public class Node {
             node.setOutside(out);
             node.setNessOutside(nessout);
 
-            JSONArray arr = obj.getJSONArray(Constants.ROOMS);
-            Room r;
 
-            for (int i = 0; i < arr.length(); i++){
-                r = Room.parseJson(arr.getJSONObject(i));
-                node.AddRoom(r);
-            }
 
             return node;
         }catch (JSONException e){

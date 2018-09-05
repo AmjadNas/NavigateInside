@@ -18,6 +18,7 @@ import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
+import navigate.inside.Objects.Room;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
@@ -60,13 +61,22 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     public void onPostUpdate(JSONObject res, ResStatus status) {
         if(status == ResStatus.SUCCESS){
             try {
-                JSONArray arr = res.getJSONArray(Constants.Node), nbers;
+                JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms;
                 JSONObject o, nbr;
                 Node n;
 
                 for(int i = 0; i < arr.length(); i++){
-                    n = Node.parseJson(arr.getJSONObject(i));
-                    SysData.getInstance().insertNode(n);
+                    o = arr.getJSONObject(i);
+                    n = Node.parseJson(o);
+                    if(SysData.getInstance().insertNode(n)) {
+                        rooms = o.getJSONArray(Constants.ROOMS);
+                        Room r;
+
+                        for (int j = 0; j < rooms.length(); j++) {
+                            r = Room.parseJson(arr.getJSONObject(j));
+                            SysData.getInstance().insertRoomToNode(r, n);
+                        }
+                    }
                 }
                 for(int i = 0; i < arr.length(); i++){
                     o = arr.getJSONObject(i);

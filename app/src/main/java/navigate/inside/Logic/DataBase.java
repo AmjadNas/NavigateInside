@@ -75,7 +75,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
 
-    public void insertRoom(String bid, String name, String number){
+    public boolean insertRoom(String bid, String name, String number){
         try {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = new ContentValues();
@@ -84,11 +84,14 @@ public class DataBase extends SQLiteOpenHelper {
             cv.put(Constants.NAME, name);
             cv.put(Constants.NUMBER, number);
 
-            db.insert(Constants.Room, null, cv);
+            long i = db.insert(Constants.Room, null, cv);
 
             db.close();
+
+            return i >= 0;
         }catch (Throwable th){
             th.printStackTrace();
+            return false;
         }
     }
 
