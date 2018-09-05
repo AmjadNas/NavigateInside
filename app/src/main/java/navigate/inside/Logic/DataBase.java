@@ -212,15 +212,18 @@ public class DataBase extends SQLiteOpenHelper {
         return null;
     }
 
-    public void insertNode(ContentValues contentValues) {
+    public boolean insertNode(ContentValues contentValues) {
         try {
             SQLiteDatabase db = getWritableDatabase();
 
-            db.insert(Constants.Node, null, contentValues);
+            long i = db.insert(Constants.Node, null, contentValues);
 
             db.close();
+
+            return i >= 0;
         }catch (Throwable th){
             th.printStackTrace();
+            return false;
         }
     }
 
@@ -239,7 +242,7 @@ public class DataBase extends SQLiteOpenHelper {
         }
     }
 
-    public void insertRelation(String s1, String s2, int direction, boolean isdirect) {
+    public boolean insertRelation(String s1, String s2, int direction, boolean isdirect) {
 
         try {
             SQLiteDatabase db = getWritableDatabase();
@@ -250,11 +253,14 @@ public class DataBase extends SQLiteOpenHelper {
             cv.put(Constants.Direction, direction);
             cv.put(Constants.DIRECT, isdirect);
 
-            db.insert(Constants.Relation, null, cv);
+            long i = db.insert(Constants.Relation, null, cv);
 
             db.close();
+
+            return i >= 0;
         }catch (Throwable th){
             th.printStackTrace();
+            return false;
         }
     }
 }

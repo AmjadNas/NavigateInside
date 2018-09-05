@@ -77,4 +77,22 @@ public class SysData {
     public void insertImageToDB(BeaconID currentBeacon, Bitmap res) {
         db.insertImage(currentBeacon, res);
     }
+
+    public void insertNode(Node n) {
+        if(db.insertNode(Node.getContentValues(n)))
+            AllNodes.add(n);
+
+    }
+
+    public void insertNeighbourToNode(String string, String string1, int dir) {
+        Node n1 = getNodeByBeaconID(BeaconID.from(string));
+        Node n2 = getNodeByBeaconID(BeaconID.from(string1));
+
+        if(db.insertRelation(string, string1, dir, false)){
+            int d = (dir + 180) % 360;
+            n1.AddNeighbour(new Pair<Node, Integer>(n2, dir));
+            n2.AddNeighbour(new Pair<Node, Integer>(n1, d));
+        }
+
+    }
 }

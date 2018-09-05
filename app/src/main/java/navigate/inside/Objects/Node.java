@@ -6,6 +6,7 @@ import android.media.Image;
 import android.util.Log;
 import android.util.Pair;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +17,7 @@ import navigate.inside.Utills.Constants;
 
 public class Node {
 
-    private int id;
+
     private BeaconID _id; // new id to be used
     private boolean Junction;
     private boolean Elevator;
@@ -32,15 +33,6 @@ public class Node {
     private String roomsRange;   // must be entered in format x:y (from room x to y)
     private Bitmap image = null;
 
-    public Node(int id,boolean Junction,boolean Elevator,String Building,String Floor){
-        this.id = id;
-        this.Junction = Junction;
-        this.Elevator = Elevator;
-        this.Building = Building;
-        this.Floor = Floor;
-        Neighbours = new ArrayList<>();
-        this.rooms = new ArrayList<>();
-    }
 
     public Node(BeaconID _id,boolean Junction,boolean Elevator,String Building,String Floor){
         this._id = _id;
@@ -113,15 +105,6 @@ public class Node {
     public void AddNeighbour(Pair<Node,Integer> Neighbour){
         if(!Neighbours.contains(Neighbour))
             Neighbours.add(Neighbour);
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public boolean isJunction() {
@@ -290,6 +273,14 @@ public class Node {
             node = new Node(BeaconId,junc,Elev,building,floor);
             node.setOutside(out);
             node.setNessOutside(nessout);
+
+            JSONArray arr = obj.getJSONArray(Constants.ROOMS);
+            Room r;
+
+            for (int i = 0; i < arr.length(); i++){
+                r = Room.parseJson(arr.getJSONObject(i));
+                node.AddRoom(r);
+            }
 
             return node;
         }catch (JSONException e){
