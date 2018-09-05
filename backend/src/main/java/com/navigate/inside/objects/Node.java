@@ -24,7 +24,7 @@ public class Node {
     private String Floor;
     private boolean Outside;
     private boolean NessOutside;
-    private ArrayList<Pair> Neighbours;
+    private List<Edge> Neighbours;
     private List<Room> RoomsNearby;
     private int direction;
     private byte[] image;
@@ -73,7 +73,7 @@ public class Node {
     }
 
 
-    public void AddNeighbour(Pair Neighbour){
+    public void AddNeighbour(Edge Neighbour){
         if(!Neighbours.contains(Neighbour))
             Neighbours.add(Neighbour);
     }
@@ -168,8 +168,8 @@ public class Node {
 
 
     public JSONObject toJson(){
-        JSONObject object = null;
-        JSONArray arr = new JSONArray();
+        JSONObject object = new JSONObject();
+        JSONArray arr = new JSONArray(), nbers = new JSONArray();
 
         object.put(Constants.BEACONID,id);
         object.put(Constants.Junction,Junction);
@@ -181,7 +181,11 @@ public class Node {
         for(Room n : RoomsNearby)
             arr.add(n.toJson());
 
+        for (Edge e : Neighbours)
+            nbers.add(e.toJson());
+
         object.put(Constants.ROOMS, arr);
+        object.put(Constants.Node, nbers);
         return object;
     }
 
@@ -217,5 +221,28 @@ public class Node {
 
     public void setRoomsNearBy(List<Room> roomsNearBy) {
         this.RoomsNearby = roomsNearBy;
+    }
+
+    public void setNeigbours(List<Edge> neigbours) {
+        this.Neighbours = neigbours;
+    }
+
+    public static class Edge {
+        String id;
+        int direction;
+
+        public Edge(String id, int dir) {
+
+            this.id = id;
+            direction = dir;
+        }
+
+        JSONObject toJson() {
+            JSONObject obj = new JSONObject();
+            obj.put(Constants.BEACONID, id);
+            obj.put(Constants.Direction, direction);
+
+            return obj;
+        }
     }
 }

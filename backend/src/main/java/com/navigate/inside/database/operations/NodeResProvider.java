@@ -45,6 +45,7 @@ public class NodeResProvider {
             Constants.Direction + "=?, "+
             Constants.Image + "=? "+
             " WHERE " + Constants.BEACONID + "=?;";
+    private static final String GET_NEIGHBOURS = "SELECT "+ Constants.SecondID + ", "+ Constants.Direction + " FROM " + Constants.Relation + " WHERE " + Constants.FirstID + " =?;";
 
     public List<Node> getAllNodes(Connection conn) throws SQLException {
 
@@ -90,6 +91,9 @@ public class NodeResProvider {
                 }
 
                 Node n = new Node(id,Junction,Elevator,Building,Floor);
+                List<Node.Edge> list = getNeighbours(n, conn);
+                n.setNeigbours(list);
+
                 RoomResProvider roomResProvider = new RoomResProvider();
 
                 n.setRoomsNearBy(roomResProvider.getRoomsForNode(n.getId(), conn));
@@ -124,6 +128,52 @@ public class NodeResProvider {
         }
 
         return results;
+    }
+
+    private List<Node.Edge> getNeighbours(Node n, Connection conn) throws SQLException {
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        List<Node.Edge> list = new ArrayList<>();
+
+        try{
+            ps = conn.prepareStatement(GET_NEIGHBOURS);
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+
+                String id = rs.getNString(1);
+                int dir = rs.getInt(2);
+
+                list.add(new Node.Edge(id, dir));
+
+            }
+        }catch (SQLException e){
+            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
+
+        }finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return list;
+
+
     }
 
     public byte[] getImage(String itemId, Connection conn)
