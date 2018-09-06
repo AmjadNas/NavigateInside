@@ -26,7 +26,7 @@ public final class Constants {
     public static final int SE = 225;
 
     public static final String DIRECT = "IsDirect";
-    public static final String Node = "Node";
+    public static final String Node = "node";
     public static final String ID = "ID";
     public static final String UID = "UID";
     public static final String MAJOR = "Major";
@@ -39,12 +39,12 @@ public final class Constants {
     public static final String Outside = "Outside";
     public static final String NessOutside = "NessOutside";
     public static final String Direction = "Direction";
-    public static final String Relation = "Relation";
+    public static final String Relation = "relation";
     public static final String FirstID = "FirstID";
     public static final String SecondID = "SecondID";
     public static final String Image ="Image";
     public static final String Range = "range";
-    public static final String Room = "Room";
+    public static final String Room = "room";
     public static final String ROOMS = "rooms";
     public static final String NUMBER = "Number";
     public static final String NAME = "Name";
