@@ -2,7 +2,9 @@ package com.navigate.inside.servlets;
 
 import com.navigate.inside.database.operations.ConnPool;
 import com.navigate.inside.database.operations.NodeResProvider;
+import com.navigate.inside.database.operations.RoomResProvider;
 import com.navigate.inside.objects.Node;
+import com.navigate.inside.objects.Room;
 import com.navigate.inside.utils.Constants;
 import com.navigate.inside.utils.FilesUtils;
 
@@ -111,6 +113,24 @@ public class ProjectResourceServlet extends HttpServlet {
                         }case PAIR_NODES:{
                             break;
                         }case ADD_ROOM_TO_NODE:{
+                            String nID = req.getParameter(Constants.BEACONID);
+                            String number = req.getParameter(Constants.NUMBER);
+                            String name = req.getParameter(Constants.NAME);
+
+                            respPage = RESOURCE_FAIL_TAG;
+
+                            conn = ConnPool.getInstance().getConnection();
+                            RoomResProvider roomResProvider = new RoomResProvider();
+                            Room room = new Room(number, name);
+
+                            if (roomResProvider.insertRoom(nID, room, conn)) {
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            }
+
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
+
+                            retry = 0;
                             break;
                         }
                         default: {

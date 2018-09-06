@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class NodeResProvider {
-    private static final String INSERT_NODE = "INSERT INTO " + Constants.Node  + " (" +
+    private static final String INSERT_NODE = "INSERT INTO " + Constants.Node + " (" +
             Constants.BEACONID + ", " +
             Constants.Junction + ", " +
             Constants.Elevator + ", "+
@@ -28,7 +28,7 @@ public class NodeResProvider {
             Constants.Direction + ", "+
             Constants.Image +
             ")" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node +";";
     private static final String GET_IMAGE =  "SELECT " + Constants.Image + " FROM " + Constants.Node + " WHERE " + Constants.BEACONID + " =?;";
     private static final String DELETE_ITEM_BY_ID = "DELETE FROM " + Constants.Node +" WHERE " + Constants.BEACONID + "=?;";
