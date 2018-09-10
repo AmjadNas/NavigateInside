@@ -24,6 +24,7 @@ import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.SysData;
+import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
@@ -71,20 +72,18 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     }
 
     public void bindPage(Node node){
-        int m = node.get_id().getMajor();
         name.setText(String.valueOf(node.toNameString()));
         direction.setText(node.toRoomsString());
         Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
 
         if (image != null)
-            new ImageLoader(CurrentBeacon, this, false).execute(image);
-
-        // loadImageto3D(image, false);
-
+            new ImageLoader(node.get_id(), this, false).execute(image);
+        else
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, node, this);
 
     }
 
-    @SuppressLint("StaticFieldLeak")
+   /* @SuppressLint("StaticFieldLeak")
     private void loadImageto3D(final Bitmap res, final boolean downloaded) {
         new AsyncTask<Void, Void, Bitmap>(){
             @Override
@@ -93,7 +92,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
                     panoWidgetView.setImageBitmap(aVoid);
                 /* else
                     NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET, itemList.get(position).first, this);
-                    */
+
             }
 
             @Override
@@ -105,7 +104,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
             }
         }.execute();
 
-    }
+    }*/
 
     @Override
     public void onPreUpdate(String str) {
@@ -122,8 +121,6 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new ImageLoader(CurrentBeacon, this, true).execute(res);
-
-                //   loadImageto3D(res, true);
             }
 
         }else
@@ -151,10 +148,6 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     public void onImageLoaded(Bitmap image) {
         if (image != null)
             panoWidgetView.setImageBitmap(image);
-               /* else
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
-                    */
-
     }
 
     public void viewPanoramic(View view) {

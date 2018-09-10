@@ -42,6 +42,7 @@ import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PageAdapter;
 import navigate.inside.Logic.PathFinder;
 import navigate.inside.Logic.SysData;
+import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Network.NetworkResListener;
 import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
@@ -170,7 +171,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         Bitmap image = PathFinder.getInstance().getImage(position);
         if (image != null)
             new ImageLoader(currentID, this, false).execute(image);
-           // loadImageto3D(image, false);
+        else
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, itemList.get(position).first, this);
 
     }
 
@@ -300,29 +302,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private void loadImageto3D(final Bitmap res, final boolean downloaded) {
-        new AsyncTask<Bitmap,Bitmap,Bitmap>(){
-            @Override
-            protected Bitmap doInBackground(Bitmap... params) {
-                if (downloaded)
-                    SysData.getInstance().insertImageToDB(currentID, res);
-
-                return Converter.getImageTHumbnail(res);
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap aVoid) {
-                if (aVoid != null)
-                    panoWidgetView.setImageBitmap(aVoid);
-               /* else
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
-                    */
-            }
-        }.execute();
-
-    }
-
     @Override
     public void onClick(View v) {
         if(v instanceof TextView) {
@@ -363,7 +342,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new ImageLoader(currentID, this, true).execute(res);
-                // loadImageto3D(res, true);
             }
 
         }else
@@ -389,11 +367,28 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     public void onImageLoaded(Bitmap image) {
         if (image != null)
             panoWidgetView.setImageBitmap(image);
-               /* else
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_ALL_NODES_JSON_REQ, itemList.get(position).first, this);
-                    */
 
     }
+
+     /* @SuppressLint("StaticFieldLeak")
+    private void loadImageto3D(final Bitmap res, final boolean downloaded) {
+        new AsyncTask<Bitmap,Bitmap,Bitmap>(){
+            @Override
+            protected Bitmap doInBackground(Bitmap... params) {
+                if (downloaded)
+                    SysData.getInstance().insertImageToDB(currentID, res);
+
+                return Converter.getImageTHumbnail(res);
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap aVoid) {
+                if (aVoid != null)
+                    panoWidgetView.setImageBitmap(aVoid);
+            }
+        }.execute();
+
+    }*/
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

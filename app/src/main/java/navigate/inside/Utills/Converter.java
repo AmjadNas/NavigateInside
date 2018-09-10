@@ -23,7 +23,7 @@ public final class Converter {
         byte[] bArray;
         try {
             bas = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,75 ,bas);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100 ,bas);
             bArray = bas.toByteArray();
             bas.flush();
             bas.close();
