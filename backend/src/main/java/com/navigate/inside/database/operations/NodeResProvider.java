@@ -20,32 +20,38 @@ public class NodeResProvider {
     private static final String INSERT_NODE = "INSERT INTO " + Constants.Node + " (" +
             Constants.BEACONID + ", " +
             Constants.Junction + ", " +
-            Constants.Elevator + ", "+
-            Constants.Building + ", "+
+            Constants.Elevator + ", " +
+            Constants.Building + ", " +
             Constants.Floor + ", " +
-            Constants.Outside + ", "+
-            Constants.NessOutside + ", "+
-            Constants.Direction + ", "+
+            Constants.Outside + ", " +
+            Constants.NessOutside + ", " +
+            Constants.Direction + ", " +
             Constants.Image +
             ")" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node +";";
-    private static final String GET_IMAGE =  "SELECT " + Constants.Image + " FROM " + Constants.Node + " WHERE " + Constants.BEACONID + " =?;";
-    private static final String DELETE_ITEM_BY_ID = "DELETE FROM " + Constants.Node +" WHERE " + Constants.BEACONID + "=?;";
-    private static final String GET_ITEM_BY_ID = "SELECT * FROM " + Constants.Node + " WHERE "+ Constants.BEACONID +"=?;";
+    private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node + ";";
+    private static final String GET_IMAGE = "SELECT " + Constants.Image + " FROM " + Constants.Node + " WHERE " + Constants.BEACONID + " =?;";
+    private static final String DELETE_ITEM_BY_ID = "DELETE FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
+    private static final String GET_ITEM_BY_ID = "SELECT * FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String UPDATE_ITEM = "UPDATE " +
             Constants.Node +
-            " SET "+
+            " SET " +
             Constants.Junction + "=?, " +
-            Constants.Elevator + "=?, "+
-            Constants.Building + "=?, "+
+            Constants.Elevator + "=?, " +
+            Constants.Building + "=?, " +
             Constants.Floor + "=?, " +
-            Constants.Outside + "=?, "+
-            Constants.NessOutside + "=?, "+
-            Constants.Direction + "=?, "+
-            Constants.Image + "=? "+
+            Constants.Outside + "=?, " +
+            Constants.NessOutside + "=?, " +
+            Constants.Direction + "=?, " +
+            Constants.Image + "=? " +
             " WHERE " + Constants.BEACONID + "=?;";
-    private static final String GET_NEIGHBOURS = "SELECT "+ Constants.SecondID + ", "+ Constants.Direction + " FROM " + Constants.Relation + " WHERE " + Constants.FirstID + " =?;";
+    private static final String GET_NEIGHBOURS = "SELECT " + Constants.SecondID + ", " + Constants.Direction + " FROM " + Constants.Relation + " WHERE " + Constants.FirstID + " =?;";
+    private static final String PAOR_NODES = "INSERT INTO " + Constants.Relation + " ("
+            + Constants.FirstID + ", "
+            + Constants.SecondID + ", "
+            + Constants.Direction + ", "
+            + Constants.DIRECT +
+            ") VALUES (?,?,?,?);";
 
     public List<Node> getAllNodes(Connection conn) throws SQLException {
 
@@ -54,43 +60,43 @@ public class NodeResProvider {
         ResultSet rs = null;
         PreparedStatement ps = null;
 
-        try{
+        try {
             ps = conn.prepareStatement(Get_All_Nodes);
 
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 boolean Junction;
 
                 String id = rs.getNString(1);
-                if(rs.getInt(2) == 0){
+                if (rs.getInt(2) == 0) {
                     Junction = false;
-                }else{
-                    Junction=true;
+                } else {
+                    Junction = true;
                 }
                 boolean Elevator;
-                if(rs.getInt(3) == 0){
+                if (rs.getInt(3) == 0) {
                     Elevator = false;
-                }else{
-                    Elevator=true;
+                } else {
+                    Elevator = true;
                 }
                 String Building = rs.getString(4);
-                String Floor =  rs.getString(5);
+                String Floor = rs.getString(5);
 
                 boolean Outside;
                 boolean NessOutside;
-                if(rs.getInt(6) == 0){
-                    Outside =false;
-                }else{
+                if (rs.getInt(6) == 0) {
+                    Outside = false;
+                } else {
                     Outside = true;
                 }
 
-                if(rs.getInt(7) == 0){
+                if (rs.getInt(7) == 0) {
                     NessOutside = false;
-                }else{
+                } else {
                     NessOutside = true;
                 }
 
-                Node n = new Node(id,Junction,Elevator,Building,Floor);
+                Node n = new Node(id, Junction, Elevator, Building, Floor);
                 List<Node.Edge> list = getNeighbours(n, conn);
                 n.setNeigbours(list);
 
@@ -103,12 +109,12 @@ public class NodeResProvider {
 
 
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw e;
         } catch (Throwable e) {
             e.printStackTrace();
 
-        }finally {
+        } finally {
             if (rs != null) {
                 try {
                     rs.close();
@@ -128,6 +134,44 @@ public class NodeResProvider {
         }
 
         return results;
+    }
+
+    public boolean pairNodes(String first, String second, int dir, Connection conn) throws SQLException {
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        boolean result = false;
+        try {
+            ps = conn.prepareStatement(PAOR_NODES);
+            ps.setString(1, first);
+            ps.setString(2, second);
+            ps.setInt(3, dir);
+            ps.setBoolean(4, false);
+            ps.execute();
+            result = true;
+        } catch (SQLException e) {
+            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
+
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
     }
 
     private List<Node.Edge> getNeighbours(Node n, Connection conn) throws SQLException {
@@ -172,8 +216,6 @@ public class NodeResProvider {
         }
 
         return list;
-
-
     }
 
     public byte[] getImage(String itemId, Connection conn)
@@ -353,7 +395,7 @@ public class NodeResProvider {
 
     }
 
-    public boolean deleteItem(Node item, Connection conn) throws SQLException{
+    public boolean deleteItem(String item, Connection conn) throws SQLException{
         boolean result = false;
         PreparedStatement ps = null;
 
@@ -363,9 +405,7 @@ public class NodeResProvider {
 
                 ps = (PreparedStatement) conn.prepareStatement(DELETE_ITEM_BY_ID);
 
-                String id = item.getId();
-
-                ps.setString(1, id);
+                ps.setString(1, item);
 
                 ps.execute();
 

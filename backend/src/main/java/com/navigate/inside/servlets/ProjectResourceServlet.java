@@ -28,6 +28,7 @@ public class ProjectResourceServlet extends HttpServlet {
 
     private static final int GET_ALL_NODES_JSON_REQ = 0;
     private static final int GET_NODE_IMAGE = 1;
+    private static final int DELETE_NODE = 5;
     private static final int ADD_ROOM_TO_NODE = 4;
     private static final int PAIR_NODES = 3;
 
@@ -111,6 +112,22 @@ public class ProjectResourceServlet extends HttpServlet {
                             retry = 0;
                             break;
                         }case PAIR_NODES:{
+                            String first = req.getParameter(Constants.FirstID);
+                            String second = req.getParameter(Constants.SecondID);
+                            int dir = Integer.parseInt(req.getParameter(Constants.Direction));
+                            respPage = RESOURCE_FAIL_TAG;
+
+                            conn = ConnPool.getInstance().getConnection();
+                            NodeResProvider nodeResProvider = new NodeResProvider();
+
+                            if (nodeResProvider.pairNodes(first, second, dir, conn)){
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            }
+
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
+
+                            retry = 0;
                             break;
                         }case ADD_ROOM_TO_NODE:{
                             String nID = req.getParameter(Constants.BEACONID);
@@ -124,6 +141,24 @@ public class ProjectResourceServlet extends HttpServlet {
                             Room room = new Room(number, name);
 
                             if (roomResProvider.insertRoom(nID, room, conn)) {
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            }
+
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
+
+                            retry = 0;
+                            break;
+                        }case DELETE_NODE:{
+
+                            String nID = req.getParameter(Constants.BEACONID);
+
+                            respPage = RESOURCE_FAIL_TAG;
+
+                            conn = ConnPool.getInstance().getConnection();
+                            NodeResProvider nodeResProvider = new NodeResProvider();
+
+                            if (nodeResProvider.deleteItem(nID, conn)) {
                                 respPage = RESOURCE_SUCCESS_TAG;
                             }
 
