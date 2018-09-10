@@ -2,7 +2,6 @@ package com.navigate.inside.objects;
 
 
 import com.navigate.inside.utils.Constants;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import jdk.internal.util.xml.impl.Pair;
 
 
 public class Node {
