@@ -158,7 +158,7 @@ public class WebItemsManageServlet extends HttpServlet {
 					if(isDelete){
 						
 						
-						if(itemResProvider.deleteItem(item, conn)){
+						if(itemResProvider.deleteItem(id, conn)){
 							respPage = RESOURCE_SUCCESS_TAG;
 						}
 						
