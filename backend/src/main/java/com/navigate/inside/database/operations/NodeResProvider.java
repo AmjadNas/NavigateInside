@@ -67,7 +67,7 @@ public class NodeResProvider {
             while (rs.next()) {
                 boolean Junction;
 
-                String id = rs.getNString(1);
+                String id = (String) rs.getObject(1);
                 if (rs.getInt(2) == 0) {
                     Junction = false;
                 } else {
@@ -181,11 +181,12 @@ public class NodeResProvider {
 
         try{
             ps = conn.prepareStatement(GET_NEIGHBOURS);
+            ps.setString(1, n.getId());
 
             rs = ps.executeQuery();
             while(rs.next()){
 
-                String id = rs.getNString(1);
+                String id = (String) rs.getObject(1);
                 int dir = rs.getInt(2);
 
                 list.add(new Node.Edge(id, dir));

@@ -14,7 +14,9 @@ public class RoomResProvider {
 
     private static final String INSERT_ROOM_TO_NODE = "INSERT INTO " + Constants.Room + " (" +
             Constants.BEACONID + ", " + Constants.NUMBER + ", " + Constants.NAME + ") VALUES (?, ?, ?);";
-    private static final String GET_ROOMS_FOR_NODE = "SELECT " + Constants.NAME + ", " + Constants.NUMBER + " FROM" + Constants.Room + " WHERE " + Constants.BEACONID + " =?;";
+    private static final String GET_ROOMS_FOR_NODE = "SELECT "
+            + Constants.NAME + ", "
+            + Constants.NUMBER + " FROM " + Constants.Room + " WHERE " + Constants.BEACONID + " =?;";
 
     public boolean insertRoom(String nID, Room room, Connection conn) throws SQLException {
         boolean result = false;
@@ -68,8 +70,8 @@ public class RoomResProvider {
             rs = ps.executeQuery();
 
             while (rs.next()){
-                name = rs.getNString(1);
-                number = rs.getNString(2);
+                name =  (String) rs.getObject(1);
+                number =  (String) rs.getObject(2);
                 rooms.add(new Room(number, name));
 
             }

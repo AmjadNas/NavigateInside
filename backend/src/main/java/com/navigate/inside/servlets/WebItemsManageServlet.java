@@ -1,6 +1,7 @@
 package com.navigate.inside.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -62,10 +63,10 @@ public class WebItemsManageServlet extends HttpServlet {
 		// Commons file upload classes are specifically instantiated
         DiskFileItemFactory factory = new DiskFileItemFactory();
 
-        factory.setSizeThreshold(500000);
+        factory.setSizeThreshold(5000000);
 
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		upload.setFileSizeMax(500000);
+		upload.setFileSizeMax(5000000);
 		ServletOutputStream out = null;
 		
 		int retry = DB_RETRY_TIMES;
@@ -95,7 +96,6 @@ public class WebItemsManageServlet extends HttpServlet {
             conn = ConnPool.getInstance().getConnection();
 			// Set a response content type
 			resp.setContentType("text/html");
-
 			// Setup the output stream for the return XML data
 			out = resp.getOutputStream();
 
@@ -169,7 +169,7 @@ public class WebItemsManageServlet extends HttpServlet {
 						}
 						
 					}
-					
+
 					retry = 0;
 
 				} catch (SQLException e) {
@@ -188,7 +188,7 @@ public class WebItemsManageServlet extends HttpServlet {
 			
 			out.println(respPage);
 			out.close();
-			
+
 	
 		} catch (FileUploadException fue) {
 			fue.printStackTrace();

@@ -43,6 +43,8 @@ public class Node {
         this.Elevator=Elevator;
         this.Building=Building;
         this.Floor=Floor;
+        Neighbours = new ArrayList<>();
+        RoomsNearby = new ArrayList<>();
     }
 
     public byte[] getImage() {
