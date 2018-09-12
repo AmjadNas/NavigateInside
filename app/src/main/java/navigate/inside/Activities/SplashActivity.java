@@ -25,7 +25,7 @@ import navigate.inside.Utills.Constants;
 public class SplashActivity extends AppCompatActivity implements NetworkResListener {
 
     private boolean firstInit;
-
+    private SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +35,12 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         SysData.getInstance().initDatBase(getApplicationContext());
         NetworkConnector.getInstance().initialize(getApplicationContext());
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
         firstInit = sharedPref.getBoolean(getResources().getString(R.string.firstLaunch), true);
 
        if (firstInit) {
             NetworkConnector.getInstance().update(this);
-            sharedPref.edit()
-                    .putBoolean(getResources().getString(R.string.firstLaunch), false)
-                    .apply();
+
         }else{
 
        // SysData.getInstance().initDatBase(getApplicationContext());
@@ -73,7 +71,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                         Room r;
 
                         for (int j = 0; j < rooms.length(); j++) {
-                            r = Room.parseJson(arr.getJSONObject(j));
+                            r = Room.parseJson(rooms.getJSONObject(j));
                             SysData.getInstance().insertRoomToNode(r, n);
                         }
                     }
@@ -87,13 +85,18 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                         SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
                     }
                 }
+                sharedPref.edit()
+                        .putBoolean(getResources().getString(R.string.firstLaunch), false)
+                        .apply();
+                launchActivity();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
         }else {
             //temporary
             SysData.getInstance().InitializeData();
-            launchActivity();
+            Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
 
         }
       /*  if (firstInit && status == ResStatus.FAIL)
