@@ -74,10 +74,12 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     public void bindPage(Node node){
         name.setText(String.valueOf(node.toNameString()));
         direction.setText(node.toRoomsString());
+
         Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
 
-        if (image != null)
+        if (image != null) {
             new ImageLoader(node.get_id(), this, false).execute(image);
+        }
         else
             NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, node, this);
 
@@ -146,8 +148,10 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     }
     @Override
     public void onImageLoaded(Bitmap image) {
-        if (image != null)
+        if (image != null) {
             panoWidgetView.setImageBitmap(image);
+
+        }
     }
 
     public void viewPanoramic(View view) {
