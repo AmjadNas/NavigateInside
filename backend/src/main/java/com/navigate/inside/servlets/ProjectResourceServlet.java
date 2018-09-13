@@ -143,7 +143,7 @@ public class ProjectResourceServlet extends HttpServlet {
                             if (roomResProvider.insertRoom(nID, room, conn)) {
                                 respPage = RESOURCE_SUCCESS_TAG;
                             }
-                            System.out.println(respPage);
+
                             PrintWriter pw = resp.getWriter();
                             pw.write(respPage);
 
@@ -170,7 +170,7 @@ public class ProjectResourceServlet extends HttpServlet {
                         }
                         default: {
                             retry = 0;
-                            break;
+
                         }
 
                     }
