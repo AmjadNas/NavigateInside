@@ -30,4 +30,6 @@
     <string name="navigation">Navigation</string>
     <string name="getDirections">Get Directions</string>
     <string name="currentlocal">Current Location</string>
+    <string name="empty_field">There are some empty fields!</string>
+    <string name="room_not_exist">Entered room for starting point or destination does not exist</string>
 </resources>

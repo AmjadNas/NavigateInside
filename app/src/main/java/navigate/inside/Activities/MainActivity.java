@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void find_location(View view) {
-        launchActivity(MyLocationActivity.class);
-    }
-
     public void get_directions(View view) {
         launchActivity(GetDirectionsActivity.class);
     }

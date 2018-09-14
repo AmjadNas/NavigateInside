@@ -1,6 +1,7 @@
 package navigate.inside.Activities.Navigation.Activities;
 
 import android.content.Intent;
+import android.graphics.YuvImage;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.Toast;
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.recognition.packets.Beacon;
 
-import navigate.inside.Activities.DestinationActivity;
 import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PathFinder;
@@ -59,36 +59,32 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     }
 
     public void Search(View view) {
-        // todo SEARCH DISABLED TEMPORARILY
-
 
         String txtSNode = sNode.getText().toString();
         String txtGNode = gNode.getText().toString();
+        if (!txtGNode.isEmpty() && !txtSNode.isEmpty()) {
 
-        //temporary
-        BeaconID FinishNode;
-        BeaconID StartNode;
-        StartNode = SysData.getInstance().getNodeIdByRoom(txtSNode);
-        FinishNode = SysData.getInstance().getNodeIdByRoom(txtGNode);
+            BeaconID FinishNode;
+            BeaconID StartNode;
+            StartNode = SysData.getInstance().getNodeIdByRoom(txtSNode);
+            FinishNode = SysData.getInstance().getNodeIdByRoom(txtGNode);
 
-        if(StartNode == null){
-            Toast.makeText(this, "Start Poistion was not found !", Toast.LENGTH_SHORT).show();
-        }
-        if(FinishNode == null){
-            Toast.makeText(this, "Finish goal was not found !", Toast.LENGTH_SHORT).show();
-        }
+            if (StartNode != null && FinishNode != null) {
+                PathFinder pf = PathFinder.getInstance();
+                boolean b = chElevator.isChecked();
 
-        PathFinder pf = PathFinder.getInstance();
-        boolean b = chElevator.isChecked();
+                // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
+                if (!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
 
-        // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
-        if(!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
-
-            Intent intent = new Intent(this, PlaceViewActivity.class);
-            intent.putExtra(Constants.INDEX, 0);
-            startActivity(intent);
+                    Intent intent = new Intent(this, PlaceViewActivity.class);
+                    intent.putExtra(Constants.INDEX, 0);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(this, R.string.no_path_found, Toast.LENGTH_LONG).show();
+            }else
+                Toast.makeText(this, R.string.room_not_exist, Toast.LENGTH_SHORT).show();
         }else
-            Toast.makeText(this, R.string.no_path_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.empty_field, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -110,7 +106,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     }
 
     private void doStuff(){
-        if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
+        if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) != null){
             BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
         }else{
             Toast.makeText(this, R.string.cant_find_location, Toast.LENGTH_SHORT).show();
@@ -119,7 +115,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     }
     @Override
     public void onBeaconEvent(Beacon beacon) {
-        BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
+        BeaconID temp = new BeaconID(beacon.getProximityUUID(), String.valueOf(beacon.getMajor()),String.valueOf(beacon.getMinor()));
         if(CurrentBeacon == null || !CurrentBeacon.equals(temp)){
             CurrentBeacon = temp;
             doStuff();
@@ -143,5 +139,10 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         if(resultCode == RESULT_OK && requestCode == Constants.REQUESTROOMNUMBER){
             SetGNode(data.getStringExtra("RoomNumber"));
         }
+    }
+
+    public void openfindmylocation(View view) {
+
+        LaunchActivity(MyLocationActivity.class, Constants.NOREQUEST);
     }
 }

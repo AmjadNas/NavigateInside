@@ -325,7 +325,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
-                beacon.getMajor(), beacon.getMinor());
+                String.valueOf(beacon.getMajor()), String.valueOf(beacon.getMinor()));
         if (!currentID.equals(tempID)) {
 
             int index = PathFinder.getInstance().getIndexOfNode(tempID);

@@ -73,8 +73,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
         </activity>
-        >
-        <activity android:name=".Activities.DestinationActivity"></activity>
+
+        <activity android:name=".Activities.Navigation.Activities.DestinationActivity"
+            android:label="Locations"
+            android:configChanges="orientation"
+            android:parentActivityName=".Activities.Navigation.Activities.GetDirectionsActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.Navigation.Activities.GetDirectionsActivity" />
+        </activity>
     </application>
 
 </manifest>

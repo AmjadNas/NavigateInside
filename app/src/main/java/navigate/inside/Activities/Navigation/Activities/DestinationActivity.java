@@ -1,4 +1,4 @@
-package navigate.inside.Activities;
+package navigate.inside.Activities.Navigation.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +36,7 @@ public class DestinationActivity extends AppCompatActivity {
                 String itemValue = (String)listview.getItemAtPosition(position);
                 String[] BothItems = itemValue.split("-");
                 Intent intent = new Intent();
-                intent.putExtra("RoomNumber",BothItems[1]);
+                intent.putExtra("RoomNumber", BothItems[1]);
                 setResult(RESULT_OK,intent);
                 finish();
             }
@@ -53,10 +53,4 @@ public class DestinationActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-
-
-
 }

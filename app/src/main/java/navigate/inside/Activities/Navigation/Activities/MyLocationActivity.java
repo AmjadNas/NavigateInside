@@ -132,8 +132,8 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
 
     @Override
     public void onBeaconEvent(Beacon beacon) {
-        BeaconID temp = new BeaconID(beacon.getProximityUUID(),beacon.getMajor(),beacon.getMinor());
-        if(CurrentBeacon == null || !CurrentBeacon.equals(temp)){
+        BeaconID temp = new BeaconID(beacon.getProximityUUID(), String.valueOf(beacon.getMajor()), String.valueOf(beacon.getMinor()));
+        if(!temp.equals(CurrentBeacon)){
             CurrentBeacon = temp;
             doStuff();
         }

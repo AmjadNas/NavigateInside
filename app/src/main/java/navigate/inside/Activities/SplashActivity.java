@@ -26,6 +26,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
 
     private boolean firstInit;
     private SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
