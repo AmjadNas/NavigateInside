@@ -25,16 +25,17 @@
         <activity
             android:name=".Activities.MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activities.Navigation.Activities.PlaceViewActivity"
-            android:label="@string/navigation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.Navigation.Activities.PlaceViewActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:label="@string/navigation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,36 +45,36 @@
         <activity
             android:name=".Activities.PanoramicImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_panoramic_image"
             android:parentActivityName=".Activities.Navigation.Activities.PlaceViewActivity"
-            android:theme="@style/FullscreenTheme" >
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.Navigation.Activities.PlaceViewActivity"
-                />
+                android:value=".Activities.Navigation.Activities.PlaceViewActivity" />
         </activity>
-
-        <activity android:name=".Activities.Navigation.Activities.MyLocationActivity"
+        <activity
+            android:name=".Activities.Navigation.Activities.MyLocationActivity"
+            android:configChanges="orientation"
             android:label="@string/currentlocal"
-            android:configChanges="orientation"
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity"
-                />
+                android:value=".Activities.MainActivity" />
         </activity>
-        <activity android:name=".Activities.Navigation.Activities.GetDirectionsActivity"
-            android:label="@string/getDirections"
+        <activity
+            android:name=".Activities.Navigation.Activities.GetDirectionsActivity"
             android:configChanges="orientation"
+            android:label="@string/getDirections"
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity"
-                />
-        </activity>>
+                android:value=".Activities.MainActivity" />
+        </activity>
+        >
+        <activity android:name=".Activities.DestinationActivity"></activity>
     </application>
 
 </manifest>

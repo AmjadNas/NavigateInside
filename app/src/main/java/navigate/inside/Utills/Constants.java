@@ -51,6 +51,8 @@ public final class Constants {
     public static final String NUMBER = "Number";
     public static final String ROOMS = "rooms";
     public static final String NAME = "Name";
+    public static final int NOREQUEST = -1;
+    public static final int REQUESTROOMNUMBER = 1;
     public static final UUID DEFULTUID = UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
 
 

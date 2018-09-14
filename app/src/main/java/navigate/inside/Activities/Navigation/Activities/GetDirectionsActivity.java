@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.recognition.packets.Beacon;
 
+import navigate.inside.Activities.DestinationActivity;
 import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.MyApplication;
 import navigate.inside.Logic.PathFinder;
@@ -26,6 +27,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     private TextView sNode,gNode;
     private CheckBox chElevator;
     private BeaconID CurrentBeacon;
+    private Intent nextAct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,13 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         }
     }
 
+    private void SetGNode(String s){
+        this.gNode.setText(s);
+    }
+
+    public void StartListActivity(View view){
+        LaunchActivity(DestinationActivity.class,Constants.REQUESTROOMNUMBER);
+    }
 
     public void Search(View view) {
         // todo SEARCH DISABLED TEMPORARILY
@@ -117,4 +126,22 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         }
     }
 
+    private void LaunchActivity(Class<?> act,int request){
+        nextAct = new Intent(this,act);
+
+        if(request != Constants.NOREQUEST){
+            startActivityForResult(nextAct,request);
+        }else{
+            startActivity(nextAct);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == Constants.REQUESTROOMNUMBER){
+            SetGNode(data.getStringExtra("RoomNumber"));
+        }
+    }
 }
