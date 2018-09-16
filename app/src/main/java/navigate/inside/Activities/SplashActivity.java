@@ -68,6 +68,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                     o = arr.getJSONObject(i);
                     n = Node.parseJson(o);
                     if(SysData.getInstance().insertNode(n)) {
+                        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, this);
                         rooms = o.getJSONArray(Constants.ROOMS);
                         Room r;
 
@@ -115,7 +116,12 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+                SysData.getInstance().insertImageToDB(BeaconID.from(id), res);
+            }
+        }
 
     }
 }

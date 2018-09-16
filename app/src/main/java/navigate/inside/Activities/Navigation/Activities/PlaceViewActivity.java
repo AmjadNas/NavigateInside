@@ -338,7 +338,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, ResStatus status) {
+    public void onPostUpdate(Bitmap res,  String id, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new ImageLoader(currentID, this, true).execute(res);

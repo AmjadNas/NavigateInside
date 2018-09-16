@@ -119,7 +119,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new ImageLoader(CurrentBeacon, this, true).execute(res);
