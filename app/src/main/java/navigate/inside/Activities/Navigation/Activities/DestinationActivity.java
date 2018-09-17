@@ -34,9 +34,9 @@ public class DestinationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String itemValue = (String)listview.getItemAtPosition(position);
-                String[] BothItems = itemValue.split("-");
+
                 Intent intent = new Intent();
-                intent.putExtra("RoomNumber", BothItems[1]);
+                intent.putExtra("RoomNumber", itemValue);
                 setResult(RESULT_OK,intent);
                 finish();
             }

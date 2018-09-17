@@ -13,6 +13,7 @@ import android.view.View;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 
+import navigate.inside.Logic.PathFinder;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Objects.BeaconID;
 import navigate.inside.R;
@@ -107,12 +108,12 @@ public class PanoramicImageActivity extends AppCompatActivity {
         observer = new GyroscopeObserver();
         observer.setMaxRotateRadian(Math.PI/9);
 
-        final BeaconID  id = (BeaconID)getIntent().getExtras().get(Constants.ID);
-        if (id != null){
+        final int  id = getIntent().getIntExtra(Constants.INDEX, -1);
+        if (id >= 0){
             new AsyncTask<Void,Void,Void>(){
                 @Override
                 protected Void doInBackground(Void... params) {
-                    image = SysData.getInstance().getImageForNode(id);
+                    image = PathFinder.getInstance().getImage(id);
                     if (image != null)
                         image = Bitmap.createScaledBitmap(image, I_WIDTH, I_HEIGHT,false);
 

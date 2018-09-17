@@ -46,7 +46,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     public void BindText(Node n){
         if(!n.getRooms().isEmpty()) {
             Room r = n.getRooms().get(0);
-            sNode.setText(r.GetRoomNum());
+            sNode.setText(r.GetRoomName()+"-"+r.GetRoomNum());
         }
     }
 

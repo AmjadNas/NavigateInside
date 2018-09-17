@@ -37,12 +37,23 @@ public class SysData {
     }
 
     public BeaconID getNodeIdByRoom(String room){
-        for(Node n : AllNodes)
-            for (Room m : n.getRooms()) {
-                if(room.equals(m.GetRoomName()) || room.equals(m.GetRoomNum())){
-                    return n.get_id();
+        String[] BothItems = room.split("-");
+        if (BothItems.length > 1){
+            Room r = new Room(BothItems[1], BothItems[0]);
+            for(Node n : AllNodes)
+                for (Room m : n.getRooms()) {
+                    if(r.equals(m)){
+                        return n.get_id();
+                    }
                 }
-            }
+        }else {
+            for(Node n : AllNodes)
+                for (Room m : n.getRooms()) {
+                    if(m.GetRoomNum().equals(BothItems[0])){
+                        return n.get_id();
+                    }
+                }
+        }
         return null;
     }
 

@@ -128,23 +128,37 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         Node temp = itemList.get(position).first;
         currentID = temp.get_id();
 
-        /*Message for Elevator*/
+        if( (position-1) >=0 ){
+            if(itemList.get(position).first.isJunction() && itemList.get(position-1).first.isJunction()){
+                position++;
+            }
+            if(itemList.get(position).first.isElevator()&& itemList.get(position-1).first.isElevator()){
+                position++;
+            }
+
+        }
+        //Two Staris solution !
+        /*Message for Stairs*/
+
+
+        /*Getting the rooms range and display for Regular Node */
+        if(itemList.size() > position+1) {
+            if((temp.isJunction() && !itemList.get(position+1).first.isJunction()) || (temp.isElevator()&& !itemList.get(position+1).first.isElevator())){
+                name.setText(String.format(getString(R.string.nextStep), itemList.get(position).first.getRoomsRange()));
+            }else{
+                name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
+            }
+        }else{
+            name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
+        }
+
+          /*Message for Elevator*/
         if(itemList.size() > position+1){
             if(temp.isElevator() && itemList.get(position+1).first.isElevator()){
                 name.setText("Next Step : Go to Floor " + itemList.get(position+1).first.getFloor()+" by elevator");
-                position++;
             }
         }
 
-        if(itemList.size() > position+1){
-            if(temp.isElevator() && !itemList.get(position+1).first.isElevator()){
-                name.setText("Next Step :  elevator");
-
-            }
-        }
-
-        //Two Staris solution !
-        /*Message for Stairs*/
         if(itemList.size() > position+1) {
             if (temp.isJunction() && itemList.get(position + 1).first.isJunction()) {
 
@@ -153,21 +167,11 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
                 } else {
                     name.setText("Next Step : Go down  the stairs to Floor " + itemList.get(position + 1).first.getFloor());
                 }
-                position++;
-            }
-        }
-        if(itemList.size() > position+1) {
-            if (temp.isJunction() && !itemList.get(position + 1).first.isJunction()) {
 
-                name.setText("Next step : Stairs");
             }
         }
-        /*Getting the rooms range and display for Regular Node */
-        if(!temp.isJunction() && !temp.isElevator()){
-            name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
-        }
-      //  name.setText(String.valueOf(itemList.get(position).first.get_id().getMajor()));
-        direction.setText(getDirection(mAzimuth, itemList.get(position).second));
+
+        //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
         Bitmap image = PathFinder.getInstance().getImage(position);
         if (image != null)
             new ImageLoader(currentID, this, false).execute(image);
@@ -351,7 +355,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     public void viewPanorama(View view) {
         Intent intent = new Intent(this, PanoramicImageActivity.class);
-        intent.putExtra(Constants.ID, currentID);
+        intent.putExtra(Constants.INDEX, position);
         startActivity(intent);
     }
 
