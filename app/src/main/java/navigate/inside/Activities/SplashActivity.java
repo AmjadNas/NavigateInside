@@ -63,7 +63,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                 JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms;
                 JSONObject o, nbr;
                 Node n;
-
+//todo: needs rework
                 for(int i = 0; i < arr.length(); i++){
                     o = arr.getJSONObject(i);
                     n = Node.parseJson(o);
