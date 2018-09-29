@@ -26,11 +26,11 @@ public class NodeResProvider {
             Constants.Outside + ", " +
             Constants.NessOutside + ", " +
             Constants.Direction + ", " +
-            Constants.Image +
             ")" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node + ";";
-    private static final String GET_IMAGE = "SELECT " + Constants.Image + " FROM " + Constants.Node + " WHERE " + Constants.BEACONID + " =?;";
+    private static final String GET_IMAGE = "SELECT " + Constants.PHOTO + " FROM " + Constants.IMAGES +
+            " WHERE " + Constants.BEACONID + " =? AND " + Constants.IMAGENUM + " =?; ";
     private static final String DELETE_ITEM_BY_ID = "DELETE FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String GET_ITEM_BY_ID = "SELECT * FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String UPDATE_ITEM = "UPDATE " +
@@ -43,8 +43,18 @@ public class NodeResProvider {
             Constants.Outside + "=?, " +
             Constants.NessOutside + "=?, " +
             Constants.Direction + "=?, " +
-            Constants.Image + "=? " +
             " WHERE " + Constants.BEACONID + "=?;";
+    private static final String UPDATE_IMAGE = "UPDATE " + Constants.IMAGES +
+            " SET " +
+            Constants.PHOTO + "=?, " +
+            Constants.Direction + "=?" +
+            " WHERE " + Constants.BEACONID + "=? AND" + Constants.IMAGENUM + "=?;";
+    private static String INSERT_IMAGE = "INSERT INTO " + Constants.IMAGES + " ("
+            + Constants.BEACONID + ", "
+            + Constants.IMAGENUM + ", "
+            + Constants.PHOTO + ", "
+            + Constants.Direction +
+            ") VALUES (?,?,?,?);";
     private static final String GET_NEIGHBOURS = "SELECT " + Constants.SecondID + ", " + Constants.Direction + " FROM " + Constants.Relation + " WHERE " + Constants.FirstID + " =?;";
     private static final String PAOR_NODES = "INSERT INTO " + Constants.Relation + " ("
             + Constants.FirstID + ", "
@@ -52,6 +62,8 @@ public class NodeResProvider {
             + Constants.Direction + ", "
             + Constants.DIRECT +
             ") VALUES (?,?,?,?);";
+    private static final String IMAGES_NUMS = "SELECT " + Constants.IMAGENUM + ", " + Constants.Direction + " FROM " + Constants.IMAGES
+            + " WHERE " + Constants.BEACONID + "=?;";
 
     public List<Node> getAllNodes(Connection conn) throws SQLException {
 
@@ -100,6 +112,8 @@ public class NodeResProvider {
                 List<Node.Edge> list = getNeighbours(n, conn);
                 n.setNeigbours(list);
 
+                ArrayList<Node.Image> images = getImagesNums(id, conn);
+                n.setImages(images);
                 RoomResProvider roomResProvider = new RoomResProvider();
 
                 n.setRoomsNearBy(roomResProvider.getRoomsForNode(n.getId(), conn));
@@ -107,6 +121,49 @@ public class NodeResProvider {
                 n.setNessOutside(NessOutside);
                 results.add(n);
 
+
+            }
+        } catch (SQLException e) {
+            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
+
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return results;
+    }
+
+    private ArrayList<Node.Image> getImagesNums(String id, Connection conn) throws SQLException{
+        ArrayList<Node.Image> results = new ArrayList<>();
+
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+
+        try {
+            ps = conn.prepareStatement(IMAGES_NUMS);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int num = rs.getInt(1), dir = rs.getInt(2);
+
+                results.add(new Node.Image(dir, num));
 
             }
         } catch (SQLException e) {
@@ -219,6 +276,109 @@ public class NodeResProvider {
         return list;
     }
 
+    public boolean insertImage(String id, int num, byte[] img, int dir, Connection conn){
+        boolean result = false;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        PreparedStatement ps = null;
+        PreparedStatement stt = null;
+
+        try {
+
+            if (img == null) {
+                img = getImage(id, conn);
+            }
+
+            stt = (PreparedStatement) conn.prepareStatement(GET_IMAGE);
+            stt.setString(1, id);
+            stt.setInt(2, num);
+
+            if (stt.execute()) {
+                rs1 = stt.getResultSet();
+                if (rs1.next()) {
+                    // its execute update
+                    ps = (PreparedStatement) conn.prepareStatement(UPDATE_IMAGE);
+
+                    if (img != null) {
+                        InputStream is = new ByteArrayInputStream(img);
+                        ps.setBlob(1, is);
+
+                    } else {
+
+                        ps.setNull(1, Types.BLOB);
+                    }
+                    ps.setInt(2, dir);
+                    // where
+                    ps.setString(3, id);
+                    ps.setInt(4, num);
+                    ps.execute();
+
+                    result = true;
+
+                } else {
+
+                    // its execute insert
+                    ps = (PreparedStatement) conn.prepareStatement(INSERT_IMAGE);
+
+                    ps.setString(1, id);
+                    ps.setInt(2, num);
+
+                    if (img != null) {
+                        InputStream is = new ByteArrayInputStream(img);
+                        ps.setBlob(3, is);
+
+                    } else {
+                        ps.setNull(3, Types.BLOB);
+                    }
+                    ps.setInt(4, dir);
+                    ps.execute();
+
+                    result = true;
+
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (rs1 != null) {
+                try {
+                    rs1.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (stt != null) {
+                try {
+                    stt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+    }
+
     public byte[] getImage(String itemId, Connection conn)
             throws SQLException {
 
@@ -288,11 +448,6 @@ public class NodeResProvider {
             String building = item.getBuilding();
             String floor = item.getFloor();
 
-            byte[] imageBytes = item.getImage();
-
-            if (imageBytes == null) {
-                imageBytes = getImage(id, conn);
-            }
 
             stt = (PreparedStatement) conn.prepareStatement(GET_ITEM_BY_ID);
             stt.setString(1, id);
@@ -311,16 +466,8 @@ public class NodeResProvider {
                     ps.setBoolean(6, nesoutside);
                     ps.setInt(7, direction);
 
-                    if (imageBytes != null) {
-                        InputStream is = new ByteArrayInputStream(imageBytes);
-                        ps.setBlob(8, is);
-
-                    } else {
-
-                        ps.setNull(8, Types.BLOB);
-                    }
                     // where
-                    ps.setString(9, id);
+                    ps.setString(8, id);
                     ps.execute();
 
                     result = true;
@@ -338,14 +485,6 @@ public class NodeResProvider {
                     ps.setBoolean(6, outside);
                     ps.setBoolean(7, nesoutside);
                     ps.setInt(8, direction);
-
-                    if (imageBytes != null) {
-                        InputStream is = new ByteArrayInputStream(imageBytes);
-                        ps.setBlob(9, is);
-
-                    } else {
-                        ps.setNull(9, Types.BLOB);
-                    }
 
                     ps.execute();
 

@@ -9,6 +9,7 @@ import com.navigate.inside.utils.Constants;
 import com.navigate.inside.utils.FilesUtils;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,6 +29,7 @@ public class ProjectResourceServlet extends HttpServlet {
 
     private static final int GET_ALL_NODES_JSON_REQ = 0;
     private static final int GET_NODE_IMAGE = 1;
+    private static final int INSERT_NODE = 2;
     private static final int DELETE_NODE = 5;
     private static final int ADD_ROOM_TO_NODE = 3;
     private static final int PAIR_NODES = 4;
@@ -108,6 +110,33 @@ public class ProjectResourceServlet extends HttpServlet {
                             } else {
                                 resp.sendError(404);
                             }
+
+                            retry = 0;
+                            break;
+                        }case INSERT_NODE:{
+                            String id = req.getParameter(Constants.BEACONID);
+                            boolean junction = Boolean.valueOf(req.getParameter(Constants.Junction));
+                            boolean Elevator = Boolean.valueOf(req.getParameter(Constants.Elevator));
+                            boolean Outside = Boolean.valueOf(req.getParameter(Constants.Outside));
+                            boolean NessOutside = Boolean.valueOf(req.getParameter(Constants.NessOutside));
+                            String Building = req.getParameter(Constants.Building);
+                            String Floor = req.getParameter(Constants.Floor);
+                            int dir = Integer.parseInt(req.getParameter(Constants.Direction));
+                            respPage = RESOURCE_FAIL_TAG;
+
+                            conn = ConnPool.getInstance().getConnection();
+                            NodeResProvider nodeResProvider = new NodeResProvider();
+                            Node node = new Node(id, junction, Elevator, Building,Floor);
+                            node.setDirection(dir);
+                            node.setNessOutside(NessOutside);
+                            node.setOutside(Outside);
+
+                            if (nodeResProvider.insertItem(node, conn)){
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            }
+
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
 
                             retry = 0;
                             break;

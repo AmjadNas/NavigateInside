@@ -26,6 +26,7 @@ public class Node {
     private List<Room> RoomsNearby;
     private int direction;
     private byte[] image;
+    private ArrayList<Image> images;
 
     public Node(String id,boolean Junction, boolean Elevator,String Building,String Floor, byte[] image){
         this.id = id;
@@ -59,15 +60,36 @@ public class Node {
         return direction;
     }
 
+    public static class Image{
+        int num;
+        int dir;
 
-  /*  public ArrayList<Node> getNeighbours() {
-        ArrayList<Node> node = new ArrayList<>();
-        for(Pair p : Neighbours){
-            node.add((Node) p);
+        public Image(int dir, int num){
+            this.dir = dir;
+            this.num = num;
         }
-        return node;
+
+        public JSONObject toJson(){
+            JSONObject json = new JSONObject();
+            json.put(Constants.IMAGENUM, num);
+            json.put(Constants.Direction, dir);
+            return json;
+        }
+
     }
-*/
+
+    public void setImages(ArrayList<Image> images) {
+        this.images = images;
+    }
+
+    /*  public ArrayList<Node> getNeighbours() {
+            ArrayList<Node> node = new ArrayList<>();
+            for(Pair p : Neighbours){
+                node.add((Node) p);
+            }
+            return node;
+        }
+    */
     public List<Room> getRoomsNearby() {
         return RoomsNearby;
     }
@@ -169,7 +191,7 @@ public class Node {
 
     public JSONObject toJson(){
         JSONObject object = new JSONObject();
-        JSONArray arr = new JSONArray(), nbers = new JSONArray();
+        JSONArray arr = new JSONArray(), nbers = new JSONArray(), imgs = new JSONArray();
 
         object.put(Constants.BEACONID,id);
         object.put(Constants.Junction,Junction);
@@ -183,9 +205,12 @@ public class Node {
 
         for (Edge e : Neighbours)
             nbers.add(e.toJson());
+        for (Image i : images)
+            imgs.add(i.toJson());
 
         object.put(Constants.ROOMS, arr);
         object.put(Constants.Node, nbers);
+        object.put(Constants.IMAGES, imgs);
         return object;
     }
 

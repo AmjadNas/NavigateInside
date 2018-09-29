@@ -74,13 +74,7 @@ public class WebItemsManageServlet extends HttpServlet {
 
 
         String id = null;
-        boolean Junction = false;
-        boolean Elevator = false;
-        int direction = 0;
-        String Building = null;
-        boolean Outside = false;
-        boolean NessOutside = false;
-        String Floor = null;
+        int direction = 0, num = 0;
 		boolean isDelete = false;
 		
 		byte [] image= null;
@@ -117,21 +111,11 @@ public class WebItemsManageServlet extends HttpServlet {
 
 					if (fieldname.equals(Constants.BEACONID)) {
 						id = fieldvalue;
-					} else if (fieldname.equals(Constants.Junction)) {
-                        Junction = Boolean.valueOf(fieldvalue);
-					} else if (fieldname.equals(Constants.Elevator)) {
-                        Elevator  = Boolean.valueOf(fieldvalue);
-					} else if (fieldname.equals(Constants.Building)) {
-                        Building = fieldvalue;
-					} else if(fieldname.equals(Constants.Floor)) {
-						Floor = fieldvalue;
-                    }else if(fieldname.equals(Constants.Direction)){
+					} else if (fieldname.equals(Constants.IMAGENUM)) {
+                        num = Integer.parseInt(fieldvalue);
+					}else if(fieldname.equals(Constants.Direction)){
                         direction = Integer.valueOf(fieldvalue);
-                    }else if(fieldname.equals(Constants.Outside)){
-                        Outside = Boolean.valueOf(fieldvalue);
-                    }else if(fieldname.equals(Constants.NessOutside)){
-						NessOutside = Boolean.valueOf(fieldvalue);
-					}else if(fieldname.equals(IS_DELETE)){
+                    }else if(fieldname.equals(IS_DELETE)){
 		
 						isDelete = Boolean.valueOf(fieldvalue);
 						
@@ -151,10 +135,7 @@ public class WebItemsManageServlet extends HttpServlet {
 
 
 					NodeResProvider itemResProvider = new NodeResProvider();
-                    Node item = new Node(id, Junction, Elevator, Building, Floor, image);
-					item.setOutside(Outside);
-					item.setNessOutside(NessOutside);
-					item.setDirection(direction);
+
 					if(isDelete){
 						
 						
@@ -164,7 +145,7 @@ public class WebItemsManageServlet extends HttpServlet {
 						
 					}
 					else{
-						if(itemResProvider.insertItem(item, conn)){
+						if(itemResProvider.insertImage(id, num ,image, direction, conn)){
 							respPage = RESOURCE_SUCCESS_TAG;
 						}
 						
