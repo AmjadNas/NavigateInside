@@ -53,7 +53,7 @@ import navigate.inside.Utills.Converter;
 import navigate.inside.Utills.ImageLoader;
 
 public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener, BeaconListener, NetworkResListener, ImageLoadedListener{
+        CompoundButton.OnCheckedChangeListener, BeaconListener, ImageLoadedListener{
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -126,7 +126,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     private void bindPage(){
 
         Node temp = itemList.get(position).first;
-        currentID = temp.get_id();
+        if (currentID == null)
+            currentID = temp.get_id();
 
         if( (position-1) >=0 ){
             if(itemList.get(position).first.isJunction() && itemList.get(position-1).first.isJunction()){
@@ -171,13 +172,12 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             }
         }
 
+/*
         //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
-        Bitmap image = PathFinder.getInstance().getImage(position);
+        Bitmap image = SysData.getInstance().getImageForNode(temp.get_id(), 10);
         if (image != null)
-            new ImageLoader(currentID, this, false).execute(image);
-        else
-            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, itemList.get(position).first, this);
-
+            new ImageLoader(currentID, -1, this).execute(image);
+*/
     }
 
     private void initBottomSheet() {
@@ -341,21 +341,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         }
     }
 
-    @Override
-    public void onPostUpdate(Bitmap res,  String id, ResStatus status) {
-        if (status == ResStatus.SUCCESS){
-            if (res != null){
-                new ImageLoader(currentID, this, true).execute(res);
-            }
-
-        }else
-            Toast.makeText(this,R.string.loadfailed, Toast.LENGTH_SHORT).show();
-    }
-
-
     public void viewPanorama(View view) {
         Intent intent = new Intent(this, PanoramicImageActivity.class);
-        intent.putExtra(Constants.INDEX, position);
+        intent.putExtra(Constants.ID, currentID);
         startActivity(intent);
     }
 
@@ -398,16 +386,5 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
-    @Override
-    public void onPreUpdate(String str) {
-
-    }
-
-    @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
-
-    }
-
 
 }

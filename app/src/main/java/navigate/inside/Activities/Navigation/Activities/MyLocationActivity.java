@@ -23,6 +23,7 @@ import navigate.inside.Activities.PanoramicImageActivity;
 import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.MyApplication;
+import navigate.inside.Logic.PathFinder;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Network.NetworkConnector;
 import navigate.inside.Network.NetworkResListener;
@@ -35,7 +36,7 @@ import navigate.inside.Utills.Converter;
 import navigate.inside.Utills.ImageLoader;
 
 
-public class MyLocationActivity extends AppCompatActivity implements NetworkResListener, BeaconListener, ImageLoadedListener{
+public class MyLocationActivity extends AppCompatActivity implements BeaconListener, ImageLoadedListener, NetworkResListener {
 
     private TextView name, direction;
     private ImageView panoWidgetView;
@@ -74,15 +75,18 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     public void bindPage(Node node){
         name.setText(String.valueOf(node.toNameString()));
         direction.setText(node.toRoomsString());
-
-        Bitmap image = SysData.getInstance().getImageForNode(node.get_id());
+        int m = -1;
+        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
+                node, 11, this);
+        /*Bitmap image = SysData.getInstance().getImageForNode(node.get_id(), m);
 
         if (image != null) {
-            new ImageLoader(node.get_id(), this, false).execute(image);
-        }
-        else
-            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, node, this);
+            new ImageLoader(node.get_id(), m, this).execute(image);
+        }*/
 
+        /*else
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, node, this);
+*/
     }
 
    /* @SuppressLint("StaticFieldLeak")
@@ -109,28 +113,6 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
     }*/
 
     @Override
-    public void onPreUpdate(String str) {
-
-    }
-
-    @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
-
-    }
-
-    @Override
-    public void onPostUpdate(Bitmap res, String id, ResStatus status) {
-        if (status == ResStatus.SUCCESS){
-            if (res != null){
-                new ImageLoader(CurrentBeacon, this, true).execute(res);
-            }
-
-        }else
-            Toast.makeText(this, R.string.loadfailed, Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID temp = new BeaconID(beacon.getProximityUUID(), String.valueOf(beacon.getMajor()), String.valueOf(beacon.getMinor()));
         if(!temp.equals(CurrentBeacon)){
@@ -138,6 +120,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
             doStuff();
         }
     }
+
     private void doStuff(){
         if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
 
@@ -146,6 +129,7 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
             Toast.makeText(this, R.string.cant_find_location,Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public void onImageLoaded(Bitmap image) {
         if (image != null) {
@@ -158,5 +142,25 @@ public class MyLocationActivity extends AppCompatActivity implements NetworkResL
         Intent intent = new Intent(this,PanoramicImageActivity.class);
         intent.putExtra(Constants.ID, CurrentBeacon);
         startActivity(intent);
+    }
+
+    @Override
+    public void onPreUpdate(String str) {
+
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, ResStatus status) {
+
+    }
+
+    @Override
+    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+                new ImageLoader(BeaconID.from(id), num, this).execute(res);
+
+            }
+        }
     }
 }

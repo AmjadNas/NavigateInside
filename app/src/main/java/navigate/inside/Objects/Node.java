@@ -274,8 +274,6 @@ public class Node {
             node.setOutside(out);
             node.setNessOutside(nessout);
 
-
-
             return node;
         }catch (JSONException e){
             Log.e("Exception :", e.getMessage());

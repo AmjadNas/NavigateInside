@@ -19,19 +19,22 @@ public final class Converter {
     }
 
     public static byte[] getBitmapAsByteArray(Bitmap bitmap){
-        ByteArrayOutputStream bas;
-        byte[] bArray;
-        try {
-            bas = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100 ,bas);
-            bArray = bas.toByteArray();
-            bas.flush();
-            bas.close();
-        } catch (IOException e) {
-            Log.e("IOException ",e.getMessage());
-            return null;
+        if (bitmap != null) {
+            ByteArrayOutputStream bas;
+            byte[] bArray;
+            try {
+                bas = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bas);
+                bArray = bas.toByteArray();
+                bas.flush();
+                bas.close();
+            } catch (IOException e) {
+                Log.e("IOException ", e.getMessage());
+                return null;
+            }
+            return bArray;
         }
-        return bArray;
+        return null;
 
     }
 

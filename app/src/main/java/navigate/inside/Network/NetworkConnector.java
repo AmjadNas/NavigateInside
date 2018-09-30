@@ -126,7 +126,7 @@ public class NetworkConnector {
         getRequestQueue().add(jsObjRequest);
     }
 
-    private void addImageRequestToQueue(String query, final String id, final NetworkResListener listener){
+    private void addImageRequestToQueue(String query, final String id, final int num, final NetworkResListener listener){
 
         String reqUrl = BASE_URL + "?" + query;
 
@@ -136,13 +136,13 @@ public class NetworkConnector {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 Bitmap bm = response.getBitmap();
-                notifyPostBitmapUpdateListeners(bm, ResStatus.SUCCESS, id, listener);
+                notifyPostBitmapUpdateListeners(bm, ResStatus.SUCCESS, id, num, listener);
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
-                notifyPostBitmapUpdateListeners(null, ResStatus.FAIL, id, listener);
+                notifyPostBitmapUpdateListeners(null, ResStatus.FAIL, id, num, listener);
             }
         });
     }
@@ -152,7 +152,7 @@ public class NetworkConnector {
     }
     
 
-    public void sendRequestToServer(String requestCode, Node data, NetworkResListener listener){
+    public void sendRequestToServer(String requestCode, Node data, int num, NetworkResListener listener){
 
         if(data==null){
             return;
@@ -166,9 +166,10 @@ public class NetworkConnector {
             case GET_NODE_IMAGE:{
                 builder.appendQueryParameter(REQ , requestCode);
                 builder.appendQueryParameter(Constants.ID , data.get_id().toString());
+                builder.appendQueryParameter(Constants.IMAGENUM , String.valueOf(num));
 
                 String query = builder.build().getEncodedQuery();
-                addImageRequestToQueue(query, data.get_id().toString(),listener);
+                addImageRequestToQueue(query, data.get_id().toString(), num, listener);
                 break;
             }
         }
@@ -185,7 +186,7 @@ public class NetworkConnector {
     }
 
 
-    private  void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status,final String id, final NetworkResListener listener) {
+    private  void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status,final String id, final int num, final NetworkResListener listener) {
 
         Handler handler = new Handler(mCtx.getMainLooper());
 
@@ -194,7 +195,7 @@ public class NetworkConnector {
             @Override
             public void run() {
                 try{
-                    listener.onPostUpdate(res, id, status);
+                    listener.onPostUpdate(res, id, num, status);
                 }
                 catch(Throwable t){
                     t.printStackTrace();

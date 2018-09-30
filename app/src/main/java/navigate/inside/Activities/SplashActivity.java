@@ -60,33 +60,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     public void onPostUpdate(JSONObject res, ResStatus status) {
         if(status == ResStatus.SUCCESS){
             try {
-                JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms;
-                JSONObject o, nbr;
-                Node n;
-//todo: needs rework
-                for(int i = 0; i < arr.length(); i++){
-                    o = arr.getJSONObject(i);
-                    n = Node.parseJson(o);
-                    if(SysData.getInstance().insertNode(n)) {
-                        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, this);
-                        rooms = o.getJSONArray(Constants.ROOMS);
-                        Room r;
-
-                        for (int j = 0; j < rooms.length(); j++) {
-                            r = Room.parseJson(rooms.getJSONObject(j));
-                            SysData.getInstance().insertRoomToNode(r, n);
-                        }
-                    }
-                }
-                for(int i = 0; i < arr.length(); i++){
-                    o = arr.getJSONObject(i);
-                    nbers = o.getJSONArray(Constants.Node);
-
-                    for(int j = 0; j < nbers.length(); j++){
-                        nbr = nbers.getJSONObject(j);
-                        SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
-                    }
-                }
+                parseJson(res);
                 sharedPref.edit()
                         .putBoolean(getResources().getString(R.string.firstLaunch), false)
                         .apply();
@@ -110,16 +84,53 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         finish();
     }
 
+    private void parseJson(JSONObject res) throws JSONException{
+        JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms, imgs;
+        JSONObject o, nbr, img;
+        Node n;
+
+        for(int i = 0; i < arr.length(); i++) {
+            o = arr.getJSONObject(i);
+            n = Node.parseJson(o);
+            if (n != null) {
+                if (SysData.getInstance().insertNode(n)) {
+                    ///  NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, this);
+                    rooms = o.getJSONArray(Constants.ROOMS);
+                    Room r;
+                    for (int j = 0; j < rooms.length(); j++) {
+                        r = Room.parseJson(rooms.getJSONObject(j));
+                        SysData.getInstance().insertRoomToNode(r, n);
+                    }
+
+                    nbers = o.getJSONArray(Constants.Node);
+                    for (int j = 0; j < nbers.length(); j++) {
+                        nbr = nbers.getJSONObject(j);
+                        SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
+                    }
+
+                    imgs = o.getJSONArray(Constants.IMAGES);
+                    for (int j = 0; j < imgs.length(); j++){
+                        img = imgs.getJSONObject(j);
+                        if (SysData.getInstance().insertImageToDB(n.get_id(), img.getInt(Constants.IMAGENUM),
+                                img.getInt(Constants.Direction), null))
+                            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, img.getInt(Constants.IMAGENUM),  this);
+                    }
+
+                }
+            }
+        }
+    }
+
     private void launchActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, String id, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-                SysData.getInstance().insertImageToDB(BeaconID.from(id), res);
+                SysData.getInstance().updateImage(BeaconID.from(id), num, res);
             }
         }
 

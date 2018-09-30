@@ -11,16 +11,15 @@ public class ImageLoader extends AsyncTask<Bitmap,Bitmap,Bitmap> {
     private boolean downloaded;
     private ImageLoadedListener imageLoadedListener;
     private BeaconID currentID;
+    private int imageNum;
 
-    public ImageLoader(BeaconID currentID, ImageLoadedListener imageLoadedListener, boolean downloaded){
-        this.downloaded = downloaded;
+    public ImageLoader(BeaconID currentID, int num ,ImageLoadedListener imageLoadedListener){
         this.imageLoadedListener = imageLoadedListener;
         this.currentID = currentID;
+        imageNum = num;
     }
     @Override
     protected Bitmap doInBackground(Bitmap... bitmaps) {
-        if (downloaded)
-            SysData.getInstance().insertImageToDB(currentID, bitmaps[0]);
 
         return Converter.getImageTHumbnail(bitmaps[0]);
     }

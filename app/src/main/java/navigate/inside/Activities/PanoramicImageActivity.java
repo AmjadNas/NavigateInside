@@ -13,9 +13,15 @@ import android.view.View;
 import com.gjiazhe.panoramaimageview.GyroscopeObserver;
 import com.gjiazhe.panoramaimageview.PanoramaImageView;
 
+import org.json.JSONObject;
+
 import navigate.inside.Logic.PathFinder;
 import navigate.inside.Logic.SysData;
+import navigate.inside.Network.NetworkConnector;
+import navigate.inside.Network.NetworkResListener;
+import navigate.inside.Network.ResStatus;
 import navigate.inside.Objects.BeaconID;
+import navigate.inside.Objects.Node;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
@@ -23,7 +29,7 @@ import navigate.inside.Utills.Constants;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class PanoramicImageActivity extends AppCompatActivity {
+public class PanoramicImageActivity extends AppCompatActivity implements NetworkResListener {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -108,27 +114,11 @@ public class PanoramicImageActivity extends AppCompatActivity {
         observer = new GyroscopeObserver();
         observer.setMaxRotateRadian(Math.PI/9);
 
-        final int  id = getIntent().getIntExtra(Constants.INDEX, -1);
-        if (id >= 0){
-            new AsyncTask<Void,Void,Void>(){
-                @Override
-                protected Void doInBackground(Void... params) {
-                    image = PathFinder.getInstance().getImage(id);
-                    if (image != null)
-                        image = Bitmap.createScaledBitmap(image, I_WIDTH, I_HEIGHT,false);
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    if (image != null){
-                        pamimageview.setImageBitmap(image);
-                        pamimageview.setGyroscopeObserver(observer);
-                    }
-
-                }
-            }.execute();
+        final BeaconID  id = (BeaconID)getIntent().getSerializableExtra(Constants.ID);
+        if (id != null){
+            Node n = SysData.getInstance().getNodeByBeaconID(id);
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
+                    n, 11, this);
 
         }
         pamimageview.setOnTouchListener(mDelayHideTouchListener);
@@ -220,5 +210,46 @@ public class PanoramicImageActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onPreUpdate(String str) {
+
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, ResStatus status) {
+
+    }
+
+    @Override
+    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+                new SacledImage().execute(res);
+            }
+        }
+    }
+
+    private class SacledImage extends AsyncTask<Bitmap,Void,Void>{
+
+            @Override
+            protected Void doInBackground(Bitmap... params) {
+
+                if (params[0] != null)
+                    image = Bitmap.createScaledBitmap(params[0], I_WIDTH, I_HEIGHT,false);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (image != null){
+                    pamimageview.setImageBitmap(image);
+                    pamimageview.setGyroscopeObserver(observer);
+                }
+
+            }
+
     }
 }

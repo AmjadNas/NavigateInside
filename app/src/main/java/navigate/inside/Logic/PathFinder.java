@@ -103,6 +103,6 @@ public class PathFinder {
 
     public Bitmap getImage(int position) {
 
-        return data.getImageForNode(path.get(position).first.get_id());
+        return data.getImageForNode(path.get(position).first.get_id(), -1);
     }
 }

@@ -57,6 +57,20 @@ public class DataBase extends SQLiteOpenHelper {
             "CONSTRAINT PK2 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
             " )";
 
+    private static final String SQL_CREATE_IMAGES_TABLE = "CREATE TABLE " + Constants.IMAGES + " (" +
+            Constants.BEACONID + " VARCHAR(100), " +
+            Constants.IMAGENUM + " INTEGER, " +
+            Constants.PHOTO + " BLOB, " +
+            Constants.Direction + " INTEGER, " +
+            "FOREIGN KEY (" + Constants.BEACONID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
+            "CONSTRAINT PK3 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.IMAGENUM + ")" +
+            " )";
+
+    private static final String SQL_DROP_NODES = "DROP TABLE IF EXISTS " + Constants.Node;
+    private static final String SQL_DROP_RELATION = "DROP TABLE IF EXISTS " + Constants.Relation;
+    private static final String SQL_DROP_IMAGES = "DROP TABLE IF EXISTS " + Constants.IMAGES;
+    private static final String SQL_DROP_ROOMS= "DROP TABLE IF EXISTS " + Constants.Room;
+
 
     public DataBase(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -67,11 +81,21 @@ public class DataBase extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_NODE_TABLE);
         db.execSQL(SQL_CREATE_RELATION_TABLE);
         db.execSQL(SQL_CREATE_ROOMS_TABLE);
+        db.execSQL(SQL_CREATE_IMAGES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL_DROP_RELATION);
+        db.execSQL(SQL_DROP_IMAGES);
+        db.execSQL(SQL_DROP_ROOMS);
+        db.execSQL(SQL_DROP_NODES);
+        onCreate(db);
+    }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        onUpgrade(db, oldVersion, newVersion);
     }
 
 
@@ -194,10 +218,10 @@ public class DataBase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Bitmap getNodeImage(String s) {
-        if(s != null){
+    public Bitmap getNodeImage(String...args) {
+        if(args != null){
             SQLiteDatabase sq = getReadableDatabase();
-            Cursor c = sq.query(Constants.Node, new String[]{Constants.Image}, Constants.BEACONID + " = ?", new String[]{s}, null, null, null);
+            Cursor c = sq.query(Constants.Node, new String[]{Constants.IMAGES}, Constants.BEACONID + " = ? AND " + Constants.Direction + " =?", args, null, null, null);
             byte[] arr;
             Bitmap btm = null;
 
@@ -229,19 +253,43 @@ public class DataBase extends SQLiteOpenHelper {
             return false;
         }
     }
+    public boolean updateImage(BeaconID bid, int num, Bitmap img){
+        try {
+            String[] cols = {
+                    bid.toString(),
+                    String.valueOf(num)
+            };
+            SQLiteDatabase db = getWritableDatabase();
+            ContentValues cv = new ContentValues();
 
-    public void insertImage(BeaconID bid, Bitmap img) {
+            cv.put(Constants.PHOTO, Converter.getBitmapAsByteArray(img));
 
+            long i = db.update(Constants.IMAGES, cv, Constants.BEACONID + " =? " +
+                    "AND " + Constants.IMAGENUM + "=?", cols);
+
+            db.close();
+            return i >= 0;
+        }catch (Throwable th){
+            th.printStackTrace();
+            return false;
+        }
+    }
+    public boolean insertImage(BeaconID bid, int num, int dir, Bitmap img) {
         try {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(Constants.Image, Converter.getBitmapAsByteArray(img));
-            db.update(Constants.Node, cv, Constants.BEACONID + " = ?", new String[]{bid.toString()});
 
+            cv.put(Constants.BEACONID, bid.toString());
+            cv.put(Constants.PHOTO, Converter.getBitmapAsByteArray(img));
+            cv.put(Constants.Direction, dir);
+            cv.put(Constants.IMAGENUM, num);
+            long i = db.insert(Constants.IMAGES, null, cv);
 
             db.close();
+            return i >= 0;
         }catch (Throwable th){
             th.printStackTrace();
+            return false;
         }
     }
 

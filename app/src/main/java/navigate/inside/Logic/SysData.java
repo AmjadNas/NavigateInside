@@ -76,8 +76,8 @@ public class SysData {
 
     }
 
-    public Bitmap getImageForNode(BeaconID id) {
-        Bitmap img = db.getNodeImage(id.toString());
+    public Bitmap getImageForNode(BeaconID id, int num) {
+        Bitmap img = db.getNodeImage(id.toString(), String.valueOf(num));
 
         return img;
     }
@@ -85,8 +85,9 @@ public class SysData {
     public void InitializeData(){
         db.getNodes(AllNodes);
     }
-    public void insertImageToDB(BeaconID currentBeacon, Bitmap res) {
-        db.insertImage(currentBeacon, res);
+
+    public boolean insertImageToDB(BeaconID currentBeacon,int num, int dir, Bitmap res) {
+        return db.insertImage(currentBeacon, num, dir, res);
     }
 
     public boolean insertNode(Node n) {
@@ -112,5 +113,9 @@ public class SysData {
             n.AddRoom(r);
         }
 
+    }
+
+    public void updateImage(BeaconID from, int num, Bitmap res) {
+        db.updateImage(from, num, res);
     }
 }
