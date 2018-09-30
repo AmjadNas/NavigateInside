@@ -49,7 +49,7 @@ public class NodeResProvider {
             Constants.PHOTO + "=?, " +
             Constants.Direction + "=?" +
             " WHERE " + Constants.BEACONID + "=? AND" + Constants.IMAGENUM + "=?;";
-    private static String INSERT_IMAGE = "INSERT INTO " + Constants.IMAGES + " ("
+    private static final String INSERT_IMAGE = "INSERT INTO " + Constants.IMAGES + " ("
             + Constants.BEACONID + ", "
             + Constants.IMAGENUM + ", "
             + Constants.PHOTO + ", "
