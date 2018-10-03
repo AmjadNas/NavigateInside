@@ -118,4 +118,6 @@ public class SysData {
     public void updateImage(BeaconID from, int num, Bitmap res) {
         db.updateImage(from, num, res);
     }
+
+
 }

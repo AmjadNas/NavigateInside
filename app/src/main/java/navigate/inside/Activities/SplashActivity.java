@@ -102,12 +102,6 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                         SysData.getInstance().insertRoomToNode(r, n);
                     }
 
-                    nbers = o.getJSONArray(Constants.Node);
-                    for (int j = 0; j < nbers.length(); j++) {
-                        nbr = nbers.getJSONObject(j);
-                        SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
-                    }
-
                     imgs = o.getJSONArray(Constants.IMAGES);
                     for (int j = 0; j < imgs.length(); j++){
                         img = imgs.getJSONObject(j);
@@ -118,7 +112,17 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
 
                 }
             }
+
         }
+        for(int i = 0; i < arr.length(); i++) {
+            o = arr.getJSONObject(i);
+            nbers = o.getJSONArray(Constants.Node);
+            for (int j = 0; j < nbers.length(); j++) {
+                nbr = nbers.getJSONObject(j);
+                SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
+            }
+        }
+
     }
 
     private void launchActivity() {

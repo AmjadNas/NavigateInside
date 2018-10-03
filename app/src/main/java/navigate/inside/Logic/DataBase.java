@@ -221,7 +221,7 @@ public class DataBase extends SQLiteOpenHelper {
     public Bitmap getNodeImage(String...args) {
         if(args != null){
             SQLiteDatabase sq = getReadableDatabase();
-            Cursor c = sq.query(Constants.Node, new String[]{Constants.IMAGES}, Constants.BEACONID + " = ? AND " + Constants.Direction + " =?", args, null, null, null);
+            Cursor c = sq.query(Constants.IMAGES, new String[]{Constants.PHOTO}, Constants.BEACONID + " = ? AND " + Constants.Direction + " =?", args, null, null, null);
             byte[] arr;
             Bitmap btm = null;
 

@@ -172,6 +172,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
             }
         }
 
+       Bitmap i = bindImage(itemList.get(position).second);
+        if (i != null)
+        new ImageLoader(currentID, -1, this).execute(i);
 /*
         //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
         Bitmap image = SysData.getInstance().getImageForNode(temp.get_id(), 10);
@@ -291,8 +294,10 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
-    private void bindImage(int dir){
+    private Bitmap bindImage(int dir){
         // sysdata get image with dir and node id
+       Bitmap res =  SysData.getInstance().getImageForNode(currentID, dir);
+       return res;
     }
     public void setPage(int page) {
         if(position != page) {
