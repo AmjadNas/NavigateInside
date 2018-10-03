@@ -112,7 +112,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                     for (int j = 0; j < imgs.length(); j++){
                         img = imgs.getJSONObject(j);
                         if (SysData.getInstance().insertImageToDB(n.get_id(), img.getInt(Constants.IMAGENUM),
-                                img.getInt(Constants.Direction), null))
+                                img.getInt(Constants.Direction),null))
                             NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, img.getInt(Constants.IMAGENUM),  this);
                     }
 

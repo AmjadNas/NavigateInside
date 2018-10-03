@@ -291,6 +291,9 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }
 
+    private void bindImage(int dir){
+        // sysdata get image with dir and node id
+    }
     public void setPage(int page) {
         if(position != page) {
             if (page < itemList.size()){

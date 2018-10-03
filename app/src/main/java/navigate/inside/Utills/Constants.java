@@ -54,6 +54,8 @@ public final class Constants {
     public static final String IMAGENUM = "imageNum";
     public static final String PHOTO = "photo";
     public static final String IMAGES = "images";
+    public static final String MAXDIR = "maxDir";
+    public static final String MINDIR = "minDir";
     public static final int NOREQUEST = -1;
     public static final int REQUESTROOMNUMBER = 1;
     public static final UUID DEFULTUID = UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
