@@ -2,6 +2,7 @@ package com.navigate.inside.database.operations;
 
 
 import com.navigate.inside.objects.Node;
+import com.navigate.inside.objects.Room;
 import com.navigate.inside.utils.Constants;
 
 import java.io.ByteArrayInputStream;
@@ -110,13 +111,18 @@ public class NodeResProvider {
 
                 Node n = new Node(id, Junction, Elevator, Building, Floor);
                 List<Node.Edge> list = getNeighbours(n, conn);
-                n.setNeigbours(list);
+                if (list != null)
+                    n.setNeigbours(list);
 
                 ArrayList<Node.Image> images = getImagesNums(id, conn);
-                n.setImages(images);
-                RoomResProvider roomResProvider = new RoomResProvider();
+                if (images != null)
+                    n.setImages(images);
 
-                n.setRoomsNearBy(roomResProvider.getRoomsForNode(n.getId(), conn));
+                RoomResProvider roomResProvider = new RoomResProvider();
+                List<Room> rooms = roomResProvider.getRoomsForNode(n.getId(), conn);
+                if (rooms != null)
+                    n.setRoomsNearBy(rooms);
+
                 n.setOutside(Outside);
                 n.setNessOutside(NessOutside);
                 results.add(n);

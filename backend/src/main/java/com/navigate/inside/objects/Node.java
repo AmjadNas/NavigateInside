@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 public class Node {
 
     private String id;
@@ -35,6 +33,7 @@ public class Node {
         this.Building=Building;
         this.Floor=Floor;
         this.image = image;
+        images = new ArrayList<>();
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
@@ -44,6 +43,7 @@ public class Node {
         this.Elevator=Elevator;
         this.Building=Building;
         this.Floor=Floor;
+        images = new ArrayList<>();
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
@@ -64,6 +64,7 @@ public class Node {
         int num;
         int dir;
 
+
         public Image(int dir, int num){
             this.dir = dir;
             this.num = num;
@@ -73,6 +74,7 @@ public class Node {
             JSONObject json = new JSONObject();
             json.put(Constants.IMAGENUM, num);
             json.put(Constants.Direction, dir);
+
             return json;
         }
 
@@ -200,9 +202,9 @@ public class Node {
         object.put(Constants.Floor,Floor);
         object.put(Constants.Outside,Outside);
         object.put(Constants.NessOutside,NessOutside);
+
         for(Room n : RoomsNearby)
             arr.add(n.toJson());
-
         for (Edge e : Neighbours)
             nbers.add(e.toJson());
         for (Image i : images)

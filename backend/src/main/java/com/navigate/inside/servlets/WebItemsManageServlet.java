@@ -74,7 +74,7 @@ public class WebItemsManageServlet extends HttpServlet {
 
 
         String id = null;
-        int direction = 0, num = 0;
+        int direction = -1, num = 0, dirMax = -1;
 		boolean isDelete = false;
 		
 		byte [] image= null;
