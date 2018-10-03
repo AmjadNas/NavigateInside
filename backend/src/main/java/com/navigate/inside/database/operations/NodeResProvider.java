@@ -26,7 +26,7 @@ public class NodeResProvider {
             Constants.Floor + ", " +
             Constants.Outside + ", " +
             Constants.NessOutside + ", " +
-            Constants.Direction + ", " +
+            Constants.Direction +
             ")" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node + ";";
