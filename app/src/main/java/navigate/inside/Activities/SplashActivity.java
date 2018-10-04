@@ -101,15 +101,6 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                         r = Room.parseJson(rooms.getJSONObject(j));
                         SysData.getInstance().insertRoomToNode(r, n);
                     }
-
-                    imgs = o.getJSONArray(Constants.IMAGES);
-                    for (int j = 0; j < imgs.length(); j++){
-                        img = imgs.getJSONObject(j);
-                        if (SysData.getInstance().insertImageToDB(n.get_id(), img.getInt(Constants.IMAGENUM),
-                                img.getInt(Constants.Direction),null))
-                            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, n, img.getInt(Constants.IMAGENUM),  this);
-                    }
-
                 }
             }
 
@@ -119,7 +110,10 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
             nbers = o.getJSONArray(Constants.Node);
             for (int j = 0; j < nbers.length(); j++) {
                 nbr = nbers.getJSONObject(j);
-                SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
+                if(SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction))){
+                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
+                            o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), this);
+                }
             }
         }
 
@@ -131,10 +125,10 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-                SysData.getInstance().updateImage(BeaconID.from(id), num, res);
+                SysData.getInstance().updateImage(BeaconID.from(id), BeaconID.from(id2), res);
             }
         }
 

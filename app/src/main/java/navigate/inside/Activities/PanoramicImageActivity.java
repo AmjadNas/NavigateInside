@@ -118,7 +118,7 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
         if (id != null){
             Node n = SysData.getInstance().getNodeByBeaconID(id);
             NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                    n, 11, this);
+                    id.toString(), null, this);
 
         }
         pamimageview.setOnTouchListener(mDelayHideTouchListener);
@@ -223,11 +223,14 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new SacledImage().execute(res);
             }
+        }else {
+
+            pamimageview.setImageDrawable(getDrawable(R.drawable.noimage));
         }
     }
 

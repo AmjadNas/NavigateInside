@@ -102,9 +102,10 @@ public class Node {
         this.Father=null;
     }
 
-    public void AddNeighbour(Pair<Node,Integer> Neighbour){
+    public boolean AddNeighbour(Pair<Node,Integer> Neighbour){
         if(!Neighbours.contains(Neighbour))
-            Neighbours.add(Neighbour);
+            return Neighbours.add(Neighbour);
+        return false;
     }
 
     public boolean isJunction() {

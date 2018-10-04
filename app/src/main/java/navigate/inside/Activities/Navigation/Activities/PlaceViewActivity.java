@@ -296,7 +296,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     private Bitmap bindImage(int dir){
         // sysdata get image with dir and node id
-       Bitmap res =  SysData.getInstance().getImageForNode(currentID, dir);
+       Bitmap res =  SysData.getInstance().getImageForPair(itemList.get(position-1).first.get_id(), currentID);
        return res;
     }
     public void setPage(int page) {

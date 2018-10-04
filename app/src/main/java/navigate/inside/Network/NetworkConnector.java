@@ -126,7 +126,7 @@ public class NetworkConnector {
         getRequestQueue().add(jsObjRequest);
     }
 
-    private void addImageRequestToQueue(String query, final String id, final int num, final NetworkResListener listener){
+    private void addImageRequestToQueue(String query, final String id, final String id2, final NetworkResListener listener){
 
         String reqUrl = BASE_URL + "?" + query;
 
@@ -136,13 +136,13 @@ public class NetworkConnector {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 Bitmap bm = response.getBitmap();
-                notifyPostBitmapUpdateListeners(bm, ResStatus.SUCCESS, id, num, listener);
+                notifyPostBitmapUpdateListeners(bm, ResStatus.SUCCESS, id, id2, listener);
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
-                notifyPostBitmapUpdateListeners(null, ResStatus.FAIL, id, num, listener);
+                notifyPostBitmapUpdateListeners(null, ResStatus.FAIL, id, id2, listener);
             }
         });
     }
@@ -152,9 +152,9 @@ public class NetworkConnector {
     }
     
 
-    public void sendRequestToServer(String requestCode, Node data, int num, NetworkResListener listener){
+    public void sendRequestToServer(String requestCode, String id, String id2, NetworkResListener listener){
 
-        if(data==null){
+        if(id == null){
             return;
         }
 
@@ -165,11 +165,15 @@ public class NetworkConnector {
            
             case GET_NODE_IMAGE:{
                 builder.appendQueryParameter(REQ , requestCode);
-                builder.appendQueryParameter(Constants.ID , data.get_id().toString());
-                builder.appendQueryParameter(Constants.IMAGENUM , String.valueOf(num));
+                builder.appendQueryParameter(Constants.FirstID , id);
+                if (id2 != null)
+                    builder.appendQueryParameter(Constants.SecondID , id2);
+                else
+                    builder.appendQueryParameter(Constants.SecondID , "-1");
+
 
                 String query = builder.build().getEncodedQuery();
-                addImageRequestToQueue(query, data.get_id().toString(), num, listener);
+                addImageRequestToQueue(query, id, id2, listener);
                 break;
             }
         }
@@ -186,7 +190,7 @@ public class NetworkConnector {
     }
 
 
-    private  void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status,final String id, final int num, final NetworkResListener listener) {
+    private  void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status, final String id, final String id2, final NetworkResListener listener) {
 
         Handler handler = new Handler(mCtx.getMainLooper());
 
@@ -195,7 +199,7 @@ public class NetworkConnector {
             @Override
             public void run() {
                 try{
-                    listener.onPostUpdate(res, id, num, status);
+                    listener.onPostUpdate(res, id, id2, status);
                 }
                 catch(Throwable t){
                     t.printStackTrace();

@@ -77,7 +77,7 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         direction.setText(node.toRoomsString());
         int m = -1;
         NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                node, 11, this);
+                node.get_id().toString(), null, this);
         /*Bitmap image = SysData.getInstance().getImageForNode(node.get_id(), m);
 
         if (image != null) {
@@ -155,12 +155,15 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
     }
 
     @Override
-    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status) {
+    public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             if (res != null){
-                new ImageLoader(BeaconID.from(id), num, this).execute(res);
+                new ImageLoader(BeaconID.from(id), -1, this).execute(res);
 
             }
+        }else {
+
+            panoWidgetView.setImageDrawable(getDrawable(R.drawable.noimage));
         }
     }
 }

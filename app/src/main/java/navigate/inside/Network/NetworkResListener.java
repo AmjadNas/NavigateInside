@@ -15,5 +15,5 @@ public interface NetworkResListener {
 
     public void onPostUpdate(JSONObject res, ResStatus status);
 
-    public void onPostUpdate(Bitmap res, String id, int num, ResStatus status);
+    public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status);
 }

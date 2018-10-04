@@ -49,7 +49,7 @@ public class SysData {
         }else {
             for(Node n : AllNodes)
                 for (Room m : n.getRooms()) {
-                    if(m.GetRoomNum().equals(BothItems[0])){
+                    if(m.GetRoomNum().equals(BothItems[0]) || m.GetRoomName().equals(BothItems[0])){
                         return n.get_id();
                     }
                 }
@@ -76,8 +76,8 @@ public class SysData {
 
     }
 
-    public Bitmap getImageForNode(BeaconID id, int num) {
-        Bitmap img = db.getNodeImage(id.toString(), String.valueOf(num));
+    public Bitmap getImageForPair(BeaconID id, BeaconID id2) {
+        Bitmap img = db.getNodeImage(id.toString(), id2.toString());
 
         return img;
     }
@@ -86,9 +86,9 @@ public class SysData {
         db.getNodes(AllNodes);
     }
 
-    public boolean insertImageToDB(BeaconID currentBeacon,int num, int dir, Bitmap res) {
+   /* public boolean insertImageToDB(BeaconID currentBeacon,int num, int dir, Bitmap res) {
         return db.insertImage(currentBeacon, num, dir, res);
-    }
+    }*/
 
     public boolean insertNode(Node n) {
         if(db.insertNode(Node.getContentValues(n)))
@@ -96,16 +96,16 @@ public class SysData {
         return false;
     }
 
-    public void insertNeighbourToNode(String string, String string1, int dir) {
+    public boolean insertNeighbourToNode(String string, String string1, int dir) {
         Node n1 = getNodeByBeaconID(BeaconID.from(string));
         Node n2 = getNodeByBeaconID(BeaconID.from(string1));
 
         if(db.insertRelation(string, string1, dir, false)){
-            int d = (dir + 180) % 360;
-            n1.AddNeighbour(new Pair<Node, Integer>(n2, dir));
-            n2.AddNeighbour(new Pair<Node, Integer>(n1, d));
+           // int d = (dir + 180) % 360;
+            return n1.AddNeighbour(new Pair<Node, Integer>(n2, dir));
+           // n2.AddNeighbour(new Pair<Node, Integer>(n1, d));
         }
-
+        return false;
     }
 
     public void insertRoomToNode(Room r, Node n) {
@@ -115,8 +115,8 @@ public class SysData {
 
     }
 
-    public void updateImage(BeaconID from, int num, Bitmap res) {
-        db.updateImage(from, num, res);
+    public void updateImage(BeaconID id, BeaconID id2, Bitmap res) {
+        db.updateImage(id, id2, res);
     }
 
 

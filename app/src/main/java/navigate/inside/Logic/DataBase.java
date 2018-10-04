@@ -35,13 +35,13 @@ public class DataBase extends SQLiteOpenHelper {
             Constants.Floor + " VARCHAR(25), " +
             Constants.Outside + " BOOLEAN, "+
             Constants.NessOutside + " BOOLEAN, "+
-            Constants.Direction + " INTEGER, " +
-            Constants.Image +" BLOB " +
+            Constants.Direction + " INTEGER " +
             ")";
 
     private static final String SQL_CREATE_RELATION_TABLE = "CREATE TABLE " + Constants.Relation +" ("+
             Constants.FirstID + " VARCHAR(100), "+
             Constants.SecondID + " VARCHAR(100), "+
+            Constants.PHOTO + " BLOB, " +
             Constants.Direction + " INTEGER, "+
             Constants.DIRECT + " BOOLEAN, "+
             "FOREIGN KEY (" + Constants.FirstID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
@@ -57,18 +57,8 @@ public class DataBase extends SQLiteOpenHelper {
             "CONSTRAINT PK2 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
             " )";
 
-    private static final String SQL_CREATE_IMAGES_TABLE = "CREATE TABLE " + Constants.IMAGES + " (" +
-            Constants.BEACONID + " VARCHAR(100), " +
-            Constants.IMAGENUM + " INTEGER, " +
-            Constants.PHOTO + " BLOB, " +
-            Constants.Direction + " INTEGER, " +
-            "FOREIGN KEY (" + Constants.BEACONID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
-            "CONSTRAINT PK3 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.IMAGENUM + ")" +
-            " )";
-
     private static final String SQL_DROP_NODES = "DROP TABLE IF EXISTS " + Constants.Node;
     private static final String SQL_DROP_RELATION = "DROP TABLE IF EXISTS " + Constants.Relation;
-    private static final String SQL_DROP_IMAGES = "DROP TABLE IF EXISTS " + Constants.IMAGES;
     private static final String SQL_DROP_ROOMS= "DROP TABLE IF EXISTS " + Constants.Room;
 
 
@@ -81,13 +71,11 @@ public class DataBase extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_NODE_TABLE);
         db.execSQL(SQL_CREATE_RELATION_TABLE);
         db.execSQL(SQL_CREATE_ROOMS_TABLE);
-        db.execSQL(SQL_CREATE_IMAGES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DROP_RELATION);
-        db.execSQL(SQL_DROP_IMAGES);
         db.execSQL(SQL_DROP_ROOMS);
         db.execSQL(SQL_DROP_NODES);
         onCreate(db);
@@ -221,7 +209,7 @@ public class DataBase extends SQLiteOpenHelper {
     public Bitmap getNodeImage(String...args) {
         if(args != null){
             SQLiteDatabase sq = getReadableDatabase();
-            Cursor c = sq.query(Constants.IMAGES, new String[]{Constants.PHOTO}, Constants.BEACONID + " = ? AND " + Constants.Direction + " =?", args, null, null, null);
+            Cursor c = sq.query(Constants.Relation, new String[]{Constants.PHOTO}, Constants.FirstID + " = ? AND " + Constants.SecondID + " =?", args, null, null, null);
             byte[] arr;
             Bitmap btm = null;
 
@@ -253,19 +241,19 @@ public class DataBase extends SQLiteOpenHelper {
             return false;
         }
     }
-    public boolean updateImage(BeaconID bid, int num, Bitmap img){
+    public boolean updateImage(BeaconID bid, BeaconID bid2, Bitmap img){
         try {
             String[] cols = {
                     bid.toString(),
-                    String.valueOf(num)
+                    bid2.toString()
             };
             SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = new ContentValues();
 
             cv.put(Constants.PHOTO, Converter.getBitmapAsByteArray(img));
 
-            long i = db.update(Constants.IMAGES, cv, Constants.BEACONID + " =? " +
-                    "AND " + Constants.IMAGENUM + "=?", cols);
+            long i = db.update(Constants.Relation, cv, Constants.FirstID + " =? " +
+                    "AND " + Constants.SecondID + " =? ", cols);
 
             db.close();
             return i >= 0;
@@ -274,7 +262,8 @@ public class DataBase extends SQLiteOpenHelper {
             return false;
         }
     }
-    public boolean insertImage(BeaconID bid, int num, int dir, Bitmap img) {
+
+    /*public boolean insertImage(BeaconID bid, int num, int dir, Bitmap img) {
         try {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues cv = new ContentValues();
@@ -292,7 +281,7 @@ public class DataBase extends SQLiteOpenHelper {
             return false;
         }
     }
-
+*/
     public boolean insertRelation(String s1, String s2, int direction, boolean isdirect) {
 
         try {
