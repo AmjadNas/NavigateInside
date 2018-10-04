@@ -74,8 +74,9 @@ public class WebItemsManageServlet extends HttpServlet {
 
 
         String id = null;
+		String id2 = null;
         int direction = -1, num = 0, dirMax = -1;
-		boolean isDelete = false;
+		boolean isDelete = false, isDirct;
 		
 		byte [] image= null;
 		String respPage = RESOURCE_FAIL_TAG;
@@ -109,10 +110,12 @@ public class WebItemsManageServlet extends HttpServlet {
 					System.out.println(fieldname + "=" + fieldvalue);
 
 
-					if (fieldname.equals(Constants.BEACONID)) {
+					if (fieldname.equals(Constants.FirstID)) {
 						id = fieldvalue;
-					} else if (fieldname.equals(Constants.IMAGENUM)) {
-                        num = Integer.parseInt(fieldvalue);
+					}else if (fieldname.equals(Constants.SecondID)) {
+						id2 = fieldvalue;
+					}else if(fieldname.equals(Constants.DIRECT)){
+						isDirct = Boolean.valueOf(fieldvalue);
 					}else if(fieldname.equals(Constants.Direction)){
                         direction = Integer.valueOf(fieldvalue);
                     }else if(fieldname.equals(IS_DELETE)){
@@ -145,7 +148,7 @@ public class WebItemsManageServlet extends HttpServlet {
 						
 					}
 					else{
-						if(itemResProvider.insertImage(id, num ,image, direction, conn)){
+						if(itemResProvider.pairNodes(id, id2, direction, image, conn)){
 							respPage = RESOURCE_SUCCESS_TAG;
 						}
 						

@@ -32,7 +32,7 @@ public class ProjectResourceServlet extends HttpServlet {
     private static final int INSERT_NODE = 2;
     private static final int DELETE_NODE = 5;
     private static final int ADD_ROOM_TO_NODE = 3;
-    private static final int PAIR_NODES = 4;
+
 
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
     private static final String RESOURCE_SUCCESS_TAG = "{\"result_code\":1}";
@@ -96,13 +96,15 @@ public class ProjectResourceServlet extends HttpServlet {
 
                         }
                         case GET_NODE_IMAGE: {
-                            String id = req.getParameter(Constants.ID);
+                            String id = req.getParameter(Constants.FirstID);
+                            String id2 = req.getParameter(Constants.SecondID);
+
                             respPage = RESOURCE_FAIL_TAG;
 
                             conn = ConnPool.getInstance().getConnection();
                             NodeResProvider itemsResProvider = new NodeResProvider();
 
-                            byte[] imgBlob = itemsResProvider.getImage(id, conn);
+                            byte[] imgBlob = itemsResProvider.getImage(id, id2, conn);
 
                             if (imgBlob != null && imgBlob.length > 0) {
                                 ServletOutputStream os = resp.getOutputStream();
@@ -132,24 +134,6 @@ public class ProjectResourceServlet extends HttpServlet {
                             node.setOutside(Outside);
 
                             if (nodeResProvider.insertItem(node, conn)){
-                                respPage = RESOURCE_SUCCESS_TAG;
-                            }
-
-                            PrintWriter pw = resp.getWriter();
-                            pw.write(respPage);
-
-                            retry = 0;
-                            break;
-                        }case PAIR_NODES:{
-                            String first = req.getParameter(Constants.FirstID);
-                            String second = req.getParameter(Constants.SecondID);
-                            int dir = Integer.parseInt(req.getParameter(Constants.Direction));
-                            respPage = RESOURCE_FAIL_TAG;
-
-                            conn = ConnPool.getInstance().getConnection();
-                            NodeResProvider nodeResProvider = new NodeResProvider();
-
-                            if (nodeResProvider.pairNodes(first, second, dir, conn)){
                                 respPage = RESOURCE_SUCCESS_TAG;
                             }
 

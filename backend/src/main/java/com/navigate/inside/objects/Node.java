@@ -24,7 +24,7 @@ public class Node {
     private List<Room> RoomsNearby;
     private int direction;
     private byte[] image;
-    private ArrayList<Image> images;
+
 
     public Node(String id,boolean Junction, boolean Elevator,String Building,String Floor, byte[] image){
         this.id = id;
@@ -33,7 +33,6 @@ public class Node {
         this.Building=Building;
         this.Floor=Floor;
         this.image = image;
-        images = new ArrayList<>();
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
@@ -43,7 +42,7 @@ public class Node {
         this.Elevator=Elevator;
         this.Building=Building;
         this.Floor=Floor;
-        images = new ArrayList<>();
+
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
@@ -58,30 +57,6 @@ public class Node {
 
     public int getDirection() {
         return direction;
-    }
-
-    public static class Image{
-        int num;
-        int dir;
-
-
-        public Image(int dir, int num){
-            this.dir = dir;
-            this.num = num;
-        }
-
-        public JSONObject toJson(){
-            JSONObject json = new JSONObject();
-            json.put(Constants.IMAGENUM, num);
-            json.put(Constants.Direction, dir);
-
-            return json;
-        }
-
-    }
-
-    public void setImages(ArrayList<Image> images) {
-        this.images = images;
     }
 
     /*  public ArrayList<Node> getNeighbours() {
@@ -207,8 +182,6 @@ public class Node {
             arr.add(n.toJson());
         for (Edge e : Neighbours)
             nbers.add(e.toJson());
-        for (Image i : images)
-            imgs.add(i.toJson());
 
         object.put(Constants.ROOMS, arr);
         object.put(Constants.Node, nbers);
