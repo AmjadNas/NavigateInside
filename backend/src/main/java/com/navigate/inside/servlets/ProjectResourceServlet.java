@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -32,6 +33,7 @@ public class ProjectResourceServlet extends HttpServlet {
     private static final int INSERT_NODE = 2;
     private static final int DELETE_NODE = 5;
     private static final int ADD_ROOM_TO_NODE = 3;
+    private static final int UPDATE_REQ = 4;
 
 
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
@@ -73,21 +75,37 @@ public class ProjectResourceServlet extends HttpServlet {
             while (retry > 0) {
                 try {
                     switch (reqNo) {
-                        case GET_ALL_NODES_JSON_REQ: {
-                            conn = ConnPool.getInstance().getConnection();
+                        case UPDATE_REQ: {
+                            String id = req.getParameter(Constants.ID);
+
                             respPage = RESOURCE_FAIL_TAG;
-                            NodeResProvider NodeProvider = new NodeResProvider();
 
-                            List<Node> getAllNodes = NodeProvider.getAllNodes(conn);
+                            conn = ConnPool.getInstance().getConnection();
+                            UserResProvider userResProvider = new UserResProvider();
+                            userResProvider.updateID(id,conn);
 
-                            String resultJson = Node.toJson(getAllNodes);
-                            resp.addHeader("Content-Type",
-                                    "application/json; charset=UTF-8");
-                            if (resultJson != null && !resultJson.isEmpty()) {
-                                respPage = resultJson;
+                            retry = 0;
+                            break;
+                        }case GET_ALL_NODES_JSON_REQ: {
+                            conn = ConnPool.getInstance().getConnection();
+                            String id = req.getParameter(Constants.ID);
+                            UserResProvider userResProvider = new UserResProvider();
+                            respPage = RESOURCE_FAIL_TAG;
+                            // if not updated
+                            if (!userResProvider.checkForUpdate(id, conn)) {
+                                NodeResProvider NodeProvider = new NodeResProvider();
 
-                            } else {
-                                resp.sendError(404);
+                                List<Node> getAllNodes = NodeProvider.getAllNodes(conn);
+
+                                String resultJson = Node.toJson(getAllNodes);
+                                resp.addHeader("Content-Type",
+                                        "application/json; charset=UTF-8");
+                                if (resultJson != null && !resultJson.isEmpty()) {
+                                    respPage = resultJson;
+
+                                } else {
+                                    resp.sendError(404);
+                                }
                             }
                             PrintWriter pw = resp.getWriter();
                             pw.write(respPage);
