@@ -1,4 +1,4 @@
-package com.navigate.inside.servlets;
+package com.navigate.inside.database.operations;
 
 
 import java.sql.Connection;
@@ -17,7 +17,7 @@ public class UserResProvider {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean result =  false;
-        try {
+        /*try {
          ps = conn.prepareStatement(CHECK_FOR_UPDATE);
          ps.setString(1,id);
          rs = ps.executeQuery();
@@ -38,8 +38,8 @@ public class UserResProvider {
                     e.printStackTrace();
                 }
             }
-        }
-        return result;
+        }*/
+        return false;
     }
 
     public boolean insertID(String id, Connection conn) throws SQLException{

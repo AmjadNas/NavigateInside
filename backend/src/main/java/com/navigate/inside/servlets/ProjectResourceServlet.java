@@ -3,18 +3,17 @@ package com.navigate.inside.servlets;
 import com.navigate.inside.database.operations.ConnPool;
 import com.navigate.inside.database.operations.NodeResProvider;
 import com.navigate.inside.database.operations.RoomResProvider;
+import com.navigate.inside.database.operations.UserResProvider;
 import com.navigate.inside.objects.Node;
 import com.navigate.inside.objects.Room;
 import com.navigate.inside.utils.Constants;
 import com.navigate.inside.utils.FilesUtils;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

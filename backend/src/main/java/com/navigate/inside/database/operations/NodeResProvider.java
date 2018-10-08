@@ -103,11 +103,12 @@ public class NodeResProvider {
                     NessOutside = true;
                 }
 
+                // get neighbours
                 Node n = new Node(id, Junction, Elevator, Building, Floor);
                 List<Node.Edge> list = getNeighbours(n, conn);
                 if (list != null)
                     n.setNeigbours(list);
-
+                // get rooms for node
                 RoomResProvider roomResProvider = new RoomResProvider();
                 List<Room> rooms = roomResProvider.getRoomsForNode(n.getId(), conn);
                 if (rooms != null)

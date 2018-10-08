@@ -168,7 +168,7 @@ public class Node {
 
     public JSONObject toJson(){
         JSONObject object = new JSONObject();
-        JSONArray arr = new JSONArray(), nbers = new JSONArray(), imgs = new JSONArray();
+        JSONArray arr = new JSONArray(), nbers = new JSONArray();
 
         object.put(Constants.BEACONID,id);
         object.put(Constants.Junction,Junction);
@@ -185,7 +185,6 @@ public class Node {
 
         object.put(Constants.ROOMS, arr);
         object.put(Constants.Node, nbers);
-        object.put(Constants.IMAGES, imgs);
         return object;
     }
 
