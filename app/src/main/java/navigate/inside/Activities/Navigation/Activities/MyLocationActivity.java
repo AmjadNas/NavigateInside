@@ -77,7 +77,7 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         direction.setText(node.toRoomsString());
         int m = -1;
         NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                node.get_id().toString(), null, this);
+                node.get_id().toString(), this);
         /*Bitmap image = SysData.getInstance().getImageForNode(node.get_id(), m);
 
         if (image != null) {

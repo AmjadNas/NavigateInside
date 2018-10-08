@@ -118,7 +118,7 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
         if (id != null){
             Node n = SysData.getInstance().getNodeByBeaconID(id);
             NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                    id.toString(), null, this);
+                    id.toString(), this);
 
         }
         pamimageview.setOnTouchListener(mDelayHideTouchListener);

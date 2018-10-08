@@ -118,7 +118,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         if (currentID == null)
             currentID = temp.get_id();
 
-        if( (position-1) >=0 ){
+      /*  if( (position-1) >=0 ){
             if(itemList.get(position).first.isJunction() && itemList.get(position-1).first.isJunction()){
                 position++;
             }
@@ -126,7 +126,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
                 position++;
             }
 
-        }
+        }*/
         //Two Staris solution !
         /*Message for Stairs*/
 
@@ -161,9 +161,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-       Bitmap i = bindImage(itemList.get(position).second);
+       Bitmap i = bindImage();
         if (i != null)
-        new ImageLoader(currentID, -1, this).execute(i);
+            new ImageLoader(currentID, -1, this).execute(i);
 /*
         //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
         Bitmap image = SysData.getInstance().getImageForNode(temp.get_id(), 10);
@@ -287,7 +287,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private Bitmap bindImage(int dir){
+    private Bitmap bindImage(){
         // sysdata get image with dir and node id
        Bitmap res =  SysData.getInstance().getImageForPair(itemList.get(position-1).first.get_id(), currentID);
        return res;

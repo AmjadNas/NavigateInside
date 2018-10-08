@@ -56,10 +56,14 @@ public class DataBase extends SQLiteOpenHelper {
             "FOREIGN KEY (" + Constants.BEACONID + ") REFERENCES " + Constants.Node + " (" + Constants.BEACONID + "), "+
             "CONSTRAINT PK2 PRIMARY KEY (" + Constants.BEACONID + "," + Constants.NUMBER + "," + Constants.NAME +")" +
             " )";
-
+    // drop tables
     private static final String SQL_DROP_NODES = "DROP TABLE IF EXISTS " + Constants.Node;
     private static final String SQL_DROP_RELATION = "DROP TABLE IF EXISTS " + Constants.Relation;
     private static final String SQL_DROP_ROOMS= "DROP TABLE IF EXISTS " + Constants.Room;
+    // remove records
+    private static final String SQL_DELETE_NODES = "DELETE FROM " + Constants.Node;
+    private static final String SQL_DELETE__RELATION = "DELETE FROM " + Constants.Relation;
+    private static final String SQL_DELETE__ROOMS= "DELETE FROM " + Constants.Room;
 
 
     public DataBase(Context context){
@@ -302,5 +306,14 @@ public class DataBase extends SQLiteOpenHelper {
             th.printStackTrace();
             return false;
         }
+    }
+
+    public void clearDB() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL(SQL_DELETE__ROOMS);
+        db.execSQL(SQL_DELETE__RELATION);
+        db.execSQL(SQL_DELETE_NODES);
+        db.close();
+
     }
 }

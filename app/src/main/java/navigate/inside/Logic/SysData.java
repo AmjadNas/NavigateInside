@@ -120,4 +120,9 @@ public class SysData {
     }
 
 
+    public void clearData() {
+        AllNodes.clear();
+        db.clearDB();
+    }
+
 }

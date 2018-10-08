@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import navigate.inside.Logic.Compass;
 import navigate.inside.Objects.Node;
 import navigate.inside.Utills.Constants;
 
@@ -43,6 +44,7 @@ public class NetworkConnector {
     // server requests
     public static final String GET_ALL_NODES_JSON_REQ = "0";
     public static final String GET_NODE_IMAGE = "1";
+    public static final String UPDATE_REQ = "4";
 
     private String tempReq;
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
@@ -150,8 +152,51 @@ public class NetworkConnector {
     private ImageLoader getImageLoader() {
         return mImageLoader;
     }
-    
 
+    /**
+     * send request to server and download specific image for node or declare that the app got updated
+     * @param requestCode
+     * @param id
+     * @param listener
+     */
+    public void sendRequestToServer(String requestCode, String id, NetworkResListener listener){
+
+        if(id == null){
+            return;
+        }
+
+        Uri.Builder builder = new Uri.Builder();
+        tempReq = requestCode;
+
+        switch (requestCode){
+            case UPDATE_REQ:{
+                builder.appendQueryParameter(REQ , requestCode);
+                builder.appendQueryParameter(Constants.ID , id);
+
+                String query = builder.build().getEncodedQuery();
+                addToRequestQueue(query, listener);
+                break;
+            }
+            case GET_NODE_IMAGE:{
+                builder.appendQueryParameter(REQ , requestCode);
+                builder.appendQueryParameter(Constants.FirstID , id);
+                builder.appendQueryParameter(Constants.SecondID , "-1");
+
+
+                String query = builder.build().getEncodedQuery();
+                addImageRequestToQueue(query, id, "-1", listener);
+                break;
+            }
+        }
+    }
+
+    /**
+     * download images for edges
+     * @param requestCode
+     * @param id
+     * @param id2
+     * @param listener
+     */
     public void sendRequestToServer(String requestCode, String id, String id2, NetworkResListener listener){
 
         if(id == null){
@@ -166,11 +211,7 @@ public class NetworkConnector {
             case GET_NODE_IMAGE:{
                 builder.appendQueryParameter(REQ , requestCode);
                 builder.appendQueryParameter(Constants.FirstID , id);
-                if (id2 != null)
-                    builder.appendQueryParameter(Constants.SecondID , id2);
-                else
-                    builder.appendQueryParameter(Constants.SecondID , "-1");
-
+                builder.appendQueryParameter(Constants.SecondID , id2);
 
                 String query = builder.build().getEncodedQuery();
                 addImageRequestToQueue(query, id, id2, listener);
@@ -180,10 +221,11 @@ public class NetworkConnector {
     }
 
 
-    public void update(NetworkResListener listener){
+    public void update(String id, NetworkResListener listener){
 
         Uri.Builder builder = new Uri.Builder();
         builder.appendQueryParameter(REQ , GET_ALL_NODES_JSON_REQ);
+        builder.appendQueryParameter(Constants.ID, id);
         String query = builder.build().getEncodedQuery();
 
         addToRequestQueue(query, listener);
@@ -210,7 +252,7 @@ public class NetworkConnector {
 
     }
 
-    private  void notifyPostUpdateListeners(final JSONObject res, final ResStatus status, final NetworkResListener listener) {
+    private void notifyPostUpdateListeners(final JSONObject res, final ResStatus status, final NetworkResListener listener) {
 
         Handler handler = new Handler(mCtx.getMainLooper());
 

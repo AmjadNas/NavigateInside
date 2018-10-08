@@ -24,7 +24,7 @@ import navigate.inside.Utills.Constants;
 
 public class SplashActivity extends AppCompatActivity implements NetworkResListener {
 
-    private boolean firstInit;
+    private String id;
     private SharedPreferences sharedPref;
 
     @Override
@@ -37,10 +37,11 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         NetworkConnector.getInstance().initialize(getApplicationContext());
 
         sharedPref = getPreferences(Context.MODE_PRIVATE);
-        firstInit = sharedPref.getBoolean(getResources().getString(R.string.firstLaunch), true);
+        id = sharedPref.getString(getResources().getString(R.string.firstLaunch),"-1");
 
-       if (firstInit) {
-            NetworkConnector.getInstance().update(this);
+       if (id.equals("-1")) {
+           id = System.currentTimeMillis() + "0";
+           NetworkConnector.getInstance().update(id,this);
 
         }else{
 
@@ -62,16 +63,19 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
             try {
                 parseJson(res);
                 sharedPref.edit()
-                        .putBoolean(getResources().getString(R.string.firstLaunch), false)
+                        .putString(getResources().getString(R.string.firstLaunch), id)
                         .apply();
+                NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.UPDATE_REQ, id, this);
                 launchActivity();
             } catch (JSONException e) {
-                e.printStackTrace();
+                SysData.getInstance().closeDatabase();
+                Toast.makeText(getApplicationContext(), "Incorrect data form", Toast.LENGTH_SHORT).show();
             }
 
         }else {
             //temporary
-            SysData.getInstance().InitializeData();
+            SysData.getInstance().closeDatabase();
+            //launchActivity();
             Toast.makeText(getApplicationContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
 
         }
@@ -121,6 +125,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
 
     private void launchActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Constants.ID, id);
         startActivity(intent);
     }
 
