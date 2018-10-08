@@ -33,13 +33,12 @@ public class ProjectResourceServlet extends HttpServlet {
     private static final int DELETE_NODE = 5;
     private static final int ADD_ROOM_TO_NODE = 3;
     private static final int UPDATE_REQ = 4;
-
+    private static final int CHECK_FOR_UPDATE = 6;
 
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
     private static final String RESOURCE_SUCCESS_TAG = "{\"result_code\":1}";
 
     private static final String REQ = "req";
-
     public static final int DB_RETRY_TIMES = 5;
 
 
@@ -74,15 +73,36 @@ public class ProjectResourceServlet extends HttpServlet {
             while (retry > 0) {
                 try {
                     switch (reqNo) {
-                        case UPDATE_REQ: {
+                        case CHECK_FOR_UPDATE: {
                             String id = req.getParameter(Constants.ID);
 
                             respPage = RESOURCE_FAIL_TAG;
 
                             conn = ConnPool.getInstance().getConnection();
                             UserResProvider userResProvider = new UserResProvider();
-                            userResProvider.updateID(id,conn);
+                            if (!userResProvider.checkForUpdate(id,conn))
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            else {
+                                resp.sendError(404);
+                            }
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
+                            retry = 0;
+                            break;
+                        }case UPDATE_REQ: {
+                            String id = req.getParameter(Constants.ID);
 
+                            respPage = RESOURCE_FAIL_TAG;
+
+                            conn = ConnPool.getInstance().getConnection();
+                            UserResProvider userResProvider = new UserResProvider();
+                            if (userResProvider.updateID(id,conn))
+                                respPage = RESOURCE_SUCCESS_TAG;
+                            else {
+                                resp.sendError(404);
+                            }
+                            PrintWriter pw = resp.getWriter();
+                            pw.write(respPage);
                             retry = 0;
                             break;
                         }case GET_ALL_NODES_JSON_REQ: {
