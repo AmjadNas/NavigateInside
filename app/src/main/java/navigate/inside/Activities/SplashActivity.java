@@ -53,20 +53,27 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     }
 
     @Override
-    public void onPreUpdate(String str) {
+    public void onPreUpdate() {
 
     }
 
     @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
+    public void onPostUpdate(JSONObject res, String req, ResStatus status) {
         if(status == ResStatus.SUCCESS){
             try {
-                parseJson(res);
-                sharedPref.edit()
-                        .putString(getResources().getString(R.string.firstLaunch), id)
-                        .apply();
-                NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.UPDATE_REQ, id, this);
-                launchActivity();
+                switch (req){
+                    case NetworkConnector.GET_ALL_NODES_JSON_REQ:
+                        parseJson(res);
+                        sharedPref.edit()
+                                .putString(getResources().getString(R.string.firstLaunch), id)
+                                .apply();
+                        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.UPDATE_REQ, id, this);
+                        launchActivity();
+                        break;
+                        default:
+                            break;
+                }
+
             } catch (JSONException e) {
                 SysData.getInstance().closeDatabase();
                 Toast.makeText(getApplicationContext(), "Incorrect data form", Toast.LENGTH_SHORT).show();

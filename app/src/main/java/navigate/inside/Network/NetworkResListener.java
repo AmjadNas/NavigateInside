@@ -11,9 +11,9 @@ public interface NetworkResListener {
     /**
      * callback method which called when the resources update is started
      */
-    public void onPreUpdate(String str);
+    public void onPreUpdate();
 
-    public void onPostUpdate(JSONObject res, ResStatus status);
+    public void onPostUpdate(JSONObject res, String req, ResStatus status);
 
     public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status);
 }

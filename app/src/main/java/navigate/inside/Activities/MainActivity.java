@@ -1,10 +1,15 @@
 package navigate.inside.Activities;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +39,7 @@ import navigate.inside.Utills.Constants;
 
 public class MainActivity extends AppCompatActivity implements NetworkResListener {
 
+    private static final int MY_NOTIFICATION_ID = 22;
     private ProgressDialog progressDialog;
     private SysData data;
     private String appID;
@@ -47,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
         setSupportActionBar(toolbar);
         appID = getIntent().getStringExtra(Constants.ID);
         data = SysData.getInstance();
+
+        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.CHECK_FOR_UPDATE, appID, this);
 
     }
 
@@ -92,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
 
     @Override
-    public void onPreUpdate(String str) {
+    public void onPreUpdate() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Updating App..");
@@ -101,21 +109,65 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
     }
 
     @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
+    public void onPostUpdate(JSONObject res,String req, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             try {
-                data.clearData();
-                parseJson(res);
-                NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.UPDATE_REQ, appID, this);
+                switch (req){
+                    case NetworkConnector.GET_ALL_NODES_JSON_REQ:
+                        data.clearData();
+                        parseJson(res);
+                        NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.UPDATE_REQ, appID, this);
+                        break;
+                    case NetworkConnector.CHECK_FOR_UPDATE:
+                        // notify user by showing a notification
+                        notifyUser();
+                        break;
+
+                        default:
+                            break;
+                }
+
             } catch (JSONException e) {
                 Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
 
             }
-
-        }else {
-            Toast.makeText(this, "Nothing to update", Toast.LENGTH_SHORT).show();
+        }else if (status == ResStatus.FAIL){
+            if (req.equals(NetworkConnector.GET_ALL_NODES_JSON_REQ))
+                Toast.makeText(this, "Nothing to update", Toast.LENGTH_SHORT).show();
         }
         progressDialog.dismiss();
+    }
+
+    private void notifyUser() {
+        // Notification Action Elements
+        Intent mNotificationIntent;
+        PendingIntent mContentIntent;
+
+        mNotificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        mContentIntent = PendingIntent.getActivity(getApplicationContext(), 0, mNotificationIntent,
+                Intent.FILL_IN_ACTION);
+
+        // Define the Notification's expanded message and Intent:
+        // Notification Sound and Vibration on Arrival
+        Uri soundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        long[] mVibratePattern = { 0, 200, 200, 300 };
+        // Notification Text Elements
+        String contentTitle = getResources().getString(R.string.app_name);
+
+        Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+
+        notificationBuilder.setSmallIcon(R.drawable.logo);
+        notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setContentTitle(contentTitle);
+        notificationBuilder.setContentText(getResources().getString(R.string.clickToUpdate));
+        notificationBuilder.setContentIntent(mContentIntent).setSound(soundURI);
+        notificationBuilder.setVibrate(mVibratePattern);
+
+        // Pass the Notification to the NotificationManager:
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(MY_NOTIFICATION_ID, notificationBuilder.build());
+
+
     }
 
     @Override

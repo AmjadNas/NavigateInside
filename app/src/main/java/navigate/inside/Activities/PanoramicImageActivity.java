@@ -213,12 +213,12 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
     }
 
     @Override
-    public void onPreUpdate(String str) {
+    public void onPreUpdate() {
 
     }
 
     @Override
-    public void onPostUpdate(JSONObject res, ResStatus status) {
+    public void onPostUpdate(JSONObject res, String req, ResStatus status) {
 
     }
 

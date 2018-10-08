@@ -30,6 +30,7 @@ import navigate.inside.Utills.Constants;
 
 public class NetworkConnector {
 
+
     private static NetworkConnector mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -45,6 +46,7 @@ public class NetworkConnector {
     public static final String GET_ALL_NODES_JSON_REQ = "0";
     public static final String GET_NODE_IMAGE = "1";
     public static final String UPDATE_REQ = "4";
+    public static final String CHECK_FOR_UPDATE = "6";
 
     private String tempReq;
     private static final String RESOURCE_FAIL_TAG = "{\"result_code\":0}";
@@ -169,7 +171,7 @@ public class NetworkConnector {
         tempReq = requestCode;
 
         switch (requestCode){
-            case UPDATE_REQ:{
+            case UPDATE_REQ: case CHECK_FOR_UPDATE:{
                 builder.appendQueryParameter(REQ , requestCode);
                 builder.appendQueryParameter(Constants.ID , id);
 
@@ -261,7 +263,7 @@ public class NetworkConnector {
             @Override
             public void run() {
                 try{
-                    listener.onPostUpdate(res, status);
+                    listener.onPostUpdate(res, tempReq, status);
                 }
                 catch(Throwable t){
                     t.printStackTrace();
@@ -281,7 +283,7 @@ public class NetworkConnector {
             @Override
             public void run() {
                 try{
-                        listener.onPreUpdate(tempReq);
+                        listener.onPreUpdate();
                 }
                 catch(Throwable t){
                     t.printStackTrace();
