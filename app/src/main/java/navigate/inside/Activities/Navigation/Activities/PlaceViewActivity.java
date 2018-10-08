@@ -21,6 +21,8 @@ import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import navigate.inside.Activities.PanoramicImageActivity;
+import navigate.inside.Logic.Compass;
 import navigate.inside.Logic.Listeners.BeaconListener;
 import navigate.inside.Logic.GridSpacingItemDecoration;
 import navigate.inside.Logic.Listeners.ImageLoadedListener;
@@ -52,39 +55,25 @@ import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
 import navigate.inside.Utills.ImageLoader;
 
-public class PlaceViewActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener, BeaconListener, ImageLoadedListener{
+public class PlaceViewActivity extends AppCompatActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener, BeaconListener, ImageLoadedListener, Compass.CompassListener {
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
     // device sensor manager
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
-    private float[] rMat = new float[9];
-    private float[] orientation = new float[3];
-    // azimuth and current page position
-    private int mAzimuth, position;
+    private Compass compass;
+    // page position in path
+    private int position;
     // bottom sheet params
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout sheetLayout;
-    // delay handlers
-    private boolean flag;
-    private Handler handler;
-    private final Runnable processSensors = new Runnable() {
-        private final int interval = 1000;
-        @Override
-        public void run() {
 
-            flag = true;
-            // The Runnable is posted to run again here:
-            handler.postDelayed(this, interval);
-        }
-    };
     private ArrayList<Pair<Node,Integer>> itemList;
     private TextView name, direction;
     private CheckBox checkBox;
     private ImageView panoWidgetView;
     private BeaconID currentID;
+    private ImageView arrowView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +84,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         if (position >= 0){
             itemList =  PathFinder.getInstance().getPath();
             initSensor();
-            handler = new Handler();
             initView();
             bindPage();
             initBottomSheet();
@@ -121,6 +109,7 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         checkBox = (CheckBox) findViewById(R.id.arrive_check);
         checkBox.setOnCheckedChangeListener(this);
         panoWidgetView = (ImageView) findViewById(R.id.thumb_place_activity);
+        arrowView = (ImageView) findViewById(R.id.arrow_dir);
     }
 
     private void bindPage(){
@@ -206,8 +195,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     private void initSensor(){
         // initialize your android device sensor capabilities
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR );
+        compass = new Compass(this);
+        compass.setListener(this);
     }
 
     private void initRecyclerViews(){
@@ -224,10 +213,25 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         list.setItemAnimator(new DefaultItemAnimator());
     }
 
+    private void adjustArrow(float azimuth) {
+        int dir = itemList.get(position).second;
+
+        Animation an = new RotateAnimation(-azimuth, -(float)dir,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        an.setDuration(500);
+        an.setRepeatCount(0);
+        an.setFillAfter(true);
+
+        arrowView.startAnimation(an);
+    }
+
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+
 
     @Override
     protected void onResume() {
@@ -237,9 +241,8 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         ((MyApplication)getApplication()).startRanging();
 
         // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
-        // register handler
-        handler.post(processSensors);
+        compass.start();
+
     }
 
     @Override
@@ -249,24 +252,14 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
         ((MyApplication)getApplication()).stopRanging();
         ((MyApplication)getApplication()).unRegisterListener(this);
         // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
-        // unregister handler
-        handler.removeCallbacks(processSensors);
+        compass.stop();
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if(flag) {
-            if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-                // calculate th rotation matrix
-                SensorManager.getRotationMatrixFromVector(rMat, event.values);
-                // get the azimuth value (orientation[0]) in degree
-                mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
-                direction.setText(getDirection(mAzimuth, itemList.get(position).second));
-                flag = false;
-            }
 
-        }
+    @Override
+    public void onNewAzimuth(float azimuth) {
+        adjustArrow(azimuth);
+        direction.setText(getDirection((int)azimuth, itemList.get(position).second));
     }
 
     private String getDirection(int mAzimuth, int direction){
@@ -390,9 +383,6 @@ public class PlaceViewActivity extends AppCompatActivity implements SensorEventL
 
     }*/
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
 
 }
