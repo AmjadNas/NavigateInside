@@ -12,7 +12,9 @@ import java.io.IOException;
 public final class Converter {
 
     private Converter(){}
-
+    /**
+     * helper class for performing image conversion operations
+     */
     public static Bitmap decodeImage(byte[] arr){
 
         return BitmapFactory.decodeByteArray(arr, 0,arr.length);

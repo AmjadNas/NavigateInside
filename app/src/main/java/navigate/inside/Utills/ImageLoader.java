@@ -7,6 +7,9 @@ import navigate.inside.Logic.Listeners.ImageLoadedListener;
 import navigate.inside.Logic.SysData;
 import navigate.inside.Objects.BeaconID;
 
+/**
+ * class for loading images on a new thread
+ */
 public class ImageLoader extends AsyncTask<Bitmap,Bitmap,Bitmap> {
     private boolean downloaded;
     private ImageLoadedListener imageLoadedListener;
