@@ -14,7 +14,7 @@ import java.util.List;
 public class Node {
 
     private String id;
-    private boolean Junction;
+    private boolean Junction; // stairs
     private boolean Elevator;
     private String Building;
     private String Floor;
@@ -46,7 +46,7 @@ public class Node {
         Neighbours = new ArrayList<>();
         RoomsNearby = new ArrayList<>();
     }
-
+    /*getters and setters*/
     public byte[] getImage() {
         return image;
     }
@@ -136,7 +136,15 @@ public class Node {
     public void setNessOutside(boolean nessOutside) {
         NessOutside = nessOutside;
     }
+    public void setRoomsNearBy(List<Room> roomsNearBy) {
+        this.RoomsNearby = roomsNearBy;
+    }
 
+    public void setNeigbours(List<Edge> neigbours) {
+        this.Neighbours = neigbours;
+    }
+
+    /* */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -165,7 +173,10 @@ public class Node {
         direction = d;
     }
 
-
+    /**
+     *
+     * @return JSON form of the object
+     */
     public JSONObject toJson(){
         JSONObject object = new JSONObject();
         JSONArray arr = new JSONArray(), nbers = new JSONArray();
@@ -217,15 +228,9 @@ public class Node {
         }
 
     }
-
-    public void setRoomsNearBy(List<Room> roomsNearBy) {
-        this.RoomsNearby = roomsNearBy;
-    }
-
-    public void setNeigbours(List<Edge> neigbours) {
-        this.Neighbours = neigbours;
-    }
-
+    /**
+     * Edge class holds information for node's neighbours
+     * */
     public static class Edge {
         String id;
         int direction;

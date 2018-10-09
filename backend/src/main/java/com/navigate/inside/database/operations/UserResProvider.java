@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 
 public class UserResProvider {
+    /*mysql queries*/
     private static final String UPDATE = "UPDATE TABLE users SET updated =? WHERE ID =?;";
     private static final String INSERT = "INSERT INTO TABLE users (ID, updated) VALUES (?,?);";
     private static final String CHECK_FOR_UPDATE = "SELECT updated FROM users WHERE ID =?;";
@@ -17,28 +18,28 @@ public class UserResProvider {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean result =  false;
-        /*try {
-         ps = conn.prepareStatement(CHECK_FOR_UPDATE);
-         ps.setString(1,id);
-         rs = ps.executeQuery();
-         if (rs.first()){
-             result =  rs.getBoolean(1);
-         }else {
-             insertID(id,conn);
-         }
-
-        }catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+        try {
+            ps = conn.prepareStatement(CHECK_FOR_UPDATE);
+            ps.setString(1,id);
+            rs = ps.executeQuery();
+            if (rs.first()){
+                result =  rs.getBoolean(1);
+            }else {
+                insertID(id,conn);
             }
-        }*/
+
+            }catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
         return false;
     }
 

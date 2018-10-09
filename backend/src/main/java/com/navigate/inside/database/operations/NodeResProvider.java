@@ -18,6 +18,7 @@ import java.util.List;
 
 
 public class NodeResProvider {
+    /*mysql queries*/
     private static final String INSERT_NODE = "INSERT INTO " + Constants.Node + " (" +
             Constants.BEACONID + ", " +
             Constants.Junction + ", " +
@@ -26,9 +27,10 @@ public class NodeResProvider {
             Constants.Floor + ", " +
             Constants.Outside + ", " +
             Constants.NessOutside + ", " +
-            Constants.Direction +
+            Constants.Direction + ", " +
+            Constants.Image +
             ")" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node + ";";
     private static final String GET_IMAGE = "SELECT " + Constants.PHOTO + " FROM " + Constants.Relation +
             " WHERE " + Constants.FirstID + " =? AND " + Constants.SecondID + " =?; ";
@@ -45,6 +47,7 @@ public class NodeResProvider {
             Constants.Outside + "=?, " +
             Constants.NessOutside + "=?, " +
             Constants.Direction + "=?, " +
+            Constants.Image + "=? " +
             " WHERE " + Constants.BEACONID + "=?;";
     private static final String UPDATE_IMAGE = "UPDATE " + Constants.Relation +
             " SET " +
@@ -366,7 +369,11 @@ public class NodeResProvider {
             boolean outside = item.isOutside();
             String building = item.getBuilding();
             String floor = item.getFloor();
+            byte[] img = item.getImage();
 
+            if (img == null) {
+                img = getImage(id, "-1", conn);
+            }
 
             stt = (PreparedStatement) conn.prepareStatement(GET_ITEM_BY_ID);
             stt.setString(1, id);
@@ -384,9 +391,17 @@ public class NodeResProvider {
                     ps.setBoolean(5, outside);
                     ps.setBoolean(6, nesoutside);
                     ps.setInt(7, direction);
+                    if (img != null) {
+                        InputStream is = new ByteArrayInputStream(img);
+                        ps.setBlob(8, is);
+
+                    } else {
+
+                        ps.setNull(8, Types.BLOB);
+                    }
 
                     // where
-                    ps.setString(8, id);
+                    ps.setString(9, id);
                     ps.execute();
 
                     result = true;
@@ -404,6 +419,14 @@ public class NodeResProvider {
                     ps.setBoolean(6, outside);
                     ps.setBoolean(7, nesoutside);
                     ps.setInt(8, direction);
+                    if (img != null) {
+                        InputStream is = new ByteArrayInputStream(img);
+                        ps.setBlob(9, is);
+
+                    } else {
+
+                        ps.setNull(9, Types.BLOB);
+                    }
 
                     ps.execute();
 

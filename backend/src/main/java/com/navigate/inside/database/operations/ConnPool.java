@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 
+/**
+ * this class is responsible for handling the connections to the server
+ * to help to not overflow the server with requests
+ */
 public class ConnPool {
 
     static ConnPool instance = null;

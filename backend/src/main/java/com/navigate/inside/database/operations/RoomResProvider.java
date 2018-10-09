@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoomResProvider {
-
+    /*mysql queries*/
     private static final String INSERT_ROOM_TO_NODE = "INSERT INTO " + Constants.Room + " (" +
             Constants.BEACONID + ", " + Constants.NUMBER + ", " + Constants.NAME + ") VALUES (?, ?, ?);";
     private static final String GET_ROOMS_FOR_NODE = "SELECT "

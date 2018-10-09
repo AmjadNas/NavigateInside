@@ -32,4 +32,15 @@
         <servlet-name>WebItemsManageServlet</servlet-name>
         <url-pattern>/web_item_manage</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <description></description>
+        <display-name>WebNodeManage</display-name>
+        <servlet-name>WebNodeManage</servlet-name>
+        <servlet-class>com.navigate.inside.servlets.WebNodeManage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WebNodeManage</servlet-name>
+        <url-pattern>/web_node_manage</url-pattern>
+    </servlet-mapping>
 </web-app>
