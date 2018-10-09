@@ -224,6 +224,7 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
 
     @Override
     public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
+        // if image was received display it otherwise display "No image" Image
         if (status == ResStatus.SUCCESS){
             if (res != null){
                 new SacledImage().execute(res);

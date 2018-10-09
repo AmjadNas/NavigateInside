@@ -72,6 +72,10 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
+    /**
+     * helper moth to bind page according to given node
+     * @param node that should be displayed on screen
+     */
     public void bindPage(Node node){
         name.setText(String.valueOf(node.toNameString()));
         direction.setText(node.toRoomsString());
@@ -111,7 +115,9 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         }.execute();
 
     }*/
-
+    /**
+     * triggered when a beacon event happens
+     * */
     @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID temp = new BeaconID(beacon.getProximityUUID(), String.valueOf(beacon.getMajor()), String.valueOf(beacon.getMinor()));
@@ -120,7 +126,9 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
             doStuff();
         }
     }
-
+    /**
+     * helper method binds fields according to nearest beacon if found
+     */
     private void doStuff(){
         if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) !=null){
 
@@ -130,6 +138,10 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         }
     }
 
+    /**
+     * implemented method listen for image loading
+     * @param image
+     */
     @Override
     public void onImageLoaded(Bitmap image) {
         if (image != null) {
@@ -138,6 +150,10 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
         }
     }
 
+    /**
+     * handle image click to open panoramic view
+     * @param view
+     */
     public void viewPanoramic(View view) {
         Intent intent = new Intent(this,PanoramicImageActivity.class);
         intent.putExtra(Constants.ID, CurrentBeacon);

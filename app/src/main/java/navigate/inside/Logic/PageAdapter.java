@@ -15,7 +15,9 @@ import navigate.inside.Activities.Navigation.Activities.PlaceViewActivity;
 import navigate.inside.Objects.Node;
 import navigate.inside.R;
 
-
+/**
+ * Custom RecyclerView Adapter
+ */
 public class PageAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
@@ -25,7 +27,9 @@ public class PageAdapter extends RecyclerView.Adapter {
         mContext = context;
         this.itemList = itemlist;
     }
-
+    /**
+     * create the view holder that holds the view elements and information
+     * */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -33,7 +37,9 @@ public class PageAdapter extends RecyclerView.Adapter {
         view = LayoutInflater.from(mContext).inflate(R.layout.place_list_line_item, parent, false);
         return new PageAdapter.ListViewHolder(view);
     }
-
+    /**
+     * bind the view holder
+    * */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((ListViewHolder)holder).bind(position);
@@ -45,6 +51,9 @@ public class PageAdapter extends RecyclerView.Adapter {
         return itemList.size();
     }
 
+    /**
+     * custom view holder
+     */
     public class ListViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
 

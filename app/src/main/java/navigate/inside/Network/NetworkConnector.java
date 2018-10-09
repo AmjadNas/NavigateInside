@@ -30,7 +30,7 @@ import navigate.inside.Utills.Constants;
 
 public class NetworkConnector {
 
-
+    // singleton pattern
     private static NetworkConnector mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -66,6 +66,10 @@ public class NetworkConnector {
         return mInstance;
     }
 
+    /**
+     * initialize image loader chache and request repeater
+     * @param context application context
+     */
     public void initialize(Context context){
         mCtx = context;
         mRequestQueue = getRequestQueue();
@@ -96,18 +100,24 @@ public class NetworkConnector {
         return mRequestQueue;
     }
 
-    private void addToRequestQueue(String query, final NetworkResListener listener) {
+    /**
+     * helper method adds the query to the request queue
+     * @param query
+     * @param req
+     * @param listener
+     */
+    private void addToRequestQueue(String query, final String req, final NetworkResListener listener) {
 
         String reqUrl = BASE_URL + "?" + query;
         notifyPreUpdateListeners(listener);
-
+        // set on response handlers
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, reqUrl, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        notifyPostUpdateListeners(response, ResStatus.SUCCESS, listener);
+                        notifyPostUpdateListeners(response, ResStatus.SUCCESS, req, listener);
                     }
                 }, new Response.ErrorListener() {
 
@@ -121,12 +131,12 @@ public class NetworkConnector {
                             e.printStackTrace();
                         }
                         finally {
-                            notifyPostUpdateListeners(err, ResStatus.FAIL, listener);
+                            notifyPostUpdateListeners(err, ResStatus.FAIL, req, listener);
                         }
 
                     }
                 });
-
+        // send request
         getRequestQueue().add(jsObjRequest);
     }
 
@@ -135,7 +145,7 @@ public class NetworkConnector {
         String reqUrl = BASE_URL + "?" + query;
 
         notifyPreUpdateListeners(listener);
-
+        // set on response handlers and send request to fetch image
         getImageLoader().get(reqUrl, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -176,7 +186,7 @@ public class NetworkConnector {
                 builder.appendQueryParameter(Constants.ID , id);
 
                 String query = builder.build().getEncodedQuery();
-                addToRequestQueue(query, listener);
+                addToRequestQueue(query, requestCode, listener);
                 break;
             }
             case GET_NODE_IMAGE:{
@@ -222,7 +232,11 @@ public class NetworkConnector {
         }
     }
 
-
+    /**
+     * download all data from online database
+     * @param id
+     * @param listener
+     */
     public void update(String id, NetworkResListener listener){
 
         Uri.Builder builder = new Uri.Builder();
@@ -230,11 +244,11 @@ public class NetworkConnector {
         builder.appendQueryParameter(Constants.ID, id);
         String query = builder.build().getEncodedQuery();
 
-        addToRequestQueue(query, listener);
+        addToRequestQueue(query, GET_ALL_NODES_JSON_REQ, listener);
     }
 
 
-    private  void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status, final String id, final String id2, final NetworkResListener listener) {
+    private void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status, final String id, final String id2, final NetworkResListener listener) {
 
         Handler handler = new Handler(mCtx.getMainLooper());
 
@@ -254,7 +268,7 @@ public class NetworkConnector {
 
     }
 
-    private void notifyPostUpdateListeners(final JSONObject res, final ResStatus status, final NetworkResListener listener) {
+    private void notifyPostUpdateListeners(final JSONObject res, final ResStatus status, final String req, final NetworkResListener listener) {
 
         Handler handler = new Handler(mCtx.getMainLooper());
 
@@ -263,7 +277,7 @@ public class NetworkConnector {
             @Override
             public void run() {
                 try{
-                    listener.onPostUpdate(res, tempReq, status);
+                    listener.onPostUpdate(res, req, status);
                 }
                 catch(Throwable t){
                     t.printStackTrace();

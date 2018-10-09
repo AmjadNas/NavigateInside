@@ -80,7 +80,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_view);
         position = getIntent().getIntExtra(Constants.INDEX, -1);
-
+        // if position is not out of bounds
         if (position >= 0){
             itemList =  PathFinder.getInstance().getPath();
             initSensor();
@@ -93,6 +93,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             finish();
     }
 
+    /**
+     * handle back pressed events
+     */
     @Override
     public void onBackPressed() {
 
@@ -102,7 +105,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             super.onBackPressed();
     }
 
-
+    /**
+     * helper method initialize the view elements
+     */
     private void initView(){
         name = (TextView) findViewById(R.id.node_name);
         direction = (TextView) findViewById(R.id.node_direct);
@@ -112,6 +117,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         arrowView = (ImageView) findViewById(R.id.arrow_dir);
     }
 
+    /**
+     * helper method binds page according to the position of the user on the path
+     */
     private void bindPage(){
 
         Node temp = itemList.get(position).first;
@@ -172,6 +180,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
 */
     }
 
+    /**
+     * helper method to initialize the bottom sheet layout and it's behaviour
+     */
     private void initBottomSheet() {
         sheetLayout = (LinearLayout) findViewById(R.id.bottom_sheet);
         final TextView textView = (TextView) sheetLayout.findViewById(R.id.path_show_lbl) ;
@@ -213,6 +224,10 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         list.setItemAnimator(new DefaultItemAnimator());
     }
 
+    /**
+     * rotates navigation arrow according to the given azimuth
+     * @param azimuth given from compass range from 0 to 359
+     */
     private void adjustArrow(float azimuth) {
         int dir = itemList.get(position).second;
 
@@ -227,6 +242,11 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         arrowView.startAnimation(an);
     }
 
+    /**
+     * helper method that converts density pixels to pixels
+     * @param dp given dp
+     * @return converted pixel
+     */
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
@@ -255,13 +275,22 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         compass.stop();
     }
 
-
+    /**
+     * handle the event of discovering a new angle
+     * @param azimuth from 0 to 359
+     */
     @Override
     public void onNewAzimuth(float azimuth) {
         adjustArrow(azimuth);
         direction.setText(getDirection((int)azimuth, itemList.get(position).second));
     }
 
+    /**
+     * helper method to get the right direction call for the user
+     * @param mAzimuth given direction from compass 0 to 359
+     * @param direction given direction for destination
+     * @return the correct call where the user should
+     */
     private String getDirection(int mAzimuth, int direction){
         int diff = mAzimuth - direction;
         String dir = null;
@@ -287,6 +316,10 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    /**
+     * helper method to load image
+     * @return
+     */
     private Bitmap bindImage(){
         // sysdata get image with dir and node id
        Bitmap res =  SysData.getInstance().getImageForPair(itemList.get(position-1).first.get_id(), currentID);
@@ -307,6 +340,10 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
+    /**
+     * handle click for textview for the bottom sheet
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         if(v instanceof TextView) {
@@ -324,7 +361,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     protected void onDestroy() {
         super.onDestroy();
     }
-    /*
+    /**
     * triggered when a beacon event happens
     * */
     @Override
@@ -341,13 +378,21 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             }
         }
     }
-
+    /**
+     * handle image click to open panoramic view
+     * @param view
+     */
     public void viewPanorama(View view) {
         Intent intent = new Intent(this, PanoramicImageActivity.class);
         intent.putExtra(Constants.ID, currentID);
         startActivity(intent);
     }
 
+    /**
+     * handle the checking of the arrival checkBox
+     * @param buttonView
+     * @param isChecked
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
@@ -355,7 +400,10 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             checkBox.setChecked(false);
         }
     }
-
+    /**
+     * implemented method listen for image loading
+     * @param image
+     */
     @Override
     public void onImageLoaded(Bitmap image) {
         if (image != null)

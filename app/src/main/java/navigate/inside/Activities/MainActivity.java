@@ -38,7 +38,7 @@ import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
 public class MainActivity extends AppCompatActivity implements NetworkResListener {
-
+    // notification ID
     private static final int MY_NOTIFICATION_ID = 22;
     private ProgressDialog progressDialog;
     private SysData data;
@@ -53,13 +53,14 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
         setSupportActionBar(toolbar);
         appID = getIntent().getStringExtra(Constants.ID);
         data = SysData.getInstance();
-
+        // check if the data has changed in the online database
         NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.CHECK_FOR_UPDATE, appID, this);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // render the custom menu icons
         getMenuInflater().inflate(R.menu.acctivity_main_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
@@ -83,17 +84,25 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
+    protected void onStop() {
+        super.onStop();
+        // make sure database is saved and closed when the app stops
         data.closeDatabase();
     }
 
+    /**
+     * helper method to launch other activities
+     * @param cls the destination activity class
+     */
     private void launchActivity(Class<?> cls){
         Intent intent = new Intent(this, cls);
         startActivity(intent);
     }
 
+    /**
+     * handle button click
+     * @param view
+     */
     public void get_directions(View view) {
         launchActivity(GetDirectionsActivity.class);
     }
@@ -101,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
     @Override
     public void onPreUpdate() {
+        // show dialog and prevent user from caneling the update
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Updating App..");
@@ -112,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
     public void onPostUpdate(JSONObject res,String req, ResStatus status) {
         if (status == ResStatus.SUCCESS){
             try {
+                // handle request statuses when the operation is a success
                 switch (req){
                     case NetworkConnector.GET_ALL_NODES_JSON_REQ:
                         data.clearData();
@@ -179,6 +190,11 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
         }
     }
 
+    /**
+     * handle json parsing and insert data into the local database
+     * @param res
+     * @throws JSONException
+     */
     private void parseJson(JSONObject res) throws JSONException {
         JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms, imgs;
         JSONObject o, nbr, img;

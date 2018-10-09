@@ -36,6 +36,9 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         initView();
     }
 
+    /**
+     * helper method to initialize view references
+     */
     private void initView() {
 
         sNode = (TextView)findViewById(R.id.start);
@@ -58,12 +61,17 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         LaunchActivity(DestinationActivity.class,Constants.REQUESTROOMNUMBER);
     }
 
+    /**
+     * handle search click event
+     * @param view
+     */
     public void Search(View view) {
 
         String txtSNode = sNode.getText().toString();
         String txtGNode = gNode.getText().toString();
         if (!txtGNode.isEmpty() && !txtSNode.isEmpty()) {
 
+            // get nodes by the room that belongs to them
             BeaconID FinishNode;
             BeaconID StartNode;
             StartNode = SysData.getInstance().getNodeIdByRoom(txtSNode);
@@ -71,9 +79,10 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
 
             if (StartNode != null && FinishNode != null) {
                 PathFinder pf = PathFinder.getInstance();
-                boolean b = chElevator.isChecked();
 
                 // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
+                boolean b = chElevator.isChecked();
+
                 if (!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
 
                     Intent intent = new Intent(this, PlaceViewActivity.class);
@@ -92,7 +101,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     protected void onResume() {
         super.onResume();
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
-
+        // register the activity to listen for nearby beacon events
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();
     }
@@ -105,6 +114,9 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         ((MyApplication)getApplication()).unRegisterListener(this);
     }
 
+    /**
+     * helper method binds fields according to nearest beacon if found
+     */
     private void doStuff(){
         if(SysData.getInstance().getNodeByBeaconID(CurrentBeacon) != null){
             BindText(SysData.getInstance().getNodeByBeaconID(CurrentBeacon));
@@ -113,6 +125,9 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         }
 
     }
+    /**
+     * triggered when a beacon event happens
+     * */
     @Override
     public void onBeaconEvent(Beacon beacon) {
         BeaconID temp = new BeaconID(beacon.getProximityUUID(), String.valueOf(beacon.getMajor()),String.valueOf(beacon.getMinor()));
@@ -122,6 +137,11 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
         }
     }
 
+    /**
+     * helper method launches activities according to request and desired activity
+     * @param act
+     * @param request
+     */
     private void LaunchActivity(Class<?> act,int request){
         nextAct = new Intent(this,act);
 
@@ -136,11 +156,16 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // if desired data received back from the activity that was called
         if(resultCode == RESULT_OK && requestCode == Constants.REQUESTROOMNUMBER){
             SetGNode(data.getStringExtra("RoomNumber"));
         }
     }
 
+    /**
+     * handle lick event to launch MyLocationActivity activity
+     * @param view
+     */
     public void openfindmylocation(View view) {
 
         LaunchActivity(MyLocationActivity.class, Constants.NOREQUEST);

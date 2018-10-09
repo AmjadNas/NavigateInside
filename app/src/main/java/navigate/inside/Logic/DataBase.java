@@ -23,10 +23,11 @@ import navigate.inside.Utills.Converter;
 
 
 public class DataBase extends SQLiteOpenHelper {
-
+    // db version
     private static final int DATABASE_VERSION = 1;
+    // db name
     private static final String DATABASE_NAME = String.valueOf(R.string.app_name);
-
+    /* table creation queries*/
     private static final String SQL_CREATE_NODE_TABLE = "CREATE TABLE "+ Constants.Node + " ("+
             Constants.BEACONID + " VARCHAR(100) PRIMARY KEY, "+   // beaconid with format UID:Major:Minor for
             Constants.Junction + " BOOLEAN, " +                   // example fadsfasdf-afda-dasffdfd:1555:54654

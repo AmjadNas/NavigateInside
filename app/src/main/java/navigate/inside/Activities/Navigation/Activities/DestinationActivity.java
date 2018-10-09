@@ -20,13 +20,14 @@ public class DestinationActivity extends AppCompatActivity {
 
     ListView listview;
     ArrayList<String> values;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination);
         listview =(ListView)findViewById(R.id.list);
         GetAllRooms();
-
+        // initialize list to display all rooms available
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,values);
         listview.setAdapter(adapter);
 
@@ -43,6 +44,9 @@ public class DestinationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * helper method to fetch all rooms
+     */
     private void GetAllRooms(){
         values = new ArrayList<>();
         String S = "";

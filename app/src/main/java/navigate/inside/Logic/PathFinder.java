@@ -1,6 +1,5 @@
 package navigate.inside.Logic;
 
-
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
@@ -14,10 +13,9 @@ import navigate.inside.Objects.BeaconID;
 import navigate.inside.Objects.Node;
 
 public class PathFinder {
-    //
+    // singleton pattern
     private static PathFinder instance = null;
     private ArrayList< Pair<Node,Integer>> path;
-
     private SysData data;
 
     private PathFinder(){
@@ -31,12 +29,18 @@ public class PathFinder {
         return instance;
     }
 
-    // BFS to find path
+    /**
+     * finds path from point A to B
+     * @param SNode starting point
+     * @param GNode destination point
+     * @param ok stairs or elevator is needed
+     * @return shortest path step count wise
+     */
     public ArrayList<Pair<Node,Integer>> FindPath(BeaconID SNode,BeaconID GNode , boolean ok){
         path = new ArrayList<>();
         Node first = data.getNodeByBeaconID(SNode);
         Node FinishNode =  data.getNodeByBeaconID(GNode);
-
+        // perform BFS to find path
         if(first != null && FinishNode != null) {
             Pair<Node, Integer> StartNode = new Pair<>(first, 0);
             boolean check = true;
@@ -80,6 +84,9 @@ public class PathFinder {
         return path;
     }
 
+    /**
+     * helper method to reset nodes visited status
+     */
     private void setFathersNull(){
         for(Node n : data.getAllNodes()){
             n.setFather(null);
@@ -91,6 +98,11 @@ public class PathFinder {
         return path;
     }
 
+    /**
+     * finds given node's position in the path
+     * @param id node's id
+     * @return postion if found else -1
+     */
     public int getIndexOfNode(BeaconID id){
         int index = 0;
         for (Pair<Node,Integer> p : path){

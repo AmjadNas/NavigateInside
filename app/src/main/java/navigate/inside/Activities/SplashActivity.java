@@ -31,14 +31,14 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        // initialize system class and networking class
         SysData.getInstance();
         SysData.getInstance().initDatBase(getApplicationContext());
         NetworkConnector.getInstance().initialize(getApplicationContext());
 
+        // check for app id if it doesn't exist generate one and download data
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         id = sharedPref.getString(getResources().getString(R.string.firstLaunch),"-1");
-
        if (id.equals("-1")) {
            id = System.currentTimeMillis() + "0";
            NetworkConnector.getInstance().update(id,this);
@@ -61,9 +61,11 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
     public void onPostUpdate(JSONObject res, String req, ResStatus status) {
         if(status == ResStatus.SUCCESS){
             try {
+                //handle requests on success
                 switch (req){
                     case NetworkConnector.GET_ALL_NODES_JSON_REQ:
                         parseJson(res);
+                        // save generated app id for further use
                         sharedPref.edit()
                                 .putString(getResources().getString(R.string.firstLaunch), id)
                                 .apply();
@@ -95,6 +97,11 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         finish();
     }
 
+    /**
+     * handle parsing the json
+     * @param res
+     * @throws JSONException
+     */
     private void parseJson(JSONObject res) throws JSONException{
         JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms, imgs;
         JSONObject o, nbr, img;
