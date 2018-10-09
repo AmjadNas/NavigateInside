@@ -54,7 +54,6 @@ public class ProjectResourceServlet extends HttpServlet {
         }
     }
 
-
     protected void service(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -109,12 +108,9 @@ public class ProjectResourceServlet extends HttpServlet {
                         }case GET_ALL_NODES_JSON_REQ: {
                             conn = ConnPool.getInstance().getConnection();
                             String id = req.getParameter(Constants.ID);
-                            UserResProvider userResProvider = new UserResProvider();
                             respPage = RESOURCE_FAIL_TAG;
-                            // if not updated
-                            if (!userResProvider.checkForUpdate(id, conn)) {
+                            if(id.equals("-1")){
                                 NodeResProvider NodeProvider = new NodeResProvider();
-
                                 List<Node> getAllNodes = NodeProvider.getAllNodes(conn);
 
                                 String resultJson = Node.toJson(getAllNodes);
@@ -126,7 +122,25 @@ public class ProjectResourceServlet extends HttpServlet {
                                 } else {
                                     resp.sendError(404);
                                 }
+                            }else{
+                                UserResProvider userResProvider = new UserResProvider();
+                                // if not updated
+                                if (!userResProvider.checkForUpdate(id, conn)) {
+                                    NodeResProvider NodeProvider = new NodeResProvider();
+                                    List<Node> getAllNodes = NodeProvider.getAllNodes(conn);
+
+                                    String resultJson = Node.toJson(getAllNodes);
+                                    resp.addHeader("Content-Type",
+                                            "application/json; charset=UTF-8");
+                                    if (resultJson != null && !resultJson.isEmpty()) {
+                                        respPage = resultJson;
+
+                                    } else {
+                                        resp.sendError(404);
+                                    }
+                                }
                             }
+
                             PrintWriter pw = resp.getWriter();
                             pw.write(respPage);
                             retry = 0;
