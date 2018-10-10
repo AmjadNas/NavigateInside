@@ -34,7 +34,7 @@ public class NodeResProvider {
     private static final String Get_All_Nodes = "SELECT * FROM " + Constants.Node + ";";
     private static final String GET_IMAGE = "SELECT " + Constants.PHOTO + " FROM " + Constants.Relation +
             " WHERE " + Constants.FirstID + " =? AND " + Constants.SecondID + " =?; ";
-    private static final String GET_IMAGE_FOR_NODE = "SELECT " + Constants.Image + " FROM0 " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
+    private static final String GET_IMAGE_FOR_NODE = "SELECT " + Constants.Image + " FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String DELETE_ITEM_BY_ID = "DELETE FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String GET_ITEM_BY_ID = "SELECT * FROM " + Constants.Node + " WHERE " + Constants.BEACONID + "=?;";
     private static final String UPDATE_ITEM = "UPDATE " +
