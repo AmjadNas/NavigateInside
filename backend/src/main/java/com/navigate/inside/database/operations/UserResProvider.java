@@ -9,8 +9,8 @@ import java.sql.SQLException;
 
 public class UserResProvider {
     /*mysql queries*/
-    private static final String UPDATE = "UPDATE TABLE users SET updated =? WHERE ID =?;";
-    private static final String INSERT = "INSERT INTO TABLE users (ID, updated) VALUES (?,?);";
+    private static final String UPDATE = "UPDATE users SET updated =? WHERE ID =?;";
+    private static final String INSERT = "INSERT INTO users (ID, updated) VALUES (?,?);";
     private static final String CHECK_FOR_UPDATE = "SELECT updated FROM users WHERE ID =?;";
 
 
