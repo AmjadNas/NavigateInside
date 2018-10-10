@@ -20,6 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -55,8 +57,7 @@ import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
 import navigate.inside.Utills.ImageLoader;
 
-public class PlaceViewActivity extends AppCompatActivity implements View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener, BeaconListener, ImageLoadedListener, Compass.CompassListener {
+public class PlaceViewActivity extends AppCompatActivity implements View.OnClickListener, BeaconListener, ImageLoadedListener, Compass.CompassListener {
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -69,8 +70,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout sheetLayout;
 
     private ArrayList<Pair<Node,Integer>> itemList;
-    private TextView name, direction;
-    private CheckBox checkBox;
+    private TextView name;
     private ImageView panoWidgetView;
     private BeaconID currentID;
     private ImageView arrowView;
@@ -110,11 +110,33 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
      */
     private void initView(){
         name = (TextView) findViewById(R.id.node_name);
-        direction = (TextView) findViewById(R.id.node_direct);
-        checkBox = (CheckBox) findViewById(R.id.arrive_check);
-        checkBox.setOnCheckedChangeListener(this);
         panoWidgetView = (ImageView) findViewById(R.id.thumb_place_activity);
         arrowView = (ImageView) findViewById(R.id.arrow_dir);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // render the custom menu icons
+        getMenuInflater().inflate(R.menu.activity_place_view_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.actionArrive) {
+            // check for new changes in data
+            setPage(position+1);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -282,7 +304,6 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onNewAzimuth(float azimuth) {
         adjustArrow(azimuth);
-        direction.setText(getDirection((int)azimuth, itemList.get(position).second));
     }
 
     /**
@@ -388,18 +409,6 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    /**
-     * handle the checking of the arrival checkBox
-     * @param buttonView
-     * @param isChecked
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            setPage(position+1);
-            checkBox.setChecked(false);
-        }
-    }
     /**
      * implemented method listen for image loading
      * @param image
