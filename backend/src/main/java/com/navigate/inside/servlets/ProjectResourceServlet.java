@@ -95,14 +95,13 @@ public class ProjectResourceServlet extends HttpServlet {
 
                             conn = ConnPool.getInstance().getConnection();
                             UserResProvider userResProvider = new UserResProvider();
-                           /* if (*/userResProvider.updateID(id,conn);
-                            /*)*/
-                            /*    respPage = RESOURCE_SUCCESS_TAG;
+                            if (userResProvider.updateID(id,conn))
+                                respPage = RESOURCE_SUCCESS_TAG;
                             else {
                                 resp.sendError(404);
                             }
                             PrintWriter pw = resp.getWriter();
-                            pw.write(respPage);*/
+                            pw.write(respPage);
                             retry = 0;
                             break;
                         }case GET_ALL_NODES_JSON_REQ: {
