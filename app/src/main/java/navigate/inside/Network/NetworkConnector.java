@@ -38,7 +38,7 @@ public class NetworkConnector {
 
     // server address
     private final String PORT = "8080";
-    private final String IP = "132.74.209.138";
+    private final String IP = "132.74.208.190";
     private final String HOST_URL = "http://" + IP + ":" + PORT +"/";
     private final String BASE_URL = HOST_URL + "projres";
 
@@ -116,8 +116,10 @@ public class NetworkConnector {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
-                        notifyPostUpdateListeners(response, ResStatus.SUCCESS, req, listener);
+                        if (response.toString().equals(RESOURCE_FAIL_TAG))
+                            notifyPostUpdateListeners(response, ResStatus.FAIL, req, listener);
+                        else
+                            notifyPostUpdateListeners(response, ResStatus.SUCCESS, req, listener);
                     }
                 }, new Response.ErrorListener() {
 

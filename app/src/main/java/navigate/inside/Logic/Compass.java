@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
  */
 public class Compass implements SensorEventListener {
     private static final String TAG = "Compass";
+    private int mLastAccuracy;
 
     public interface CompassListener {
         void onNewAzimuth(float azimuth);
@@ -68,6 +69,9 @@ public class Compass implements SensorEventListener {
         final float alpha = 0.97f;
     /* the code below helps the sensor thrashing problem */
         synchronized (this) {
+            if (mLastAccuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+                return;
+            }
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
                 mGravity[0] = alpha * mGravity[0] + (1 - alpha)
@@ -113,5 +117,8 @@ public class Compass implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if (mLastAccuracy != accuracy) {
+            mLastAccuracy = accuracy;
+        }
     }
 }

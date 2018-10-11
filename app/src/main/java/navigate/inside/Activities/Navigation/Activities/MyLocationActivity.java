@@ -58,7 +58,7 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
     @Override
     protected void onResume() {
         super.onResume();
-        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+        SystemRequirementsChecker.checkWithDefaultDialogs(this );
 
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();
@@ -79,7 +79,7 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
     public void bindPage(Node node){
         name.setText(String.valueOf(node.toNameString()));
         direction.setText(node.toRoomsString());
-        int m = -1;
+
         NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
                 node.get_id().toString(), this);
         /*Bitmap image = SysData.getInstance().getImageForNode(node.get_id(), m);

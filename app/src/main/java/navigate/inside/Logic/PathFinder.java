@@ -77,7 +77,7 @@ public class PathFinder {
                     Father = Father.first.getFather();
                 }
                 Collections.reverse(path);
-                path.remove(0);
+               // path.remove(0);
                 setFathersNull();
             }
         }

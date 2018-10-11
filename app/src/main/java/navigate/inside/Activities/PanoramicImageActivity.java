@@ -113,13 +113,21 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
 
         observer = new GyroscopeObserver();
         observer.setMaxRotateRadian(Math.PI/9);
+        Bitmap img ;
+
+
 
         final BeaconID  id = (BeaconID)getIntent().getSerializableExtra(Constants.ID);
-        if (id != null){
-            Node n = SysData.getInstance().getNodeByBeaconID(id);
-            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                    id.toString(), this);
+        final BeaconID  id2 = (BeaconID)getIntent().getSerializableExtra(Constants.SecondID);
+        if (id != null ){
+            if (id2 != null) {
+                img = SysData.getInstance().getImageForPair(id, id2);
+                bindImage(img);
 
+            }else {
+                NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
+                        id.toString(), this);
+            }
         }
         pamimageview.setOnTouchListener(mDelayHideTouchListener);
         // Set up the user interaction to manually show or hide the system UI.
@@ -129,6 +137,27 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
                 toggle();
             }
         });
+
+    }
+
+    /**
+     * helper method to bind image
+     * @param img image to be bound in imageView
+     */
+    private void bindImage(Bitmap img) {
+        if (img != null){
+            // if an image is bigger than a specific resolution scale it down
+            if (img.getWidth() > I_WIDTH && img.getHeight() > I_HEIGHT){
+                new SacledImage().execute(img);
+            }else {
+                pamimageview.setImageBitmap(img);
+                pamimageview.setGyroscopeObserver(observer);
+            }
+        }else {
+            pamimageview.setImageDrawable(getDrawable(R.drawable.noimage));
+
+        }
+
     }
 
     @Override
@@ -226,11 +255,8 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
     public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
         // if image was received display it otherwise display "No image" Image
         if (status == ResStatus.SUCCESS){
-            if (res != null){
-                new SacledImage().execute(res);
-            }
+            bindImage(res);
         }else {
-
             pamimageview.setImageDrawable(getDrawable(R.drawable.noimage));
         }
     }

@@ -106,7 +106,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         JSONArray arr = res.getJSONArray(Constants.Node), nbers, rooms, imgs;
         JSONObject o, nbr, img;
         Node n;
-
+        // fill in nodes and rooms
         for(int i = 0; i < arr.length(); i++) {
             o = arr.getJSONObject(i);
             n = Node.parseJson(o);
@@ -123,6 +123,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
             }
 
         }
+        //fill in neighbours and request image node and then its neighbour
         for(int i = 0; i < arr.length(); i++) {
             o = arr.getJSONObject(i);
             nbers = o.getJSONArray(Constants.Node);

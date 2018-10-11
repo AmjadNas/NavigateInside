@@ -86,7 +86,7 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
                 if (!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
 
                     Intent intent = new Intent(this, PlaceViewActivity.class);
-                    intent.putExtra(Constants.INDEX, 0);
+                    intent.putExtra(Constants.INDEX, 1);
                     startActivity(intent);
                 } else
                     Toast.makeText(this, R.string.no_path_found, Toast.LENGTH_LONG).show();
@@ -100,7 +100,8 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     @Override
     protected void onResume() {
         super.onResume();
-        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+        SystemRequirementsChecker.checkWithDefaultDialogs(this );
+
         // register the activity to listen for nearby beacon events
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();

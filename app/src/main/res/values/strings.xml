@@ -36,4 +36,6 @@
     <string name="follow_the_arrow">follow the arrow</string>
     <string name="reach_the_red_marker">Reach the red marker</string>
     <string name="arrived_to_location">Arrived to location</string>
+    <string name="cannot_accesss">Please allow the to access the device\'s Bluetooth to be able to use the app\'s features fully</string>
+    <string name="notsupportbluetotth">Your device does not support Bluetooth</string>
 </resources>

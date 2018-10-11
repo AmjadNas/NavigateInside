@@ -1,15 +1,21 @@
 package navigate.inside.Activities;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +43,7 @@ import navigate.inside.Objects.Room;
 import navigate.inside.R;
 import navigate.inside.Utills.Constants;
 
-public class MainActivity extends AppCompatActivity implements NetworkResListener {
+public class MainActivity extends AppCompatActivity implements NetworkResListener,ActivityCompat.OnRequestPermissionsResultCallback {
     // notification ID
     private static final int MY_NOTIFICATION_ID = 22;
     private ProgressDialog progressDialog;
@@ -120,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
     @Override
     public void onPostUpdate(JSONObject res,String req, ResStatus status) {
+        progressDialog.dismiss();
         if (status == ResStatus.SUCCESS){
             try {
                 // handle request statuses when the operation is a success
@@ -138,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
                             break;
                 }
 
-            } catch (JSONException e) {
+           } catch (JSONException e) {
                 Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
 
             }
@@ -146,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
             if (req.equals(NetworkConnector.GET_ALL_NODES_JSON_REQ))
                 Toast.makeText(this, "Nothing to update", Toast.LENGTH_SHORT).show();
         }
-        progressDialog.dismiss();
+
     }
 
     private void notifyUser() {

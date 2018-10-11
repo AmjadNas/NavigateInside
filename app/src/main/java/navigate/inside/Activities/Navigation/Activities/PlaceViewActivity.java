@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.coresdk.common.requirements.SystemRequirementsChecker;
 import com.estimote.coresdk.recognition.packets.Beacon;
 
 import org.json.JSONObject;
@@ -65,6 +66,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     private Compass compass;
     // page position in path
     private int position;
+    private int dir;
     // bottom sheet params
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout sheetLayout;
@@ -132,6 +134,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionArrive) {
             // check for new changes in data
+
             setPage(position+1);
             return true;
         }
@@ -144,10 +147,16 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
      */
     private void bindPage(){
 
-        Node temp = itemList.get(position).first;
-        if (currentID == null)
-            currentID = temp.get_id();
+        Node next = itemList.get(position).first;
+        currentID = next.get_id();
+        dir = itemList.get(position).second;
+        Node curr = itemList.get(position-1).first;
 
+        // if (currentID == null)
+        if (curr.isJunction() || curr.isElevator()){
+            name.setText(String.format(getString(R.string.nextStep), "Go to Floor " + next.getFloor()));
+        }else
+            name.setText(String.format(getString(R.string.nextStep), next.getRoomsRange()));
       /*  if( (position-1) >=0 ){
             if(itemList.get(position).first.isJunction() && itemList.get(position-1).first.isJunction()){
                 position++;
@@ -162,7 +171,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
 
 
         /*Getting the rooms range and display for Regular Node */
-        if(itemList.size() > position+1) {
+        /*if(itemList.size() > position+1) {
             if((temp.isJunction() && !itemList.get(position+1).first.isJunction()) || (temp.isElevator()&& !itemList.get(position+1).first.isElevator())){
                 name.setText(String.format(getString(R.string.nextStep), itemList.get(position).first.getRoomsRange()));
             }else{
@@ -170,12 +179,12 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             }
         }else{
             name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
-        }
+        }*/
 
           /*Message for Elevator*/
-        if(itemList.size() > position+1){
+        /*if(itemList.size() > position+1){
             if(temp.isElevator() && itemList.get(position+1).first.isElevator()){
-                name.setText("Next Step : Go to Floor " + itemList.get(position+1).first.getFloor()+" by elevator");
+
             }
         }
 
@@ -189,17 +198,17 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
                 }
 
             }
-        }
+        }*/
 
-       Bitmap i = bindImage();
-        if (i != null)
-            new ImageLoader(currentID, -1, this).execute(i);
-/*
+
         //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
-        Bitmap image = SysData.getInstance().getImageForNode(temp.get_id(), 10);
+        Bitmap image = bindImage();
         if (image != null)
             new ImageLoader(currentID, -1, this).execute(image);
-*/
+        else {
+            panoWidgetView.setImageDrawable(getDrawable(R.drawable.noimage));
+        }
+
     }
 
     /**
@@ -251,13 +260,13 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
      * @param azimuth given from compass range from 0 to 359
      */
     private void adjustArrow(float azimuth) {
-        int dir = itemList.get(position).second;
-
-        Animation an = new RotateAnimation(-azimuth, -(float)dir,
+        float d = (float) dir - azimuth;
+        Animation an = new RotateAnimation(d, azimuth,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
 
-        an.setDuration(500);
+
+        an.setDuration(1000);
         an.setRepeatCount(0);
         an.setFillAfter(true);
 
@@ -278,6 +287,8 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this );
+
         // register beacon listener
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();
@@ -387,7 +398,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
     * */
     @Override
     public void onBeaconEvent(Beacon beacon) {
-        BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
+       BeaconID tempID = new BeaconID(beacon.getProximityUUID(),
                 String.valueOf(beacon.getMajor()), String.valueOf(beacon.getMinor()));
         if (!currentID.equals(tempID)) {
 
@@ -405,7 +416,8 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
      */
     public void viewPanorama(View view) {
         Intent intent = new Intent(this, PanoramicImageActivity.class);
-        intent.putExtra(Constants.ID, currentID);
+        intent.putExtra(Constants.ID, itemList.get(position-1).first.get_id());
+        intent.putExtra(Constants.SecondID, currentID);
         startActivity(intent);
     }
 
