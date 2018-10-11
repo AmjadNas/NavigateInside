@@ -58,7 +58,7 @@ public class Node {
             if (rooms.size() > 1){
                 return "Rooms: " + rooms.get(0).GetRoomNum() + " - " + rooms.get(rooms.size()-1).GetRoomNum();
             }else{
-                return "Room: " + rooms.get(0).GetRoomNum();
+                return "Room: " + rooms.get(0).GetRoomNum() + " : " + rooms.get(0).GetRoomName();
             }
         }
 

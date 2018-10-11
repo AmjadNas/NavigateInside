@@ -152,56 +152,16 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         dir = itemList.get(position).second;
         Node curr = itemList.get(position-1).first;
 
-        // if (currentID == null)
+        // match instruction with steps
         if (curr.isJunction() || curr.isElevator()){
-            name.setText(String.format(getString(R.string.nextStep), "Go to Floor " + next.getFloor()));
+            if (Integer.parseInt(next.getFloor()) > Integer.parseInt(curr.getFloor()))
+                name.setText(String.format(getString(R.string.nextStep), "Go up to Floor " + next.getFloor()));
+            else
+                name.setText(String.format(getString(R.string.nextStep), "Go down to Floor " + next.getFloor()));
+
         }else
             name.setText(String.format(getString(R.string.nextStep), next.getRoomsRange()));
-      /*  if( (position-1) >=0 ){
-            if(itemList.get(position).first.isJunction() && itemList.get(position-1).first.isJunction()){
-                position++;
-            }
-            if(itemList.get(position).first.isElevator()&& itemList.get(position-1).first.isElevator()){
-                position++;
-            }
 
-        }*/
-        //Two Staris solution !
-        /*Message for Stairs*/
-
-
-        /*Getting the rooms range and display for Regular Node */
-        /*if(itemList.size() > position+1) {
-            if((temp.isJunction() && !itemList.get(position+1).first.isJunction()) || (temp.isElevator()&& !itemList.get(position+1).first.isElevator())){
-                name.setText(String.format(getString(R.string.nextStep), itemList.get(position).first.getRoomsRange()));
-            }else{
-                name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
-            }
-        }else{
-            name.setText(String.format(getString(R.string.nextStep), temp.getRoomsRange()));
-        }*/
-
-          /*Message for Elevator*/
-        /*if(itemList.size() > position+1){
-            if(temp.isElevator() && itemList.get(position+1).first.isElevator()){
-
-            }
-        }
-
-        if(itemList.size() > position+1) {
-            if (temp.isJunction() && itemList.get(position + 1).first.isJunction()) {
-
-                if (Integer.parseInt(temp.getFloor()) < Integer.parseInt(itemList.get(position + 1).first.getFloor())) {
-                    name.setText("Next Step : Go up the stairs to Floor " + itemList.get(position + 1).first.getFloor());
-                } else {
-                    name.setText("Next Step : Go down  the stairs to Floor " + itemList.get(position + 1).first.getFloor());
-                }
-
-            }
-        }*/
-
-
-        //  name.setText(String.vaterection(mAzimuth, itemList.get(position).second));
         Bitmap image = bindImage();
         if (image != null)
             new ImageLoader(currentID, -1, this).execute(image);
