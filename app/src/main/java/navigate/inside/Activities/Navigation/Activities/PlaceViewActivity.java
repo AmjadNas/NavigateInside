@@ -153,7 +153,9 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         Node curr = itemList.get(position-1).first;
 
         // match instruction with steps
-        if (curr.isJunction() || curr.isElevator()){
+        boolean a = curr.isElevator() && next.isElevator();
+        boolean b = curr.isJunction() && next.isJunction();
+        if ( a || b){
             if (Integer.parseInt(next.getFloor()) > Integer.parseInt(curr.getFloor()))
                 name.setText(String.format(getString(R.string.nextStep), "Go up to Floor " + next.getFloor()));
             else
