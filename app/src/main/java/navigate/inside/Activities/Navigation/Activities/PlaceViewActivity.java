@@ -358,8 +358,11 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
        return res;
     }
     public void setPage(int page) {
+        if (page == 0)
+            page = 1;
         if(position != page) {
             if (page < itemList.size()){
+
                 position = page;
 
                 bindPage();

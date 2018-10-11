@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
     @Override
     public void onPostUpdate(JSONObject res,String req, ResStatus status) {
-        progressDialog.dismiss();
+
         if (status == ResStatus.SUCCESS){
             try {
                 // handle request statuses when the operation is a success
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
             if (req.equals(NetworkConnector.GET_ALL_NODES_JSON_REQ))
                 Toast.makeText(this, "Nothing to update", Toast.LENGTH_SHORT).show();
         }
-
+        progressDialog.dismiss();
     }
 
     private void notifyUser() {

@@ -251,62 +251,60 @@ public class NetworkConnector {
 
 
     private void notifyPostBitmapUpdateListeners(final Bitmap res, final ResStatus status, final String id, final String id2, final NetworkResListener listener) {
+        if (listener != null) {
+            Handler handler = new Handler(mCtx.getMainLooper());
 
-        Handler handler = new Handler(mCtx.getMainLooper());
+            Runnable myRunnable = new Runnable() {
 
-        Runnable myRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                try{
-                    listener.onPostUpdate(res, id, id2, status);
+                @Override
+                public void run() {
+                    try {
+                        listener.onPostUpdate(res, id, id2, status);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
                 }
-                catch(Throwable t){
-                    t.printStackTrace();
-                }
-            }
-        };
-        handler.post(myRunnable);
-
+            };
+            handler.post(myRunnable);
+        }
     }
 
     private void notifyPostUpdateListeners(final JSONObject res, final ResStatus status, final String req, final NetworkResListener listener) {
+        if (listener != null) {
+            Handler handler = new Handler(mCtx.getMainLooper());
 
-        Handler handler = new Handler(mCtx.getMainLooper());
+            Runnable myRunnable = new Runnable() {
 
-        Runnable myRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                try{
-                    listener.onPostUpdate(res, req, status);
+                @Override
+                public void run() {
+                    try {
+                        listener.onPostUpdate(res, req, status);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
                 }
-                catch(Throwable t){
-                    t.printStackTrace();
-                }
-            }
-        };
-        handler.post(myRunnable);
+            };
+            handler.post(myRunnable);
+        }
 
     }
 
     private void notifyPreUpdateListeners(final NetworkResListener listener) {
+        if (listener != null) {
+            Handler handler = new Handler(mCtx.getMainLooper());
 
-        Handler handler = new Handler(mCtx.getMainLooper());
+            Runnable myRunnable = new Runnable() {
 
-        Runnable myRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                try{
+                @Override
+                public void run() {
+                    try {
                         listener.onPreUpdate();
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
                 }
-                catch(Throwable t){
-                    t.printStackTrace();
-                }
-            }
-        };
-        handler.post(myRunnable);
-
+            };
+            handler.post(myRunnable);
+        }
     }
 }

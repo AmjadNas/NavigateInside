@@ -32,7 +32,6 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         // initialize system class and networking class
-        SysData.getInstance();
         SysData.getInstance().initDatBase(getApplicationContext());
         NetworkConnector.getInstance().initialize(getApplicationContext());
 
@@ -81,7 +80,7 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
                 Toast.makeText(getApplicationContext(), "Incorrect data form", Toast.LENGTH_SHORT).show();
             }
 
-        }else {
+        }else if (status == ResStatus.FAIL && req.equals(NetworkConnector.GET_ALL_NODES_JSON_REQ)){
             //temporary
             SysData.getInstance().closeDatabase();
             //launchActivity();
