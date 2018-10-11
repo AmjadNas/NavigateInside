@@ -40,7 +40,7 @@ public class UserResProvider {
                     }
                 }
         }
-        return false;
+        return result;
     }
 
     public boolean insertID(String id, Connection conn) throws SQLException{
