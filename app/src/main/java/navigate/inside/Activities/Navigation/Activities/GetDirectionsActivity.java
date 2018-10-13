@@ -100,7 +100,6 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
     @Override
     protected void onResume() {
         super.onResume();
-        SystemRequirementsChecker.checkWithDefaultDialogs(this );
 
         // register the activity to listen for nearby beacon events
         ((MyApplication)getApplication()).registerListener(this);

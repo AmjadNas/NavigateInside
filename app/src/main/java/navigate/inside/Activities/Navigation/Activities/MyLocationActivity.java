@@ -58,7 +58,6 @@ public class MyLocationActivity extends AppCompatActivity implements BeaconListe
     @Override
     protected void onResume() {
         super.onResume();
-        SystemRequirementsChecker.checkWithDefaultDialogs(this );
 
         ((MyApplication)getApplication()).registerListener(this);
         ((MyApplication)getApplication()).startRanging();
