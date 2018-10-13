@@ -46,6 +46,7 @@ import navigate.inside.Utills.Constants;
 public class MainActivity extends AppCompatActivity implements NetworkResListener,ActivityCompat.OnRequestPermissionsResultCallback {
     // notification ID
     private static final int MY_NOTIFICATION_ID = 22;
+    private static final int REQUEST_ENABLE_BT = 87;
     private ProgressDialog progressDialog;
     private SysData data;
     private String appID;
@@ -62,6 +63,22 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
         // check if the data has changed in the online database
         NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.CHECK_FOR_UPDATE, appID, this);
 
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device doesn't support Bluetooth
+            Toast.makeText(this, "Your device doesn't support Bluetooth for some reason", Toast.LENGTH_SHORT).show();
+        }else if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED && requestCode == REQUEST_ENABLE_BT){
+            Toast.makeText(this, "To use the apps features fully you must enable bluetooth", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
