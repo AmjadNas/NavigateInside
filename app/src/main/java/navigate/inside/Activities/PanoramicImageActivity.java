@@ -99,8 +99,8 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
     private PanoramaImageView pamimageview;
     private GyroscopeObserver observer;
     private Bitmap image;
-    private final int I_WIDTH = 3992;
-    private final int I_HEIGHT = 1104;
+    private int I_WIDTH;
+    private int I_HEIGHT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +113,13 @@ public class PanoramicImageActivity extends AppCompatActivity implements Network
 
         observer = new GyroscopeObserver();
         observer.setMaxRotateRadian(Math.PI/9);
-        Bitmap img ;
-
-
+        Bitmap img;
+        
+        // figure out screen device's native resolution and store it for rescaling the image
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        I_WIDTH = metrics.widthPixels;
+        I_HEIGHT = metrics.heightPixels;
 
         final BeaconID  id = (BeaconID)getIntent().getSerializableExtra(Constants.ID);
         final BeaconID  id2 = (BeaconID)getIntent().getSerializableExtra(Constants.SecondID);
