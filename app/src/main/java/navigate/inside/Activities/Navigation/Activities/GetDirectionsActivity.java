@@ -79,15 +79,19 @@ public class GetDirectionsActivity extends AppCompatActivity implements BeaconLi
 
             if (StartNode != null && FinishNode != null) {
                 PathFinder pf = PathFinder.getInstance();
+                
+                if(StartNode.equals(FinishNode)){
+                    Toast.makeText(this, "the destination you have chosen, is in the same location you are in.", Toast.LENGTH_LONG).show();
+                }else{
+                    // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
+                    boolean b = chElevator.isChecked();
 
-                // if b is true then ignore the stairs (don't expand stairs node) else go through stairs
-                boolean b = chElevator.isChecked();
+                    if (!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
 
-                if (!pf.FindPath(StartNode, FinishNode, b).isEmpty()) {
-
-                    Intent intent = new Intent(this, PlaceViewActivity.class);
-                    intent.putExtra(Constants.INDEX, 1);
-                    startActivity(intent);
+                        Intent intent = new Intent(this, PlaceViewActivity.class);
+                        intent.putExtra(Constants.INDEX, 1);
+                        startActivity(intent);
+                    }
                 } else
                     Toast.makeText(this, R.string.no_path_found, Toast.LENGTH_LONG).show();
             }else
