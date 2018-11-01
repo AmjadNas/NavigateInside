@@ -122,16 +122,14 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
             }
 
         }
-        //fill in neighbours and request image node and then its neighbour
+        //fill in neighbours 
         for(int i = 0; i < arr.length(); i++) {
             o = arr.getJSONObject(i);
             nbers = o.getJSONArray(Constants.Node);
             for (int j = 0; j < nbers.length(); j++) {
                 nbr = nbers.getJSONObject(j);
-                if(SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction))){
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                            o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), this);
-                }
+                SysData.getInstance().insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));
+
             }
         }
 
@@ -145,11 +143,5 @@ public class SplashActivity extends AppCompatActivity implements NetworkResListe
 
     @Override
     public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
-        if (status == ResStatus.SUCCESS){
-            if (res != null){
-                SysData.getInstance().updateImage(BeaconID.from(id), BeaconID.from(id2), res);
-            }
-        }
-
     }
 }
