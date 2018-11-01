@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
            } catch (JSONException e) {
                 Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
-
+                progressDialog.dismiss();
             }
         }else if (status == ResStatus.FAIL){
             if (req.equals(NetworkConnector.GET_ALL_NODES_JSON_REQ))
@@ -207,11 +207,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
 
     @Override
     public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
-        if (status == ResStatus.SUCCESS){
-            if (res != null){
-                data.updateImage(BeaconID.from(id), BeaconID.from(id2), res);
-            }
-        }
+        
     }
 
     /**
@@ -245,10 +241,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResListene
             nbers = o.getJSONArray(Constants.Node);
             for (int j = 0; j < nbers.length(); j++) {
                 nbr = nbers.getJSONObject(j);
-                if(data.insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction))){
-                    NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE,
-                            o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), this);
-                }
+                data.insertNeighbourToNode(o.getString(Constants.BEACONID), nbr.getString(Constants.BEACONID), nbr.getInt(Constants.Direction));  
             }
         }
 
