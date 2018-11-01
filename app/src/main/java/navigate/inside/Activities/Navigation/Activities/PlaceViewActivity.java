@@ -58,7 +58,7 @@ import navigate.inside.Utills.Constants;
 import navigate.inside.Utills.Converter;
 import navigate.inside.Utills.ImageLoader;
 
-public class PlaceViewActivity extends AppCompatActivity implements View.OnClickListener, BeaconListener, ImageLoadedListener, Compass.CompassListener {
+public class PlaceViewActivity extends AppCompatActivity implements View.OnClickListener, BeaconListener, ImageLoadedListener, Compass.CompassListener, NetworkResListener {
     // layout containers
     private RecyclerView list;
     private PageAdapter listAdapter;
@@ -164,13 +164,7 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
         }else
             name.setText(String.format(getString(R.string.nextStep), next.getRoomsRange()));
 
-        Bitmap image = bindImage();
-        if (image != null)
-            new ImageLoader(currentID, -1, this).execute(image);
-        else {
-            panoWidgetView.setImageDrawable(getDrawable(R.drawable.noimage));
-        }
-
+        bindImage();
     }
 
     /**
@@ -312,11 +306,19 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
      * helper method to load image
      * @return
      */
-    private Bitmap bindImage(){
+    private void bindImage(){
         // sysdata get image with dir and node id
+        //if image does not exist try to download it
        Bitmap res =  SysData.getInstance().getImageForPair(itemList.get(position-1).first.get_id(), currentID);
-       return res;
+       if (res != null)
+           new ImageLoader(currentID, -1, this).execute(res);
+        else {
+            NetworkConnector.getInstance().sendRequestToServer(NetworkConnector.GET_NODE_IMAGE, itemList.get(position-1).first.get_id().toString(), currentID.toString(), this);
+            
+            //panoWidgetView.setImageDrawable(getDrawable(R.drawable.noimage));
+        }
     }
+    
     public void setPage(int page) {
         if (page == 0)
             page = 1;
@@ -394,7 +396,28 @@ public class PlaceViewActivity extends AppCompatActivity implements View.OnClick
             panoWidgetView.setImageBitmap(image);
 
     }
+    @Override
+    public void onPreUpdate() {
 
+    }
+
+    @Override
+    public void onPostUpdate(JSONObject res, String req, ResStatus status) {
+
+    }
+
+    @Override
+    public void onPostUpdate(Bitmap res, String id, String id2, ResStatus status) {
+        if (status == ResStatus.SUCCESS){
+            if (res != null){
+                new ImageLoader(BeaconID.from(id), -1, this).execute(res);
+                SysData.getInstance().updateImage(BeaconID.from(id),BeaconID.from(id2), res);
+            }
+        }else {
+
+            panoWidgetView.setImageDrawable(getDrawable(R.drawable.noimage));
+        }
+    }
      /* @SuppressLint("StaticFieldLeak")
     private void loadImageto3D(final Bitmap res, final boolean downloaded) {
         new AsyncTask<Bitmap,Bitmap,Bitmap>(){
