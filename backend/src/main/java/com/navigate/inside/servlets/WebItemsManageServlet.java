@@ -1,11 +1,16 @@
 package com.navigate.inside.servlets;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -77,11 +82,10 @@ public class WebItemsManageServlet extends HttpServlet {
 		String id2 = null;
         int direction = -1, num = 0, dirMax = -1;
 		boolean isDelete = false, isDirct;
-		
-		byte [] image= null;
+		TreeMap<String,byte []> imageparts = new TreeMap<>();		byte [] image= null;
 		String respPage = RESOURCE_FAIL_TAG;
 		try {
-			
+			int ImageSize = 0;
 			System.out.println("=======Item Servlet =======");
 			// Parse the incoming HTTP request
 			// Commons takes over incoming request at this point
@@ -126,12 +130,29 @@ public class WebItemsManageServlet extends HttpServlet {
 					
 					
 				} else {
-
-					image=item.get();
-
+					imageparts.put(item.getName(),item.get());
+					ImageSize += item.get().length;
 				}
 			}
-			
+			if (ImageSize > 0) {
+				Map.Entry<String, byte[]> entry;
+				ByteArrayInputStream bis;
+				image = new byte[ImageSize];
+				int offset = 0, size,k;
+				if (imageparts != null)
+					while (!imageparts.isEmpty()) {
+						entry = imageparts.pollFirstEntry();
+						size = entry.getValue().length;
+						k = size + offset-1;
+						System.out.println( offset + " --->  " + k);
+						System.arraycopy(entry.getValue(), 0, image, offset, k-offset);
+
+						offset += size;
+					}
+
+				System.out.println( offset + " " + image.length);
+
+			}
 			while (retry > 0) {
 
 				try {
@@ -169,7 +190,6 @@ public class WebItemsManageServlet extends HttpServlet {
 				}
 
 			}
-			
 			out.println(respPage);
 			out.close();
 

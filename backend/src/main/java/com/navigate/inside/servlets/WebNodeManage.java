@@ -11,11 +11,16 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -75,17 +80,19 @@ public class WebNodeManage extends HttpServlet {
         boolean isDelete = false, isDirct, Junction = false,
                 Elevator = false, Outside = false, NessOutside = false;
 
+        TreeMap<String,byte []> imageparts = new TreeMap<>();
         byte [] image= null;
         String respPage = RESOURCE_FAIL_TAG;
-        try {
 
+        try {
+            int ImageSize = 0;
             System.out.println("=======Item Servlet =======");
             // Parse the incoming HTTP request
             // Commons takes over incoming request at this point
             // Get an iterator for all the data that was sent
             List<FileItem> items = upload.parseRequest(req);
             Iterator<FileItem> iter = items.iterator();
-            conn = ConnPool.getInstance().getConnection();
+           // conn = ConnPool.getInstance().getConnection();
             // Set a response content type
             resp.setContentType("text/html");
             // Setup the output stream for the return XML data
@@ -98,8 +105,6 @@ public class WebNodeManage extends HttpServlet {
 
                 // If the current item is an HTML form field
                 if (item.isFormField()) {
-                    // If the current item is file data
-
                     // If the current item is file data
                     String fieldname = item.getFieldName();
                     String fieldvalue = item.getString();
@@ -131,16 +136,31 @@ public class WebNodeManage extends HttpServlet {
 
 
                 } else {
-
-                    image=item.get();
-
+                    imageparts.put(item.getName(),item.get());
+                    ImageSize += item.get().length;
                 }
             }
+            if (ImageSize > 0) {
+                Map.Entry<String, byte[]> entry;
+                ByteArrayInputStream bis;
+                image = new byte[ImageSize];
+                int offset = 0, size,k;
+                if (imageparts != null)
+                    while (!imageparts.isEmpty()) {
+                        entry = imageparts.pollFirstEntry();
+                        size = entry.getValue().length;
+                        k = size + offset-1;
+                        System.out.println( offset + " --->  " + k);
+                        System.arraycopy(entry.getValue(), 0, image, offset, k-offset);
 
-            while (retry > 0) {
+                        offset += size;
+                    }
 
+                System.out.println( offset + " " + image.length);
+
+            }
+         /*   while (retry > 0) {
                 try {
-
 
                     NodeResProvider itemResProvider = new NodeResProvider();
 
@@ -178,7 +198,7 @@ public class WebNodeManage extends HttpServlet {
                 }
 
             }
-
+*/
             out.println(respPage);
             out.close();
 
