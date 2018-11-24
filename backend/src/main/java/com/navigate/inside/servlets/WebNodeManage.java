@@ -92,7 +92,7 @@ public class WebNodeManage extends HttpServlet {
             // Get an iterator for all the data that was sent
             List<FileItem> items = upload.parseRequest(req);
             Iterator<FileItem> iter = items.iterator();
-           // conn = ConnPool.getInstance().getConnection();
+            conn = ConnPool.getInstance().getConnection();
             // Set a response content type
             resp.setContentType("text/html");
             // Setup the output stream for the return XML data
