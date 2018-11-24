@@ -159,7 +159,7 @@ public class WebNodeManage extends HttpServlet {
                 System.out.println( offset + " " + image.length);
 
             }
-         /*   while (retry > 0) {
+           while (retry > 0) {
                 try {
 
                     NodeResProvider itemResProvider = new NodeResProvider();
@@ -198,7 +198,7 @@ public class WebNodeManage extends HttpServlet {
                 }
 
             }
-*/
+
             out.println(respPage);
             out.close();
 
