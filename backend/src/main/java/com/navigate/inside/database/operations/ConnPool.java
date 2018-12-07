@@ -58,10 +58,12 @@ public class ConnPool {
     }
 
     public static ConnPool getInstance() {
-        if (instance == null) {
-            instance = new ConnPool();
+        synchronized (ConnPool.class) {
+            if (instance == null) {
+                instance = new ConnPool();
+            }
+            return instance;
         }
-        return instance;
     }
 
     public Connection getConnection() {
