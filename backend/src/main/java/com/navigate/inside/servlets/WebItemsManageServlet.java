@@ -136,16 +136,16 @@ public class WebItemsManageServlet extends HttpServlet {
 			}
 			if (ImageSize > 0) {
 				Map.Entry<String, byte[]> entry;
-				ByteArrayInputStream bis;
+				//ByteArrayInputStream bis;
 				image = new byte[ImageSize];
 				int offset = 0, size,k;
 				if (imageparts != null)
 					while (!imageparts.isEmpty()) {
 						entry = imageparts.pollFirstEntry();
 						size = entry.getValue().length;
-						k = size + offset-1;
+						k = size + offset;
 						System.out.println( offset + " --->  " + k);
-						System.arraycopy(entry.getValue(), 0, image, offset, k-offset);
+						System.arraycopy(entry.getValue(), 0, image, offset, size);
 
 						offset += size;
 					}
@@ -153,6 +153,7 @@ public class WebItemsManageServlet extends HttpServlet {
 				System.out.println( offset + " " + image.length);
 
 			}
+
 			while (retry > 0) {
 
 				try {

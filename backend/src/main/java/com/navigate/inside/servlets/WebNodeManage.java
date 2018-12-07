@@ -142,7 +142,7 @@ public class WebNodeManage extends HttpServlet {
             }
             if (ImageSize > 0) {
                 Map.Entry<String, byte[]> entry;
-                ByteArrayInputStream bis;
+                //ByteArrayInputStream bis;
                 image = new byte[ImageSize];
                 int offset = 0, size,k;
                 if (imageparts != null)
@@ -151,7 +151,7 @@ public class WebNodeManage extends HttpServlet {
                         size = entry.getValue().length;
                         k = size + offset-1;
                         System.out.println( offset + " --->  " + k);
-                        System.arraycopy(entry.getValue(), 0, image, offset, k-offset);
+                        System.arraycopy(entry.getValue(), 0, image, offset, size);
 
                         offset += size;
                     }
