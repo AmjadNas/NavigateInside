@@ -38,4 +38,5 @@
     <string name="arrived_to_location">Arrived to location</string>
     <string name="cannot_accesss">Please allow the to access the device\'s Bluetooth to be able to use the app\'s features fully</string>
     <string name="notsupportbluetotth">Your device does not support Bluetooth</string>
+    <string name="sameLocation">the destination you have chosen, is in the same location you are in.</string>
 </resources>
